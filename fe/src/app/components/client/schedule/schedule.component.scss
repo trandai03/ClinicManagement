@@ -1,0 +1,148 @@
+.show {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+.show::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên các trình duyệt sử dụng WebKit (như Chrome, Safari) */
+}
+
+.button_exit {
+    font-size: 30px;
+    color: white;
+    background-color: #102E9E;
+    border: none;
+    cursor: pointer;
+    position: fixed;
+    right: 20%;
+    top: 6%;
+}
+
+// input[type="radio"] {
+//     display: none;
+// }
+
+// input[type="radio"]+label {
+//     display: inline-block;
+//     width: 98%;
+//     height: 40px;
+//     line-height: 37px;
+//     text-align: center;
+//     background-color: #ffffff;
+//     border: 2px solid #ccc;
+//     border-radius: 7px;
+//     cursor: pointer;
+// }
+
+// input[type="radio"]:checked+label {
+//     background-color: #102E9E;
+//     color: white;
+//     border: 1px solid #102E9E;
+// }
+
+.booking_form {
+    width: 80%;
+    height: auto;
+}
+
+.booking_register_form {
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
+}
+
+.form_header {
+    background-color: #102E9E;
+    padding: 15px 20px;
+    color: white;
+    text-align: center;
+    border-start-start-radius: 7px;
+    border-start-end-radius: 7px;
+}
+
+.form_body {
+    background-color: #1691E2;
+    padding: 10px 20px;
+}
+
+.form_element {
+    margin-bottom: 15px;
+    width: 100%;
+    height: auto;
+}
+
+.form_lable {
+    color: white;
+    margin-bottom: 5px;
+}
+
+.form_input_text_1 {
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    width: 99.5%;
+}
+
+.form_input_text_2 {
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    width: 100%;
+}
+
+.dropdown {
+    padding: 10px;
+    width: 100%;
+    border-radius: 7px;
+    overflow-y: auto;
+}
+
+.dropdown_custom {
+    width: 99.5%;
+}
+
+.form_textarea textarea {
+    border-radius: 7px;
+    width: 100%;
+    padding: 10px;
+}
+
+.outer_form_button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_button {
+    width: 150px;
+    padding: 10px;
+    border-radius: 7px;
+    color: white;
+    border: 1px solid #1691E2;
+    background-color: #3b5fe2;
+    cursor: pointer;
+}
+
+.form_button:hover {
+    background-color: white;
+    color: #102E9E;
+    border: 1px solid white;
+    transition: all 0.3s ;
+    font-weight: bold;
+}
+
+button.example-custom-date-class {
+    background: orange;
+    border-radius: 100%;
+}
+
+.drdownspe {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}

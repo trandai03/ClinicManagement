@@ -1,0 +1,243 @@
+<main id="main" class="main">
+  <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
+    <h1>Danh sách các chuyên ngành</h1>
+  </div>
+  <!-- End Page Title -->
+
+  <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
+    data-bs-target="#basicModal" (click)="addForm.reset();fileanh1 = null;submited = false;urlPreview = ''">
+    <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+  </button>
+  <br>
+  <br>
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body" style="margin-top: 20px;">         
+            <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<!-- // Day la modal them thonng tin chi tiet chuyen ngành-->
+<div class="card">
+  <div class="card-body" style="padding: 0px">
+
+    <div class="modal fade" id="basicModal" #basicModal>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thêm chuyên ngành mới</h2>
+            <button #pro type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onsave()">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên chuyên ngành</label>
+                <input type="text" class="form-control" formControlName="name" />
+                <p class="text-danger" *ngIf="f['name'].errors !== null && submited ">Name cannot be null and min 6</p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputEmail5" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="inputEmail5" style="height: 120px" formControlName="description"></textarea>
+                <p class="text-danger" *ngIf="f['description'].errors !== null && submited ">Description cannot be null and min 6</p>
+              </div>
+              <div class="col-md-6">
+                <label for="inputPassword5" class="form-label">Hình ảnh</label>
+                <input type="file" class="form-control" id="inputPassword5" formControlName="file" (change)="sb($event)"/>
+                <p class="text-danger" *ngIf="f['file'].errors !== null && submited ">Image cannot be null</p>
+              </div>
+              <div class="col-12">
+                <label>Preview image:</label> &nbsp;&nbsp;
+                <img [src]="urlPreview" alt=""
+                  style="height: 100px; width: 100px" />
+              </div>
+
+
+              <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Save changes
+            </button>
+          </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- End Basic Modal-->
+    <div class="modal fade" id="basicModalxem">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thông tin ngành</h2>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên chuyên ngành</label>
+                <input [value]="itemout.name" type="text" class="form-control" id="inputName5" readonly />
+              </div>
+              <div class="col-md-12">
+                <label for="inputEmail5" class="form-label">Mô tả</label>
+                <textarea [value]="itemout.description" class="form-control" id="inputEmail5" style="height: 120px" readonly></textarea>
+              </div>
+              <div class="col-12">
+                <label>Image:</label> &nbsp;&nbsp;
+                <img [src]="itemout.image" alt=""
+                  style="height: 100px; width: 100px" />
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Basic Modal-->
+    <div class="modal fade" id="basicModalsua" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Cập nhật thông tin ngành</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onupdate()">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên chuyên ngành</label>
+                <input type="text" [value]="itemout.name" class="form-control" id="inputName5"
+                 formControlName="name" />
+                 <p class="text-danger" *ngIf="f['name'].errors !== null && submited ">Name cannot be null and min 6</p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputEmail5" class="form-label">Mô tả</label>
+                <textarea [value]="itemout.description" class="form-control" 
+                id="inputEmail5" formControlName="description" style="height: 120px"></textarea>
+                <p class="text-danger" *ngIf="f['description'].errors !== null && submited ">Name cannot be null and min 6</p>
+              </div>
+              <div class="col-md-8">
+                <label for="inputPassword5" class="form-label">Hình ảnh (mặc định là ảnh cũ nếu không đổi)</label>
+                <input type="file" class="form-control" id="inputPassword5" (change)="sb($event)" />
+              </div>
+              <div class="col-12">
+                <label>Preview image:</label> &nbsp;&nbsp;
+                <img [src]="urlPreview || itemout.image" alt=""
+                  style="height: 100px; width: 100px" />
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  Hủy
+                </button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
+          <!-- {{addForm.value | json}} -->
+            <!-- End Multi Columns Form -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Basic Modal-->
+
+    <div class="modal fade" id="basicModalxoa" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Bạn có muốn xóa chuyên ngành có id: {{itemout.id}}</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Tên : {{itemout.name}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="xoa(itemout.id)">Xóa</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- End Basic Modal-->
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="spinner-border" style="width: 100px; height: 100px;margin-left: 48%;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>
+
+<ng-template #loaded>
+  <!-- Table with hoverable rows -->
+  <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+    <thead >
+      <tr>
+        <th style="text-align: center;">Id</th>
+        <th style="text-align: center;">Image</th>
+        <th style="text-align: center;" scope="col">Name</th>
+        <th style="text-align: center;" scope="col" >Description</th>
+        <th style="text-align: center;" scope="col" >Hành động</th>
+      </tr>
+    </thead>
+    <tbody style="text-align: center;" >
+      <tr *ngFor="let item of lmajors">
+        <th scope="row">{{item.id}}</th>
+        <th>
+          <img [src]="item.image"
+            style="width: 50px; height: 50px" />
+        </th>
+        <td>{{item.name}}</td>
+        <td>{{item.description}}</td>
+        <td>
+          <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+            data-bs-target="#basicModalxem" (click)="xem(item)">
+            <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+            data-bs-target="#basicModalsua">
+            <i class="bi bi-wrench-adjustable"></i></button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+            data-bs-target="#basicModalxoa">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <!-- End Table with hoverable rows -->
+  <!-- <div class="card">
+      <div class="card-body"> -->
+  <!-- <nav aria-label="Page navigation example">
+    <ul class="pagination" style="justify-content: center; margin-top: 20px">
+      <li class="page-item">
+        <a class="page-link" href="#">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav> -->
+  <!-- End Basic Pagination -->
+</ng-template>

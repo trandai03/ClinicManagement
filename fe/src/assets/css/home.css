@@ -1,0 +1,280 @@
+* {
+    box-sizing: border-box;
+}
+
+.slider {
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.slider img {
+    width: 100%;
+    height: 100%;
+}
+
+.slides {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.slides>div {
+    flex-shrink: 0;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background: #eee;
+    transform-origin: center center;
+    transform: scale(1);
+    transition: transform 0.5s;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+}
+
+.slider>a {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 0 0.5rem 0;
+    position: relative;
+    margin-top: 30px;
+}
+
+.slider a.active {
+    color: rgb(255, 255, 255);
+    background-color: var(--blue1);
+}
+
+.booking_area {
+    margin-top: 15px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(234, 231, 231);
+    padding: 50px 0;
+}
+
+.inner_booking_area {
+    width: 80%;
+    height: auto;
+}
+
+.booking_intro {
+    margin-top: 140px;
+}
+
+.inner_booking_intro {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.booking_intro_text_1 {
+    color: var(--blue1);
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.booking_intro_text_2 {
+    color: var(--blue1);
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.booking_intro_item {
+    border: 1px solid var(--blue1);
+    width: 95%;
+    height: 180px;
+    margin-bottom: 20px;
+    border-radius: 7px;
+}
+
+.booking_intro_link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    background-color: var(--blue3);
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.booking_intro_link:hover {
+    background-color: white;
+    color: var(--blue3);
+    transition: all 0.5 ease;
+}
+
+.booking_intro_icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.section {
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner_body_section {
+    width: 80%;
+    height: auto;
+}
+
+.section_title {
+    color: var(--blue2);
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.intro_hospital_text {
+    font-size: 20px;
+    text-align: justify;
+}
+
+.intro_hospital_video {
+    width: 90%;
+    height: 250px;
+}
+
+.intro_special {
+    background-color: var(--blue1);
+}
+
+.title_type_2 {
+    color: white;
+}
+
+.intro_special_box {
+    margin-top: 40px;
+}
+
+.section_item {
+    height: auto;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+    width: 97%;
+    margin-top: 10px;
+}
+
+.section_item:hover {
+    margin-top: -10px;
+    transition: all 0.5s ease;
+}
+
+.section_item_content {
+    background-color: white;
+    height: 100%;
+    min-height: 200px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.intro_special_item_content {
+    border-width: 5px;
+    border-style: solid;
+    border-image: linear-gradient(to bottom, yellow, gray) 1;
+}
+
+.intro_special_icon {
+    font-size: 60px;
+    color: var(--blue1);
+    margin-bottom: 15px;
+}
+
+.section_item_text {
+    text-align: center;
+    font-size: 14px;
+}
+
+.intro_doctor_box {
+    margin-top: 40px;
+}
+
+.intro_doctor_item_content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.intro_doctor_number {
+    color: var(--blue2);
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.section_button {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button_link {
+    color: white;
+    background-color: var(--blue2);
+    padding: 15px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    border-radius: 7px;
+}
+
+.button_link:hover {
+    color: var(--blue2);
+    background-color: white;
+    border: 3px solid var(--blue2);
+    transition: all 0.5 ease;
+}
+
+.outer_video_box {
+    margin-top: -20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.video_box {
+    width: 70%;
+    height: auto;
+    display: block;
+    position: relative;
+    padding-top: 35%;
+}
+
+.video_area_video {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}

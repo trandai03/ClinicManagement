@@ -1,0 +1,132 @@
+.banner_area {
+    width: 100%;
+    height: auto;
+}
+
+.banner_area_img {
+    width: 100%;
+    height: auto;
+}
+
+.banner_area_img img {
+    width: 100%;
+    height: auto;
+}
+
+.form_search_area {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.inner_form_search_area {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_search {
+    width: 350px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.form_search_input {
+    padding: 7px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.436);
+}
+
+.form_search_input:focus {
+    border: 1px solid #1691E2;
+    outline: none;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.form_search button {
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.search_icon {
+    color: #1691E2;
+    margin-left: -32px;
+    font-size: 20px;
+}
+
+.section_title {
+    text-align: center;
+    font-size: 28px;
+    color: #1691E2;
+}
+
+.list_major_area {
+    background-color: #e9e6e6;
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.inner_section_area {
+    width: 80%;
+    height: auto;
+}
+
+.list_major_item {
+    width: 95%;
+    height: 220px;
+    background-color: white;
+    border-radius: 14px;
+    margin-top: 20px;
+}
+
+.list_major_item a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.major_item_image {
+    width: 100px;
+    height: auto;
+    border: 5px solid #1691E2;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.major_item_image img {
+    width: 80%;
+    height: auto;
+}
+
+.major_item_text {
+    color: #1691E2;
+    text-align: center;
+}
+
+.list_major_item:hover {
+    background-color: #1691E2;
+    transition: all 0.5s ease;
+}
+
+.list_major_item:hover .major_item_image{
+    background-color: white;
+}
+
+.list_major_item:hover .major_item_text{
+    color: white;
+    transition: all 0.5s ease;
+}

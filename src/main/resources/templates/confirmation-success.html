@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận thành công</title>
+</head>
+<body>
+<div class="container">
+    <div class="success-icon">✓</div>
+    <h1>Xác nhận thành công</h1>
+    <div class="confirmation-details">
+        <p>Chúc mừng! Bạn đã xác nhận lịch khám thành công.</p>
+        <div class="info-row">
+            <p><strong>Tên người khám:</strong> <span th:text="${name}"></span></p>
+            <p><strong>Ngày khám:</strong> <span th:text="${date}"></span></p>
+            <p><strong>Thời gian khám:</strong> <span th:text="${time}"></span></p>
+            <p><strong>Tên bác sĩ:</strong> <span th:text="${doctorName}"></span></p>
+            <p><strong>Chuyên ngành:</strong> <span th:text="${major}"></span></p>
+        </div>
+    </div>
+
+</div>
+</body>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+        max-width: 600px;
+        width: 90%;
+        margin: 20px;
+    }
+
+    .success-icon {
+        background-color: #4CAF50;
+        color: white;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        font-size: 40px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .confirmation-details {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+    }
+
+    .info-row {
+        text-align: left;
+    }
+
+    p {
+        color: #505050;
+        margin: 15px 0;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    strong {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .home-button {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        border: 2px solid #4CAF50;
+    }
+
+    .home-button:hover {
+        background-color: white;
+        color: #4CAF50;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 30px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+</style>
+</html>

@@ -1,0 +1,21 @@
+<div class="container">
+    <h2 *ngIf="check">Đăng nhập vào hệ thống</h2>
+    <form *ngIf="check" [formGroup]="loginForm" (ngSubmit)="clickSend()">
+        <div class="mb-6">
+            <label for="gmail" class="form-label">Gmail: </label>
+            <input type="email" class="form-control" name="gmail" formControlName="gmail" required>
+        </div>
+        <button (click)="clickSend()"  type="button" class="btn">Đăng nhập</button>
+    </form>
+    <h2 *ngIf="!check">Nhập mã capcha chúng tôi vừa gửi qua email của bạn</h2>
+    <form *ngIf="!check" [formGroup]="captchaForm" (ngSubmit)="validateCaptcha()">
+        <div class="mb-6">
+            <label for="gmail" class="form-label">Mã capcha: </label>
+            <input type="text" formControlName="captcha" class="form-control" name="captcha" required>
+        </div>
+        <div style="display: flex;">
+            <button type="submit" class="btn">Gửi</button>
+            <button style="margin-left: 15px;" (click)="clickSend()" type="button" class="btn" [disabled]="pendingSecond > 0">Gửi lại captcha {{pendingSecond}}</button>
+        </div>
+    </form>
+</div>

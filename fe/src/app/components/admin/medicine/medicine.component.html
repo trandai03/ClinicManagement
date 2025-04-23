@@ -1,0 +1,190 @@
+<main id="main" class="main">
+    <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
+      <h1>Thuốc</h1>
+    </div>
+    <!-- End Page Title -->
+  
+    <!-- <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
+      data-bs-target="#basicModal">
+      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+    </button>
+    <br>
+    <br> -->
+    <br>
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body" style="margin-top: 20px;">
+              
+              <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+                <thead class="text-center">
+                  <tr>
+                    <th style="text-align: center;" >Id</th>
+                    <th style="text-align: center;" scope="col">Tên thuốc</th>
+                    <th style="text-align: center;" scope="col">Giá tiền</th>
+                    <th style="text-align: center;" scope="col">Số lượng</th>
+                    <th style="text-align: center;" scope="col">Đơn vị</th>
+                    <th style="text-align: center;" scope="col">Mô tả</th>
+                    <th style="text-align: center;" scope="col">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr *ngFor="let item of lmedicine">
+                    <th scope="row">{{item.id}}</th>
+                    <!-- <th>{{item.date}}</th> -->
+                    <td>{{item.name}}</td>
+                    <td style="max-width: 200px;">{{item.money}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.unit}}</td>
+                    <td>{{item.description}}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+                        data-bs-target="#basicModalxem" (click)="xem(item)">
+                        <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
+                      <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+                        data-bs-target="#basicModalsua">
+                        Sửa</button>&nbsp;&nbsp; -->
+                      <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+                        data-bs-target="#basicModalxoa">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+            
+                </tbody>
+              </table>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- End #main -->
+  
+  <div class="card">
+    <div class="card-body" style="padding: 0px">
+  
+      <div class="modal fade" id="basicModalxem">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Cập nhật thông tin thuốc</h2>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3">
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Tên thuốc:</label>
+                  <input [value]="itemout.name" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                    <label for="inputName5" class="form-label">Giá tiền:</label>
+                    <input [value]="itemout.money" type="text" class="form-control" id="inputName5" readonly />
+                  </div>
+                  <div class="col-md-12">
+                    <label for="inputName5" class="form-label">Số lượng:</label>
+                    <input [value]="itemout.quantity" type="text" class="form-control" id="inputName5" readonly />
+                  </div>
+                  <div class="col-md-12">
+                    <label for="inputName5" class="form-label">Đơn vị:</label>
+                    <input [value]="itemout.unit" type="text" class="form-control" id="inputName5" readonly />
+                  </div>
+                <div class="col-md-12">
+                  <label for="inputEmail5" class="form-label">Mô tả</label>
+                  <textarea [value]="itemout.description" class="form-control" id="inputEmail5" style="height: 120px"></textarea>
+                </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal fade" id="basicModalxoa" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Bạn có muốn xóa loại thuốc có id: {{itemout.id}}</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Tên thuốc : {{itemout.name}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary"data-bs-dismiss="modal" (click)="xoa(itemout.id)" >Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Basic Modal-->
+    </div>
+  </div>
+  
+  <ng-template #loading>
+    <div class="spinner-border" style="width: 90px; height: 90px;margin-left: 48%;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </ng-template>
+  
+  <ng-template #loaded>
+    <!-- Table with hoverable rows -->
+    <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+      <thead class="text-center">
+        <tr>
+          <th>Id</th>
+          <th>Tên thuốc</th>
+          <th scope="col">Số lượng</th>
+          <th scope="col">Giá tiền</th>
+          <th scope="col">Mô tả</th>
+          <th scope="col">Hành động</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr *ngFor="let item of lmedicine; index as idx">
+          <th scope="row">{{idx + 1}}</th>
+          <th>{{item.name}}</th>
+          <td>{{item.money}}</td>
+          <td style="max-width: 200px;">{{item.description}}</td>
+          <td>
+            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+              data-bs-target="#basicModalxem" (click)="xem(item)">
+              <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
+            <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+              data-bs-target="#basicModalsua">
+              Sửa</button>&nbsp;&nbsp; -->
+            <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+              data-bs-target="#basicModalxoa">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+  
+      </tbody>
+    </table>
+    <!-- End Table with hoverable rows -->
+    <!-- <div class="card">
+        <div class="card-body"> -->
+    <!-- <nav aria-label="Page navigation example">
+      <ul class="pagination" style="justify-content: center; margin-top: 20px">
+        <li class="page-item">
+          <a class="page-link" href="#">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav> -->
+    <!-- End Basic Pagination -->
+  </ng-template>

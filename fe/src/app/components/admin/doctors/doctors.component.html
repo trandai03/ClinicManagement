@@ -1,0 +1,628 @@
+<main id="main" class="main">
+  <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
+    <h1>{{ title }}</h1>
+  </div>
+  <!-- End Page Title -->
+
+  <button
+    *ngIf="status == 'true'"
+    type="button"
+    class="btn btn-outline-success rounded-pill"
+    data-bs-toggle="modal"
+    data-bs-target="#basicModal"
+    (click)="
+      addForm.reset(); fileanh1 = null; submited = false; urlPreview = ''
+    "
+  >
+    <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+  </button>
+  <br />
+  <br />
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body" style="margin-top: 20px">
+            <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<!-- // Day la modal them thonng tin chi tiet chuyen ngành-->
+<div class="card">
+  <div class="card-body" style="padding: 0px">
+    <div class="modal fade" id="basicModal" #basicModal>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thêm bác sĩ mới</h2>
+            <button
+              #pro
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onsave()">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên bác sĩ</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="fullName"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['fullName'].errors !== null && submited"
+                >
+                  FullName cannot be null and min 10
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tài khoản</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="userName"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['userName'].errors !== null && submited"
+                >
+                  UserNamecannot be null and min 6
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Mật khẩu</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="password"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['password'].errors !== null && submited"
+                >
+                  Password cannot be null and min 6
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Số điện thoại</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="phone"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['phone'].errors !== null && submited"
+                >
+                  Name cannot be null and min 9 and max 12
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="email"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['email'].errors !== null && submited"
+                >
+                  Email invalid
+                </p>
+              </div>
+              <div class="col-md-8">
+                <label for="inputState" class="form-label">Chuyên khoa</label>
+                <select
+                  id="inputState"
+                  class="form-select"
+                  formControlName="majorId"
+                >
+                  <ng-container *ngFor="let item of listMajor | async">
+                    <option [value]="item.id">{{ item.name }}</option>
+                  </ng-container>
+                </select>
+                <p
+                  class="text-danger"
+                  *ngIf="f['majorId'].errors !== null && submited"
+                >
+                  Major cannot be null
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputDes" class="form-label">Mô tả</label>
+                <textarea
+                  [value]="itemout.description"
+                  class="form-control"
+                  id="inputDes"
+                  formControlName="description"
+                  style="height: 120px"
+                ></textarea>
+                <p
+                  class="text-danger"
+                  *ngIf="f['description'].errors !== null && submited"
+                >
+                  Name cannot be null and min 10
+                </p>
+              </div>
+              <div class="col-md-6">
+                <label for="inputPassword5" class="form-label">Hình ảnh</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="inputPassword5"
+                  formControlName="file"
+                  (change)="sb($event)"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['file'].errors !== null && submited"
+                >
+                  Image cannot be null
+                </p>
+              </div>
+              <div class="col-12">
+                <label>Preview image:</label> &nbsp;&nbsp;
+                <img
+                  [src]="urlPreview"
+                  alt=""
+                  style="height: 100px; width: 100px"
+                />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- End Basic Modal-->
+    <div class="modal fade" id="basicModalxem">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thông tin chi tiết bác sĩ</h2>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên bác sĩ</label>
+                <input
+                  type="text"
+                  [value]="itemout.fullName"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tài khoản</label>
+                <input
+                  type="text"
+                  [value]="itemout.userName"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Email</label>
+                <input
+                  type="text"
+                  [value]="itemout.email"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Phone</label>
+                <input
+                  type="text"
+                  [value]="itemout.phone"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Khoa</label>
+                <input
+                  type="text"
+                  [value]="itemout.major.name"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputDes5" class="form-label">Mô tả</label>
+                <textarea
+                  [value]="itemout.description"
+                  class="form-control"
+                  id="inputDes5"
+                  readonly
+                  style="height: 120px"
+                ></textarea>
+              </div>
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Trạng thái</label>
+                <input
+                  type="text"
+                  [value]="itemout.trangthai == 'dl'
+                  ? 'Đang làm'
+                  : itemout.trangthai == 'dnh'
+                  ? 'Đã nghỉ hưu'
+                  : 'Đã rời đi'"
+                  class="form-control"
+                  id="inputName5"
+                  readonly
+                />
+              </div>
+              <div class="col-12">
+                <label>Image:</label> &nbsp;&nbsp;
+                <img
+                  [src]="itemout.avatar"
+                  alt=""
+                  style="height: 100px; width: 100px"
+                />
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Basic Modal-->
+    <div class="modal fade" id="basicModalsua">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Cập nhật thông tin bác sĩ</h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onupdate()">
+              <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tên bác sĩ</label>
+                <input
+                  type="text"
+                  [value]="itemout.fullName"
+                  class="form-control"
+                  id="inputName5"
+                  formControlName="fullName"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['fullName'].errors !== null && submited"
+                >
+                  FullName cannot be null and min 6
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputFullName5" class="form-label">Tài khoản</label>
+                <input
+                  type="text"
+                  [value]="itemout.userName"
+                  class="form-control"
+                  id="inputFullName5"
+                  formControlName="userName"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['userName'].errors !== null && submited"
+                >
+                  UserName cannot be null and min 6
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputEmail5" class="form-label">Email</label>
+                <input
+                  type="text"
+                  [value]="itemout.email"
+                  class="form-control"
+                  id="inputEmail5"
+                  formControlName="email"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['email'].errors !== null && submited"
+                >
+                  Email invalid
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputPhone5" class="form-label">Phone</label>
+                <input
+                  type="text"
+                  [value]="itemout.phone"
+                  class="form-control"
+                  id="inputPhone5"
+                  formControlName="password"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['phone'].errors !== null && submited"
+                >
+                  Phone cannot be null and min 6 and max 12
+                </p>
+              </div>
+              <div class="col-md-8">
+                <label for="inputState" class="form-label">Chuyên khoa</label>
+                <select
+                  id="inputState"
+                  class="form-select"
+                  formControlName="majorId"
+                >
+                  <ng-container *ngFor="let item of listMajor | async">
+                    <option
+                      [selected]="itemout.major.id == item.id"
+                      [value]="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <label for="inputDes5" class="form-label">Mô tả</label>
+                <textarea
+                  [value]="itemout.description"
+                  class="form-control"
+                  id="inputDes"
+                  formControlName="description"
+                  style="height: 120px"
+                ></textarea>
+                <p
+                  class="text-danger"
+                  *ngIf="f['description'].errors !== null && submited"
+                >
+                  Description cannot be null and min 10
+                </p>
+              </div>
+              <div class="col-md-8">
+                <label for="inputName5" class="form-label">Trạng thái</label>
+                <select
+                  id="inputState"
+                  class="form-select"
+                  formControlName="trangthai"
+                >
+                  <option [selected]="itemout.trangthai == 'dl'" value="dl">
+                    Đang làm
+                  </option>
+                  <option value="dnh" [selected]="itemout.trangthai == 'dnh'">
+                    Đã nghỉ hưu
+                  </option>
+                  <option value="dr" [selected]="itemout.trangthai == 'dr'">
+                    Đã rời đi
+                  </option>
+                </select>
+                <p
+                  class="text-danger"
+                  *ngIf="f['email'].errors !== null && submited"
+                >
+                  Email invalid
+                </p>
+              </div>
+              <div class="col-md-8">
+                <label for="inputimage5" class="form-label"
+                  >Hình ảnh (mặc định là ảnh cũ nếu không đổi)</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="inputimage5"
+                  (change)="sb($event)"
+                />
+              </div>
+              <div class="col-12">
+                <label>Preview image:</label> &nbsp;&nbsp;
+                <img
+                  [src]="urlPreview || itemout.avatar"
+                  alt=""
+                  style="height: 100px; width: 100px"
+                />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Hủy
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Basic Modal-->
+
+    <div class="modal fade" id="basicModalxoa" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">
+              Bạn có muốn reset password bác sĩ có id: {{ itemout.id }}
+            </h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Tên : {{ itemout.fullName }} <br /><br />
+            <p>Password mới sẽ được gửi về email của bác sĩ</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              (click)="resetpass(itemout.id)"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Basic Modal-->
+  </div>
+</div>
+
+<ng-template #loading>
+  <div
+    class="spinner-border"
+    style="width: 100px; height: 100px; margin-left: 48%"
+    role="status"
+  >
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>
+
+<ng-template #loaded>
+  <!-- Table with hoverable rows -->
+  <table
+    datatable
+    [dtOptions]="dtOption"
+    [dtTrigger]="dtTrigger"
+    class="table table-hover"
+  >
+    <thead>
+      <tr>
+        <th style="text-align: center" scope="col">Id</th>
+        <th style="text-align: center" scope="col">Avatar</th>
+        <th style="text-align: center" scope="col">Name</th>
+        <th style="text-align: center" scope="col">Khoa</th>
+        <th style="text-align: center" scope="col">Email</th>
+        <th style="text-align: center" scope="col">Trạng thái</th>
+        <th style="text-align: center" scope="col">Hành động</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      <tr *ngFor="let item of listDoctor">
+        <th scope="row">{{ item.id }}</th>
+        <th>
+          <img [src]="item.avatar" style="width: 50px; height: 50px" />
+        </th>
+        <td>{{ item.fullName }}</td>
+        <td>{{ item.major.name }}</td>
+        <td>{{ item.email }}</td>
+        <td>
+          {{
+            item.trangthai == "dl"
+              ? "Đang làm"
+              : item.trangthai == "dnh"
+              ? "Đã nghỉ hưu"
+              : "Đã rời đi"
+          }}
+        </td>
+        <td scope="row">
+          <button
+            type="button"
+            class="btn btn-primary rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#basicModalxem"
+            (click)="xem(item)"
+          >
+            <i class="bi bi-eye"></i>
+          </button>
+          <button
+            style="margin: 10px"
+            type="button"
+            class="btn btn-warning rounded-pill"
+            data-bs-toggle="modal"
+            (click)="xem(item)"
+            data-bs-target="#basicModalsua"
+          >
+            <i class="bi bi-wrench-adjustable"></i>
+          </button>
+          <!-- <button style="margin: 10px;" *ngIf="!item.enabled" type="button" class="btn btn-success rounded-pill" (click)="restore(item.id)">
+              <i class="bi bi-arrow-clockwise"></i></button> -->
+          <button
+            *ngIf="item.enabled"
+            type="button"
+            class="btn btn-danger rounded-pill"
+            data-bs-toggle="modal"
+            (click)="xem(item)"
+            data-bs-target="#basicModalxoa"
+          >
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- End Table with hoverable rows -->
+  <!-- <div class="card">
+      <div class="card-body"> -->
+  <!-- <nav aria-label="Page navigation example">
+    <ul class="pagination" style="justify-content: center; margin-top: 20px">
+      <li class="page-item">
+        <a class="page-link" href="#">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav> -->
+  <!-- End Basic Pagination -->
+</ng-template>

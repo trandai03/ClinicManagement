@@ -1,0 +1,153 @@
+main {
+    background-color: rgb(214, 234, 242)
+}
+
+.banner_area {
+    background-image: url(https://tamanhhospital.vn/wp-content/uploads/2021/02/dich-vu-dac-biet-mobile.jpg);
+    width: 100%;
+    height: 390px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner_title {
+    color: white;
+    font-size: calc(20px + 1vw) ;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.section_title {
+    text-align: center;
+    color: #1691E2;
+    font-size: 28px;
+    margin-top: 50px;
+}
+
+.div_extra {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.section_subtitle {
+    text-align: center;
+    width: 50%;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 70px;
+}
+
+.contact_area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+.inner_contact_area {
+    width: 80%;
+}
+
+.contact_map {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.contact_map img {
+    width: 80%;
+    height: auto;
+    border-radius: 25px;
+}
+
+.contact_infor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact_infor_item {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+.contact_infor_icon {
+    border: 2px solid #102E9E;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.contact_icon {
+    font-size: 25px;
+    color: #102E9E;
+}
+
+.contact_infor_text {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.form_lable {
+    color: #102E9E;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.form_input_text_1 {
+    padding: 16px 12px;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 90%;
+}
+
+.form_textarea textarea {
+    padding: 16px 12px;
+    margin-bottom: 15px;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 95%;
+}
+
+.outer_form_button {
+    width: 95%;
+    display: flex;
+    justify-content: center;
+}
+
+.form_button {
+    width: 150px;
+    padding: 14px;
+    border-radius: 20px;
+    color: white;
+    border: 1px solid #1691E2;
+    background-color: #102E9E;
+    cursor: pointer;
+}
+
+.form_button:hover {
+    background-color: white;
+    color: #102E9E;
+    border: 1px solid white;
+    transition: all 0.3s ;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1000px) {
+    .section_subtitle {
+        width: 90%;
+    }
+
+    .contact_map {
+        display: flex;
+        justify-content: center;
+    }
+}

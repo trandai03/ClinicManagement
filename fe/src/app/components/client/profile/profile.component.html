@@ -1,0 +1,161 @@
+<div class="profile-container">
+  <div class="profile-sidebar">
+    <div class="profile-header">
+      <h2>Hồ sơ bệnh nhân</h2>
+      <div class="profile-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+    </div>
+    <ul class="profile-nav">
+      <li class="profile-nav-item" (click)="clickTab(1)" [ngClass]="{'active': checkClick == 1}" data-tab="profile">
+        <i class="fas fa-user"></i> Hồ sơ cá nhân
+      </li>
+      <li class="profile-nav-item" (click)="clickTab(2)" [ngClass]="{'active': checkClick == 2}" data-tab="settings">
+        <i class="fas fa-calendar-check"></i> Lịch hẹn sắp tới
+      </li>
+      <li class="profile-nav-item" (click)="clickTab(3)" [ngClass]="{'active': checkClick == 3}" data-tab="activity">
+        <i class="fas fa-history"></i> Lịch sử khám bệnh
+      </li>
+    </ul>
+  </div>
+  
+  <div class="profile-content">
+    <!-- Hồ sơ cá nhân -->
+    <div *ngIf="checkClick == 1" id="profile" class="tab-content fade-in">
+      <div class="content-header">
+        <h2>Thông tin bệnh nhân</h2>
+      </div>
+      
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Họ và tên</label>
+            <input type="text" formControlName="fullName" class="form-control" id="fullName" placeholder="Họ và tên">
+          </div>
+          
+          <div class="form-group">
+            <label for="dob">Ngày sinh</label>
+            <input formControlName="dob" type="date" class="form-control" id="dob">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Giới tính</label>
+            <div class="gender-options">
+              <div class="form-check">
+                <input formControlName="gender" class="form-check-input" type="radio" name="gender" id="gender1" value="MALE" checked>
+                <label class="form-check-label" for="gender1">Nam</label>
+              </div>
+              <div class="form-check">
+                <input formControlName="gender" class="form-check-input" type="radio" name="gender" id="gender2" value="FEMALE">
+                <label class="form-check-label" for="gender2">Nữ</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input formControlName="phone" type="text" class="form-control" id="phone" placeholder="Số điện thoại">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bhyt">Mã BHYT</label>
+            <input formControlName="bhyt" type="text" class="form-control" id="bhyt" placeholder="Mã BHYT">
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Địa chỉ</label>
+            <input formControlName="address" type="text" class="form-control" id="address" placeholder="Địa chỉ">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save">
+            <i class="fas fa-save"></i> Lưu thông tin
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lịch hẹn sắp tới -->
+    <div *ngIf="checkClick == 2" id="settings" class="tab-content fade-in">
+      <div class="content-header">
+        <h2>Lịch khám sắp tới</h2>
+      </div>
+      
+      <div class="table-responsive">
+        <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Tên bệnh nhân</th>
+              <th>Ngày sinh</th>
+              <th>Giới tính</th>
+              <th>Ngày khám</th>
+              <th>Tên bác sĩ</th>
+              <th>Chuyên ngành</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of lsaptoi">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.dob}}</td>
+              <td>{{item.gender}}</td>
+              <td>{{item.date}}</td>
+              <td>{{item.nameDoctor}}</td>
+              <td>{{item.major}}</td>
+              <td><span class="status-pending">Đang chờ khám</span></td>
+              <td>
+                <button type="button" class="btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#basicModalxoa">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Lịch sử khám bệnh -->
+    <div *ngIf="checkClick == 3" id="activity" class="tab-content fade-in">
+      <div class="content-header">
+        <h2>Lịch khám đã khám</h2>
+      </div>
+      
+      <div class="table-responsive">
+        <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Tên bệnh nhân</th>
+              <th>Ngày sinh</th>
+              <th>Giới tính</th>
+              <th>Ngày khám</th>
+              <th>Tên bác sĩ</th>
+              <th>Chuyên ngành</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ldakham">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.dob}}</td>
+              <td>{{item.gender}}</td>
+              <td>{{item.date}}</td>
+              <td>{{item.nameDoctor}}</td>
+              <td>{{item.major}}</td>
+              <td><span class="status-success">Khám thành công</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

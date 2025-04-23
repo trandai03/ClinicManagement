@@ -1,0 +1,305 @@
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Thời khóa biểu</h1>
+    </div><!-- End Page Title -->
+    <br>
+
+    <section class="section">
+        <div class="row">
+
+
+            <!-- Sales Card -->
+            <div class="col-xxl-10 col-md-10">
+                <div class="card info-card sales-card">
+                    <div class="card-body">
+                        <br>
+                        <form action="" [formGroup]="addForm">
+                            <span style="font-size: 17px;">Ngày bắt đầu: &nbsp;<input type="date"
+                                    style="max-width: 200px;" formControlName="start"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style="font-size: 17px;">Ngày kết thúc:&nbsp;<input type="date"
+                                    style="max-width: 200px;" formControlName="end"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" (click)="onSearch()">Lọc</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" (click)="onReset()">Làm mới</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" (click)="onSearchToday()">Lịch hôm nay</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div><!-- End Sales Card -->
+
+
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="card-body" style="margin-top: 20px;">
+                            <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<ng-template #loading>
+    <div class="spinner-border" style="width: 100px; height: 100px;margin-left: 48%;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</ng-template>
+
+<ng-template #loaded>
+    <!-- Table with hoverable rows -->
+    <table datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOption" class="table table-hover" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th style="text-align: center;" scope="col">STT</th>
+                <th style="text-align: center;" scope="col">Ngày</th>
+                <th style="text-align: center;" scope="col">Thời gian</th>
+                <th style="text-align: center;" scope="col">Thông tin bệnh nhân</th>
+                <th style="text-align: center;" scope="col">Ghi chú</th>
+                <th style="text-align: center;" scope="col">Hành động</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr *ngFor="let item of lbooking;index as idx" style="height: 80px;">
+                <th>{{idx+1}}</th>
+                <td >{{item.date | date:'dd-MM-yyyy'}}</td>
+                <td>{{hours[item.idHour-1]}}</td>
+                <td>{{item.name+ ' - ' +item.gender+ ' - ' + item.dob}}
+                </td>
+                <td>{{item.note}}</td>
+                <!-- End Basic Modal-->
+
+                <td>
+                  <button type="button" (click)="changeObject(item)" class="btn btn-success rounded-pill"  data-bs-toggle="modal" data-bs-target="#basicModaltc">
+                      Khám thành công</button>&nbsp;&nbsp;
+                    <button type="button" (click)="changeObject(item)" class="btn btn-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#basicModaltb">
+                      Bị hủy</button>&nbsp;&nbsp;
+                  <div  class="card" >
+                    <div class="card-body" style="padding: 0px">
+              
+                      
+                      <div  class="modal fade" id="basicModaltc" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content" style="width: 1000px;height: 800px;margin-left: -50%;text-align: left;overflow-y: scroll;overflow-x: hidden;">
+                            <div class="modal-header">
+                              <h2 class="modal-title">Xác nhận đã khám thành công lịch hẹn có id: {{item.id}}</h2>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button><br>
+                              
+                            </div>
+                            <div class="modal-body">
+                              <h1 style="text-align: center;font-weight: 600;" class="modal-title">Tóm tắt bệnh án</h1>
+
+                              <form [formGroup]="historyForm" (ngSubmit)="xacnhan(1,'SUCCESS')">
+                                <div class="row">
+                                  <div class="form-group col">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Họ và tên</label>
+                                    <div class="col-sm-10">
+                                      <input type="email" formControlName="fullName" class="form-control" id="inputEmail3" placeholder="Họ và tên">
+                                    </div>
+                                  </div>
+                                  <div class="form-group col">
+                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Ngày sinh</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="dob" type="date" class="form-control" id="inputPassword3">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <fieldset class="form-group col">
+                                      <legend class="col-sm-2 col-form-label">Giới tính</legend>
+                                      <div class="col-sm-10">
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="male" checked>
+                                          <label class="form-check-label" for="gridRadios1">
+                                            Nam
+                                          </label>
+                                        </div>
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="female">
+                                          <label class="form-check-label" for="gridRadios2">
+                                            Nữ
+                                          </label>
+                                        </div>
+                                      </div>
+                                  </fieldset>
+                                  <div class="form-group col">
+                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Dân tộc</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="nation" type="text" class="form-control" id="inputPassword3" placeholder="Dân tộc">
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="form-group col">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Mã BHYT</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="bhyt" type="email" class="form-control" id="inputEmail3" placeholder="Mã BHYT">
+                                    </div>
+                                  </div>
+                                  <div class="form-group col">
+                                    <label for="inputPassword3" class="col-sm-4 col-form-label">Địa chỉ</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="address" type="text" class="form-control" id="inputPassword3" placeholder="Địa chỉ">
+                                    </div>
+                                  </div>
+                                </div><br>
+                                <div class="row">
+                                  <div class="form-group col">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Ngày vào viện</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="fromDate" type="date" class="form-control" id="inputVaoVien" placeholder="Ngày vào viện">
+                                    </div>
+                                  </div>
+                                  <div class="form-group col">
+                                    <label for="inputPassword3" class="col-sm-4 col-form-label">Ngày ra viện</label>
+                                    <div class="col-sm-10">
+                                      <input formControlName="toDate" type="date" class="form-control" id="inputRaVien" placeholder="Ngày ra viện">
+                                    </div>
+                                  </div>
+                                </div><br>
+                                
+                                <div class="form-group">
+                                  <label for="exampleFormControlTextarea1">Lý do chẩn đoán</label>
+                                  <textarea formControlName="medicalSummary" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                </div><br>
+
+                                <div class="row">
+                                  <div class="form-group col-6 d-flex align-items-end">
+                                    <label for="inputEmail43" class="col-sm-2 col-form-label">Thuốc</label>
+                                    <div class="col">
+                                      <select class="form-control" (change)="changeMedicine($event,1)">
+                                        <option *ngFor="let item of lmedicineAPI" [value]="item.id">
+                                          {{item.name}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="form-group col-auto d-flex align-items-end">
+                                    <button type="button" class="btn btn-primary">+</button>
+                                  </div> -->
+                                </div><br>
+                                <div class="row" *ngIf="lmedicine.length > 0">
+                                  <table style="margin-left: 5%;">
+                                    <thead>
+                                      <tr>
+                                        <th>STT</th>
+                                        <th>Tên thuốc</th>
+                                        <th>Giá</th>
+                                        <td>Số lượng</td>
+                                        <th>Thành tiền</th>
+                                        <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of lmedicine;index as idx">
+                                        <td>{{idx+1}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.money}}</td>
+                                        <td>
+                                          <input type="number" min="0" (change)="calculateTotalMoney()" [max]="item.quantity" [(ngModel)]="item.realQuantity" style="width: 60px;" name="quantity" [ngModelOptions]="{standalone: true}"/>
+                                        </td>
+                                        <td>{{item.realQuantity * item.money}}</td>
+                                        <td>
+                                          <button type="button" (click)="changeMedicine(item,-1)" class="btn btn-danger">-</button>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                                <div class="row">
+                                  <div class="form-group col-6 d-flex align-items-end">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Dịch vụ</label>
+                                    <div class="col">
+                                      <select class="form-control" (change)="changeService($event,1)">
+                                        <option *ngFor="let item of lserviceAPI" [value]="item.id">
+                                          {{item.name}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="form-group col-auto d-flex align-items-end">
+                                    <button type="button" class="btn btn-primary">+</button>
+                                  </div> -->
+                                </div>
+
+                                <div class="row" *ngIf="lservice.length > 0">
+                                  <table style="margin-left: 5%;">
+                                    <thead>
+                                      <tr>
+                                        <th>STT</th>
+                                        <th>Tên dịch vụ</th>
+                                        <th></th>
+                                        <th style="width: 13%;"></th>
+                                        <th>Giá</th>
+                                        <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of lservice;index as idx">
+                                        <td>{{idx+1}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{item.money}}</td>
+                                        <td>
+                                          <button type="button" (click)="changeService(item,-1)" class="btn btn-danger">-</button>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                              </form>
+
+
+
+
+                            </div>
+                            <hr>
+                            <h3 style="text-align: right;">Tổng tiền: {{totalMoney}}</h3>
+
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="xacnhankham()">Xác nhận</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  
+                      <div class="modal fade" id="basicModaltb" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h2 class="modal-title">Xác nhận khám thất bại cho lịch hẹn có id: {{item.id}}</h2>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Ngày khám : {{item.date}}<br><br>
+                              Tên bệnh nhân: {{item.name}}
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                              <button type="button" class="btn btn-primary"data-bs-dismiss="modal" (click)="xacnhan(item.id,'SUCCESS')" >Xác nhận</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </td>
+                
+            </tr>
+            
+        </tbody>
+    </table>
+
+    
+</ng-template>

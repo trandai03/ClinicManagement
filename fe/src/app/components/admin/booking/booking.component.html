@@ -1,0 +1,241 @@
+<main id="main" class="main">
+    <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
+      <h1>Danh sách các lịch hẹn</h1>
+    </div>
+    <!-- End Page Title -->
+  
+    <!-- <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
+      data-bs-target="#basicModal">
+      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+    </button> -->
+    <br>
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body" style="margin-top: 20px;">         
+              <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- End #main -->
+  
+  <!-- // Day la modal xem thonng tin chi tiet chuyen ngành-->
+  <div class="card">
+    <div class="card-body" style="padding: 0px">
+  
+      <!-- <div class="modal fade" id="basicModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Thêm bài mới</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3">
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Tiêu đề</label>
+                  <input type="text" class="form-control" id="inputName5" />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputEmail5" class="form-label">Nội dung</label>
+                  <textarea class="form-control" id="inputEmail5" style="height: 120px"></textarea>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputPassword5" class="form-label">Hình ảnh</label>
+                  <input type="file" class="form-control" id="inputPassword5" />
+                </div>
+                <div class="col-12">
+                  <label>Preview image:</label> &nbsp;&nbsp;
+                  <img src="https://tamanhhospital.vn/wp-content/uploads/2020/11/icon-tieuhoa.png" alt=""
+                    style="height: 100px; width: 100px" />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- End Basic Modal-->
+      <div class="modal fade" id="basicModalxem">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Thông tin chi tiết lịch hẹn</h2>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3">
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Tên bệnh nhân</label>
+                  <input [value]="itemout.name" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                    <label for="inputName5" class="form-label">Ngày sinh</label>
+                    <input [value]="itemout.dob" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Giới tính</label>
+                  <input [value]="itemout.gender" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Email</label>
+                  <input [value]="itemout.email" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Phone</label>
+                  <input [value]="itemout.phone" type="text" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputEmail5" class="form-label">Ghi chú</label>
+                  <textarea [value]="itemout.note" class="form-control" id="inputEmail5" style="height: 120px" readonly></textarea>
+                </div>
+                <div class="col-md-12">
+                    <label for="inputName55" class="form-label">Ngày khám</label>
+                    <input [value]="itemout.date" type="text" class="form-control" id="inputName55" readonly />
+                  </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Basic Modal-->
+      <!-- <div class="modal fade" id="basicModalsua">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Cập nhật thông tin bài đăng</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3">
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">Tiêu đề</label>
+                  <input type="text" [value]="itemout.title" class="form-control" id="inputName5" readonly />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputEmail5" class="form-label">Nội dung</label>
+                  <textarea [value]="itemout.content" class="form-control" id="inputEmail5" style="height: 120px" readonly></textarea>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputPassword5" class="form-label">Hình ảnh</label>
+                  <input type="file" class="form-control" id="inputPassword5" />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Hủy
+              </button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- End Basic Modal-->
+  
+      <div class="modal fade" id="basicModalxoa" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Bạn có muốn xóa lịch hẹn có id: {{itemout.id}}</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Ngày khám : {{itemout.date}}<br>
+              Email: {{itemout.email}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="xoa(itemout.id)">Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Basic Modal-->
+    </div>
+  </div>
+  
+  <ng-template #loading>
+    <div class="spinner-border" style="width: 100px; height: 100px;margin-left: 48%;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </ng-template>
+  
+  <ng-template #loaded>
+    <!-- Table with hoverable rows -->
+    <table datatable [dtOptions]="dtoption" [dtTrigger]="dtTrigger" class="table table-hover">
+      <thead>
+        <tr>
+          <th style="text-align: center;">Id</th>
+          <th style="text-align: center;">Tên bệnh nhân</th>
+          <th style="text-align: center;">Ngày sinh</th>
+          <th style="text-align: center;">Giới tính</th>
+          <th style="text-align: center;" >Ngày khám</th>
+          <th style="text-align: center;" >Tên bác sĩ</th>
+          <th style="text-align: center;">Chuyên ngành</th>
+          <th style="text-align: center;">Trạng thái</th>
+          <th style="text-align: center;">Hành động</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr *ngFor="let item of lbooking">
+          <th>{{item.id}}</th>
+          <td>{{item.name}}</td>
+          <td>{{item.dob}}</td>
+          <th>{{item.gender}}</th>
+          <td>{{item.date}}</td>
+          <td>{{item.nameDoctor}}</td>
+          <td>{{item.major}}</td>
+          <td>Chờ xác nhận</td>
+          <td>
+            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+              data-bs-target="#basicModalxem" (click)="xem(item)">
+              <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
+            <!-- <button type="button" class="btn btn-success rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+              data-bs-target="#basicModalsua">
+              <i class="bi bi-check-lg"></i></button>&nbsp;&nbsp; -->
+            <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+              data-bs-target="#basicModalxoa">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+  
+      </tbody>
+    </table>
+    <!-- End Table with hoverable rows -->
+    <!-- <div class="card">
+        <div class="card-body"> -->
+    <!-- <nav aria-label="Page navigation example">
+      <ul class="pagination" style="justify-content: center; margin-top: 20px">
+        <li class="page-item">
+          <a class="page-link" href="#">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav> -->
+    <!-- End Basic Pagination -->
+  </ng-template>

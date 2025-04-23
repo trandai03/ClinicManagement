@@ -1,0 +1,49 @@
+<main>
+    <div class="banner_area">
+        <div class="banner_area_img">
+            <img src="./assets/images/chuyen-khoa-benh-vien-tam-anh.jpg" alt="">
+        </div>
+    </div>
+
+    <!-- <div class="form_search_area">
+        <div class="inner_form_search_area">
+            <form action="" class="form_search">
+                <input type="text" class="form_search_input" placeholder="Nhập chuyên khoa" [(ngModel)]="keyword">
+                <button type="submit"><i class="fa-solid fa-magnifying-glass search_icon" (click)="onSearch()"></i></button>
+            </form>
+        </div>
+    </div> -->
+
+    <p class="section_title">DANH SÁCH CHUYÊN KHOA</p>
+
+    <div class="list_major_area">
+        <div class="inner_section_area">
+            <div class="pure-g">
+                    <div class="pure-u-md-1-4 pure-u-1-2" *ngFor="let item of listMajor | async">
+                        <div class="list_major_item">
+                            <a href="https://tamanhhospital.vn/chuyen-khoa/trung-tam-mat/">
+                                <div class="major_item_image">
+                                    <img [src]="item.image" alt="">
+                                </div>
+                                <p class="major_item_text">{{item.name}}</p>
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- <nav aria-label="Page navigation example">
+        <ul class="pagination" style="justify-content: center; margin-top: 40px; margin-bottom: 30px;">
+          <li class="page-item">
+            <a class="page-link" href="#">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav> -->
+      <!-- End Basic Pagination -->
+</main>

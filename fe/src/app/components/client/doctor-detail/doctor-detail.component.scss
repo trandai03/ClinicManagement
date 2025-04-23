@@ -1,0 +1,169 @@
+.banner_area {
+    background-color: #102E9E;
+    height: 390px;
+    width: 100%;
+}
+
+.doctorblog_main_area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: -300px;
+}
+
+.inner_doctorblog {
+    width: 80%;
+    height: auto;
+}
+
+.doctorblog_image {
+    width: 100%;
+    background-color: rgb(238, 235, 235);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.doctorblog_image img {
+    width: 100%;
+}
+
+.text_transition {
+    color: rgb(203, 203, 203);
+}
+
+.doctorblog_hospital {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.doctorblog_achievement_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.item_first {
+    border-right: 2px solid gray;
+}
+
+.item_second {
+    border-right: 2px solid gray;
+}
+
+.doctorblog_achievement_icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: rgb(235, 227, 227);
+}
+
+.doctorblog_achievement_description {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.doctorblog_achievement_value {
+    font-size: 32px;
+}
+
+.doctorblog_description {
+    margin-top: 100px;
+}
+
+.doctorblog_description p {
+    line-height: 25px;
+    font-size: 20px;
+}
+
+.doctorblog_description button {
+    background-color: #1691E2;
+    border: 2px solid #1691E2;
+    margin-top: 20px;
+    padding: 20px 40px;
+    border-radius: 25px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.doctorblog_description button:hover {
+    background-color: white;
+    color: #1691E2;
+    transition: all 0.5s ease;
+}
+
+.doctorblog_second_section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 120px;
+    margin-bottom: 50px;
+}
+
+.doctorblog_qualification {
+    width: 70%;
+    border: 2px solid #102E9E;
+    border-radius: 25px;
+    box-shadow: 1px 0 18px rgba(0, 0, 0, .2);
+    padding: 30px 40px;
+}
+
+.doctorblog_qualification_bold {
+    line-height: 25px;
+    font-size: 20px;
+    color: rgb(29, 29, 29);
+    font-weight: 500;
+}
+
+.doctorblog_qualification_none {
+    line-height: 25px;
+    font-size: 20px;
+    color: #555555;
+}
+
+@media screen and (max-width: 1024px) {
+    .text_transition {
+        color: rgb(30, 29, 29);
+    }
+
+    .doctorblog_name h1 {
+        color: #102E9E;
+    }
+
+    .doctorblog_description {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .will-hidden {
+        display: none;
+    }
+
+    .doctorblog_qualification {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .doctorblog_second_section {
+        margin-top: 70px;
+    }
+    
+    .doctorblog_qualification_bold {
+        line-height: 18px;
+        font-size: 15px;
+    }
+    
+    .doctorblog_qualification_none {
+        line-height: 18px;
+        font-size: 15px;
+    }
+
+    .doctorblog_achievement_description {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+}
+

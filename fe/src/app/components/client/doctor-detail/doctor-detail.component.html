@@ -1,0 +1,115 @@
+<main>
+    <div class="banner_area"></div>
+    <div class="doctorblog_main_area">
+        <div class="inner_doctorblog">
+            <div class="doctorblog_first_section">
+                <div class="pure-g">
+                    <div class="pure-u-lg-11-24 pure-u-1-1">
+                        <div class="doctorblog_image">
+                            <img [src]="doctor.avatar" alt="">
+                        </div>
+                    </div>
+                    <div class="pure-u-lg-1-24 will-hidden"></div>
+                    <div class="pure-u-lg-1-2 pure-u-1-1">
+                        <div class="doctorblog_infor">
+                            <div class="doctorblog_name">
+                                <h1 class="text_transition">{{doctor.fullName}}</h1>
+                            </div>
+                            <div class="doctorblog_hospital">
+                                <p class="text_transition">Bệnh viện Tâm Anh Hà Nội</p>
+                            </div>
+                            <div class="doctorblog_achievement">
+                                <div class="pure-g">
+                                    <div class="pure-u-1-3">
+                                        <div class="doctorblog_achievement_item item_first">
+                                            <i class="fa-solid fa-stethoscope doctorblog_achievement_icon text_transition"></i>
+                                            <p class="doctorblog_achievement_description text_transition">Kinh nghiệm
+                                            </p>
+                                            <p class="doctorblog_achievement_value text_transition">8+</p>
+                                        </div>
+                                    </div>
+                                    <div class="pure-u-1-3">
+                                        <div class="doctorblog_achievement_item item_second text_transition">
+                                            <i
+                                                class="fa-solid fa-user-check doctorblog_achievement_icon text_transition"></i>
+                                            <p class="doctorblog_achievement_description text_transition">Bệnh nhân</p>
+                                            <p class="doctorblog_achievement_value text_transition">5K</p>
+                                        </div>
+                                    </div>
+                                    <div class="pure-u-1-3">
+                                        <div class="doctorblog_achievement_item text_transition">
+                                            <i
+                                                class="fa-solid fa-award doctorblog_achievement_icon text_transition"></i>
+                                            <p class="doctorblog_achievement_description text_transition">Giải thưởng
+                                            </p>
+                                            <p class="doctorblog_achievement_value text_transition">6</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="doctorblog_description">
+                            <p>{{doctor.description}}</p>
+                            <button type="button" (click)="an = !an">Đặt lịch khám</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="doctorblog_second_section">
+                <div class="doctorblog_qualification">
+                    <div class="doctorblog_qualification_row">
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <p class="doctorblog_qualification_bold"><b>Chuyên khoa:</b></p>
+                            </div>
+                            <div class="pure-u-2-3">
+                                <p class="doctorblog_qualification_none">Hỗ trợ sinh sản</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="doctorblog_qualification_row">
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <p class="doctorblog_qualification_bold"><b>Chuyên khoa:</b></p>
+                            </div>
+                            <div class="pure-u-2-3">
+                                <p class="doctorblog_qualification_none">Hỗ trợ sinh sản</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="doctorblog_qualification_row">
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <p class="doctorblog_qualification_bold"><b>Trình độ:</b></p>
+                            </div>
+                            <div class="pure-u-2-3">
+                                <p class="doctorblog_qualification_none">Tiến sĩ - Bác sĩ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="doctorblog_qualification_row">
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <p class="doctorblog_qualification_bold"><b>Quá trình đào tạo:</b></p>
+                            </div>
+                            <div class="pure-u-2-3">
+                                <p class="doctorblog_qualification_none">1990 – 1996: Bác sĩ Đa khoa – Đại học Y Hà Nội</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="doctorblog_qualification_row">
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <p class="doctorblog_qualification_bold"><b>Ngày làm việc:</b></p>
+                            </div>
+                            <div class="pure-u-2-3">
+                                <p class="doctorblog_qualification_none">Thứ 2 - Thứ 4 - Thứ 6</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-schedule [ktra]="an" [ok]="true"></app-schedule>
+</main>

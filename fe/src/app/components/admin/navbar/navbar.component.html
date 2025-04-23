@@ -1,0 +1,89 @@
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="home">
+        <i class="bi bi-house-fill"></i>
+        <span>Trang chủ</span>
+      </a>
+    </li>
+    <!-- End Dashboard Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="article">
+        <i class="bi bi-chat-text-fill"></i>
+        <span>Quản lý tin tức</span>
+      </a>
+    </li>
+    <!-- End Dashboard Nav -->
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#components-nav1"
+        data-bs-toggle="collapse"
+      >
+        <i class="bi bi-person-fill"></i><span>Quản lý bác sĩ</span
+        ><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="components-nav1"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a routerLink="doctors/true">
+            <i class="bi bi-circle"></i><span>Danh sách bác sĩ đang làm</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="doctors/false">
+            <i class="bi bi-circle"></i><span>Danh sách bác sĩ đã rời</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End Components Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="major">
+        <i class="bi bi-grid"></i>
+        <span>Quản lý chuyên khoa</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="booking">
+        <i class="bi bi-calendar-day"></i>
+        <span>Quản lý lịch hẹn</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="history">
+        <i class="bi bi-clock"></i>
+        <span>Quản lý lịch hẹn đã khám</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="medical-service">
+        <i class="bi bi-life-preserver"></i>
+        <span>Quản lý dịch vụ</span>
+      </a>
+    </li>
+    <!-- <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="history">
+        <i class="bi bi-prescription2"></i>
+        <span>Quản lý loại thuốc</span>
+      </a>
+    </li> -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="medicine">
+        <i class="bi bi-capsule"></i>
+        <span>Quản lý thuốc</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="contact">
+        <i class="bi bi-chat-right-quote-fill"></i>
+        <span>Quản lý phản hồi</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+<!-- End Sidebar-->
