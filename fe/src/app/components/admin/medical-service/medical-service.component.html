@@ -4,12 +4,13 @@
     </div>
     <!-- End Page Title -->
   
-    <!-- <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
-      data-bs-target="#basicModal">
-      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+    <!-- Button for adding new medical service -->
+    <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
+      data-bs-target="#basicModalAdd">
+      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm dịch vụ mới
     </button>
     <br>
-    <br> -->
+    <br>
     <br>
   
     <section class="section">
@@ -39,9 +40,9 @@
                       <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
                         data-bs-target="#basicModalxem" (click)="xem(item)">
                         <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
-                      <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
-                        data-bs-target="#basicModalsua">
-                        Sửa</button>&nbsp;&nbsp; -->
+                      <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+                        data-bs-target="#basicModalEdit">
+                        <i class="bi bi-pencil"></i></button>&nbsp;&nbsp;
                       <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
                         data-bs-target="#basicModalxoa">
                         <i class="bi bi-trash3"></i>
@@ -114,6 +115,72 @@
           </div>
         </div>
       </div><!-- End Basic Modal-->
+
+      <div class="modal fade" id="basicModalAdd" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Thêm dịch vụ mới</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3" #addMedicalServiceForm="ngForm">
+                <div class="col-md-12">
+                  <label for="medicalServiceName" class="form-label">Tên dịch vụ<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="newMedicalService.name" type="text" class="form-control" id="medicalServiceName" name="name" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="medicalServicePrice" class="form-label">Giá tiền<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="newMedicalService.money" type="number" class="form-control" id="medicalServicePrice" name="money" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="medicalServiceDescription" class="form-label">Mô tả</label>
+                  <textarea [(ngModel)]="newMedicalService.description" class="form-control" id="medicalServiceDescription" name="description" style="height: 120px"></textarea>
+                </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" [disabled]="!addMedicalServiceForm.valid" (click)="addMedicalService()" data-bs-dismiss="modal">Thêm dịch vụ</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Add Medical Service Modal-->
+
+      <div class="modal fade" id="basicModalEdit" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Sửa thông tin dịch vụ</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3" #editMedicalServiceForm="ngForm">
+                <div class="col-md-12">
+                  <label for="editMedicalServiceName" class="form-label">Tên dịch vụ<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="itemout.name" type="text" class="form-control" id="editMedicalServiceName" name="name" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="editMedicalServicePrice" class="form-label">Giá tiền<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="itemout.money" type="number" class="form-control" id="editMedicalServicePrice" name="money" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="editMedicalServiceDescription" class="form-label">Mô tả</label>
+                  <textarea [(ngModel)]="itemout.description" class="form-control" id="editMedicalServiceDescription" name="description" style="height: 120px"></textarea>
+                </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" [disabled]="!editMedicalServiceForm.valid" (click)="updateMedicalService()" data-bs-dismiss="modal">Cập nhật</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Edit Medical Service Modal-->
     </div>
   </div>
   
@@ -122,5 +189,4 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </ng-template>
-  
-  
+

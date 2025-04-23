@@ -18,23 +18,23 @@ export class MedicalServiceService {
     return this.http.get<apiResponse<any>>(`${this.apiUrl}api/v1/medicalService`);
   }
 
-  createMedicalService(
-    name: string,
-    dob: string,
-    phone: string,
-    email: string,
-    note: string
-  ) {
+  createMedicalService(name: string, money: number, description: string) {
     return this.http.post(`${this.apiUrl}api/v1/medicalService`, {
       name,
-      dob,
-      phone,
-      email,
-      note,
+      money,
+      description
+    });
+  }
+
+  updateMedicalService(id: number, name: string, money: number, description: string) {
+    return this.http.put(`${this.apiUrl}api/v1/medicalService/${id}`, {
+      name,
+      money,
+      description
     });
   }
 
   deleteMedicalService(id: number) {
-    return this.http.delete(`${this.apiUrl}api/v1/medical-service/${id}`);
+    return this.http.delete(`${this.apiUrl}api/v1/medicalService/${id}`);
   }
 }

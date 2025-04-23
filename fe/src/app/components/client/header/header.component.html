@@ -1,128 +1,130 @@
 <header class="header_all">
-    <div class="header">
-        <div class="inner_header">
-            <div class="header_left_logo">
-                <a href="#">
-                    <img src="./assets/img/logo-ta.png" alt="Tâm Anh hospital">
-                </a>
+  <div class="header">
+    <div class="inner_header">
+      <div class="header_left_logo">
+        <a href="#">
+          <img src="./assets/img/logo-ta.png" alt="Tâm Anh hospital">
+        </a>
+      </div>
+      <div class="header_right">
+        <div class="header_right_top">
+          <div class="header_right_online">
+            <a href="#">
+              <img src="./assets/img/khám online.png" alt="Khám online">
+            </a>
+          </div>
+          <div class="header_right_hospitalInfor">
+            <div class="header_right_hanoi">
+              <a href="#">
+                <img src="./assets/img/hanoiInfor.png" alt="Bệnh viện Tâm Anh Hà Nội">
+              </a>
             </div>
-            <div class="header_right">
-                <div class="header_right_top">
-                    <div class="header_right_online">
-                        <a href="#">
-                            <img src="./assets/img/khám online.png" alt="Khám online">
-                        </a>
-                    </div>
-                    <div class="header_right_hospitalInfor">
-                        <div class="header_right_hanoi">
-                            <a href="#">
-                                <img src="./assets/img/hanoiInfor.png" alt="Bệnh viện Tâm Anh Hà Nội">
-                            </a>
-                        </div>
-                        <div class="header_right_tphcm">
-                            <a href="#">
-                                <img src="./assets/img/tphcmInfor.png" alt="Bệnh viện Tâm Anh TP.HCM">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="header_right_navbar">
-                    <ul class="header_right_list">
-                        <li>
-                            <span class="header_right_icon">
-                                <a href="#">
-                                    <img src="./assets/img/icon_support.png" alt="Hỏi đáp">
-                                </a>
-                            </span>
-                            <span class="header_right_text">
-                                <a href="#">
-                                    Hỏi đáp
-                                </a>
-                            </span>
-                        </li>
-                        <li>
-                            <span class="header_right_icon">
-                                <a href="#">
-                                    <img src="./assets/img/icon_calendar.png" alt="Đặt lịch khám">
-                                </a>
-                            </span>
-                            <span class="header_right_text">
-                                <a href="#">
-                                    Đặt lịch khám
-                                </a>
-                            </span>
-                        </li>
-                        <li>
-                            <span class="header_right_icon">
-                                <a href="#">
-                                    <img src="./assets/img/icon_customer.png" alt="Đăng nhập / Đăng ký">
-                                </a>
-                            </span>
-                            <span class="header_right_text">
-                                <a *ngIf="roleUserLogin!=3" routerLink="dang-nhap">
-                                    Đăng nhập / Đăng ký
-                                </a>
-                               <a *ngIf="roleUserLogin==3" class="user-profile-link">
-                                  <span>{{ fullnameUserLogin }} <i class="fas fa-chevron-down"></i></span>
-                                  <div class="user-dropdown">
-
-                                      <a routerLink="profile">
-                                          <i class="fas fa-user-circle"></i> Hồ sơ cá nhân
-                                      </a>
-                                      <a (click)="signout()" class="logout-link">
-                                          <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                                      </a>
-                                  </div>
-                                </a>
-                            </span>
-                        </li>
-                        <li *ngIf="roleUserLogin!=3">
-                            <span class="header_right_icon">
-                                <a href="#">
-                                    <img src="./assets/img/icon_customer.png" alt="Đăng nhập / Đăng ký">
-                                </a>
-                            </span>
-                            <span class="header_right_text">
-                                <a  routerLink="/login">
-                                    Đăng nhập (Bác sĩ)
-                                </a>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
+            <div class="header_right_tphcm">
+              <a href="#">
+                <img src="./assets/img/tphcmInfor.png" alt="Bệnh viện Tâm Anh TP.HCM">
+              </a>
             </div>
-            <button class="mobile-toggle" (click)="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
+          </div>
         </div>
+        <div class="header_right_navbar">
+          <ul class="header_right_list">
+            <li>
+              <span class="header_right_icon">
+                <a href="#">
+                  <img src="./assets/img/icon_support.png" alt="Hỏi đáp">
+                </a>
+              </span>
+              <span class="header_right_text">
+                <a href="#">
+                  Hỏi đáp
+                </a>
+              </span>
+            </li>
+            <li>
+              <span class="header_right_icon">
+                <a href="#">
+                  <img src="./assets/img/icon_calendar.png" alt="Đặt lịch khám">
+                </a>
+              </span>
+              <span class="header_right_text">
+                <a href="#">
+                  Đặt lịch khám
+                </a>
+              </span>
+            </li>
+            <li>
+
+              <span class="header_right_text">
+                <a *ngIf="roleUserLogin!=3" routerLink="dang-nhap">
+                  <span class="header_right_icon">
+                    <a href="#">
+                      <img src="./assets/img/icon_customer.png" alt="Đăng nhập / Đăng ký">
+                    </a>
+                  </span>
+                  Đăng nhập / Đăng ký
+                </a>
+                <a *ngIf="roleUserLogin==3" class="user-profile-link">
+                  <span>{{ fullnameUserLogin }} <i class="fas fa-chevron-down"></i></span>
+                  <div class="user-dropdown">
+
+                    <a routerLink="profile">
+                      <i class="fas fa-user-circle"></i> Hồ sơ cá nhân
+                    </a>
+                    <a (click)="signout()" class="logout-link">
+                      <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </a>
+                  </div>
+                </a>
+              </span>
+            </li>
+            <li *ngIf="roleUserLogin!=3">
+
+              <span class="header_right_text">
+                <a routerLink="/login">
+                  <span class="header_right_icon">
+                    <a href="#">
+                      <img src="./assets/img/icon_customer.png" alt="Đăng nhập / Đăng ký">
+                    </a>
+                  </span>
+                  Đăng nhập (Bác sĩ)
+                </a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
-    <div class="navbar">
-        <ul class="navbar_menu" [ngClass]="{'active': isMobileMenuOpen}">
-            <li>
-                <a routerLink="trang-chu" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-                    <i class="fas fa-home"></i> Giới thiệu
-                </a>
-            </li>
-            <li>
-                <a routerLink="chuyen-khoa" routerLinkActive="active-link">
-                    <i class="fas fa-stethoscope"></i> Chuyên khoa
-                </a>
-            </li>
-            <li>
-                <a routerLink="danh-muc-bac-si" routerLinkActive="active-link">
-                    <i class="fas fa-user-md"></i> Bác sĩ
-                </a>
-            </li>
-            <li>
-                <a routerLink="tin-tuc" routerLinkActive="active-link">
-                    <i class="fas fa-newspaper"></i> Tin tức
-                </a>
-            </li>
-            <li>
-                <a routerLink="lien-he" routerLinkActive="active-link">
-                    <i class="fas fa-envelope"></i> Liên hệ
-                </a>
-            </li>
-        </ul>
-    </div>
+  </div>
+  <div class="navbar">
+    <ul class="navbar_menu" [ngClass]="{'active': isMobileMenuOpen}">
+      <li>
+        <a routerLink="trang-chu" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+          <i class="fas fa-home"></i> Giới thiệu
+        </a>
+      </li>
+      <li>
+        <a routerLink="chuyen-khoa" routerLinkActive="active-link">
+          <i class="fas fa-stethoscope"></i> Chuyên khoa
+        </a>
+      </li>
+      <li>
+        <a routerLink="danh-muc-bac-si" routerLinkActive="active-link">
+          <i class="fas fa-user-md"></i> Bác sĩ
+        </a>
+      </li>
+      <li>
+        <a routerLink="tin-tuc" routerLinkActive="active-link">
+          <i class="fas fa-newspaper"></i> Tin tức
+        </a>
+      </li>
+      <li>
+        <a routerLink="lien-he" routerLinkActive="active-link">
+          <i class="fas fa-envelope"></i> Liên hệ
+        </a>
+      </li>
+    </ul>
+  </div>
 </header>

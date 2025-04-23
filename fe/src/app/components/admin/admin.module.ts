@@ -13,7 +13,7 @@ import { BookingComponent } from './booking/booking.component';
 import { HistoryComponent } from './history/history.component';
 import { ContactComponent } from './contact/contact.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChartModule } from "primeng/chart";
 import { DataTablesModule } from "angular-datatables"
 import { ToastrModule } from "ngx-toastr";
@@ -30,6 +30,7 @@ import { MedicalServiceComponent } from './medical-service/medical-service.compo
       ReactiveFormsModule,
       ChartModule,
       DataTablesModule,
-      ToastrModule
+      ToastrModule,
+      FormsModule
   ]})
   export class AdminModule {}

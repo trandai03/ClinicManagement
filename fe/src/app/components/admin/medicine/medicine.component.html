@@ -3,21 +3,20 @@
       <h1>Thuốc</h1>
     </div>
     <!-- End Page Title -->
-  
-    <!-- <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
-      data-bs-target="#basicModal">
-      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+
+    <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
+      data-bs-target="#basicModalAdd">
+      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm thuốc mới
     </button>
     <br>
-    <br> -->
     <br>
-  
+
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body" style="margin-top: 20px;">
-              
+
               <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
                 <thead class="text-center">
                   <tr>
@@ -43,19 +42,19 @@
                       <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
                         data-bs-target="#basicModalxem" (click)="xem(item)">
                         <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
-                      <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
-                        data-bs-target="#basicModalsua">
-                        Sửa</button>&nbsp;&nbsp; -->
+                      <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+                        data-bs-target="#basicModalEdit">
+                        <i class="bi bi-pencil"></i></button>&nbsp;&nbsp;
                       <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
                         data-bs-target="#basicModalxoa">
                         <i class="bi bi-trash3"></i>
                       </button>
                     </td>
                   </tr>
-            
+
                 </tbody>
               </table>
-  
+
             </div>
           </div>
         </div>
@@ -63,10 +62,10 @@
     </section>
   </main>
   <!-- End #main -->
-  
+
   <div class="card">
     <div class="card-body" style="padding: 0px">
-  
+
       <div class="modal fade" id="basicModalxem">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -108,7 +107,7 @@
           </div>
         </div>
       </div>
-  
+
       <div class="modal fade" id="basicModalxoa" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -126,15 +125,103 @@
           </div>
         </div>
       </div><!-- End Basic Modal-->
+
+      <div class="modal fade" id="basicModalAdd" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Thêm thuốc mới</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3" #addMedicineForm="ngForm">
+                <div class="col-md-12">
+                  <label for="medicineName" class="form-label">Tên thuốc<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="newMedicine.name" type="text" class="form-control" id="medicineName" name="name" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="medicinePrice" class="form-label">Giá tiền<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="newMedicine.money" type="number" class="form-control" id="medicinePrice" name="money" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="medicineQuantity" class="form-label">Số lượng<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="newMedicine.quantity" type="number" class="form-control" id="medicineQuantity" name="quantity" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="medicineUnit" class="form-label">Đơn vị<span class="text-danger">*</span>:</label>
+                  <select [(ngModel)]="newMedicine.unit" class="form-select" id="medicineUnit" name="unit" required>
+                    <option value="VI">VI</option>
+                    <option value="VIEN">VIEN</option>
+                  </select>
+                </div>
+                <div class="col-md-12">
+                  <label for="medicineDescription" class="form-label">Mô tả</label>
+                  <textarea [(ngModel)]="newMedicine.description" class="form-control" id="medicineDescription" name="description" style="height: 120px"></textarea>
+                </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" [disabled]="!addMedicineForm.valid" (click)="addMedicine()" data-bs-dismiss="modal">Thêm thuốc</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Add Medicine Modal-->
+
+      <div class="modal fade" id="basicModalEdit" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">Sửa thông tin thuốc</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Multi Columns Form -->
+              <form class="row g-3" #editMedicineForm="ngForm">
+                <div class="col-md-12">
+                  <label for="editMedicineName" class="form-label">Tên thuốc<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="itemout.name" type="text" class="form-control" id="editMedicineName" name="name" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="editMedicinePrice" class="form-label">Giá tiền<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="itemout.money" type="number" class="form-control" id="editMedicinePrice" name="money" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="editMedicineQuantity" class="form-label">Số lượng<span class="text-danger">*</span>:</label>
+                  <input [(ngModel)]="itemout.quantity" type="number" class="form-control" id="editMedicineQuantity" name="quantity" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="editMedicineUnit" class="form-label">Đơn vị<span class="text-danger">*</span>:</label>
+                  <select [(ngModel)]="itemout.unit" class="form-select" id="editMedicineUnit" name="unit" required>
+                    <option value="VI">VI</option>
+                    <option value="VIEN">VIEN</option>
+                  </select>
+                </div>
+                <div class="col-md-12">
+                  <label for="editMedicineDescription" class="form-label">Mô tả</label>
+                  <textarea [(ngModel)]="itemout.description" class="form-control" id="editMedicineDescription" name="description" style="height: 120px"></textarea>
+                </div>
+              </form>
+              <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" [disabled]="!editMedicineForm.valid" (click)="updateMedicine()" data-bs-dismiss="modal">Cập nhật</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End Edit Medicine Modal-->
     </div>
   </div>
-  
+
   <ng-template #loading>
     <div class="spinner-border" style="width: 90px; height: 90px;margin-left: 48%;" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </ng-template>
-  
+
   <ng-template #loaded>
     <!-- Table with hoverable rows -->
     <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
@@ -158,16 +245,16 @@
             <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal"
               data-bs-target="#basicModalxem" (click)="xem(item)">
               <i class="bi bi-eye"></i></button>&nbsp;&nbsp;
-            <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
-              data-bs-target="#basicModalsua">
-              Sửa</button>&nbsp;&nbsp; -->
+            <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
+              data-bs-target="#basicModalEdit">
+              <i class="bi bi-pencil"></i></button>&nbsp;&nbsp;
             <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" (click)="xem(item)"
               data-bs-target="#basicModalxoa">
               <i class="bi bi-trash3"></i>
             </button>
           </td>
         </tr>
-  
+
       </tbody>
     </table>
     <!-- End Table with hoverable rows -->

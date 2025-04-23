@@ -20,11 +20,16 @@ export class MedicineService {
 
   // name, quantity, money, description, unit = (VI,VIEN)
   createMedicine(name:string,quantity:number,money:number,description:string,unit:string) {
-    return this.http.post(`${this.apiUrl}api/v1/medicines`,{name,quantity,money,description,unit});
+    return this.http.post(`${this.apiUrl}api/v1/medicines/add`,{name,quantity,money,description,unit});
   }
 
   deleteMedicine(id : number) {
     return this.http.delete(`${this.apiUrl}api/v1/medicines/${id}`);
   }
-  
+
+  // Update an existing medicine
+  updateMedicine(id: number, name: string, quantity: number, money: number, description: string, unit: string) {
+    return this.http.put(`${this.apiUrl}api/v1/medicines/${id}`, {name, quantity, money, description, unit});
+  }
+
 }

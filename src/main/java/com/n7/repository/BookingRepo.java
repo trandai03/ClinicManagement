@@ -29,4 +29,15 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
             "AND DATE(b.date) = DATE(:date)")
     List<Booking> checkLich(Long idHour, Long idUser, Status status, Date date);
 
+    @Query("SELECT u FROM Booking u " +
+            "WHERE (:status IS NULL OR u.status = :status)" +
+            "AND u.date between :start and :end")
+    List<Booking> scanBooking(Date start, Date end, Status status);
+
+    @Query("SELECT b FROM Booking b " +
+           "WHERE b.status = :status " +
+           "AND DATE(b.date) >= DATE(:startDate) " +
+           "AND DATE(b.date) <= DATE(:endDate) " +
+           "ORDER BY b.date")
+    List<Booking> findUpcomingBookings(Status status, Date startDate, Date endDate);
 }

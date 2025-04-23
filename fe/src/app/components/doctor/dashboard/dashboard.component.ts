@@ -15,11 +15,11 @@ export class DashboardComponent {
   ngOnInit() {
     let date = new Date();
     let st = formatDate(date, 'dd/MM/yyyy', 'en-US')
-    this.bookingsv.getAllBooking('ACCEPTING',storageUtils.get('userId') || null,st,st,null).subscribe(res =>{
+    this.bookingsv.getAllBooking('ACCEPTING',storageUtils.get('userId') || null,st,null,null).subscribe(res =>{
       console.log('da chay: ', res)
       this.idsap = res.length;
     })
-    this.bookingsv.getAllBooking('CONFIRMING',storageUtils.get('userId') || null,st,st,null).subscribe(res =>{
+    this.bookingsv.getAllBooking('CONFIRMING',storageUtils.get('userId') || null,st,null,null).subscribe(res =>{
       this.idcho = res.length;
     })
   }

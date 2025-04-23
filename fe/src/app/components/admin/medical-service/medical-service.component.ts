@@ -22,6 +22,15 @@ export class MedicalServiceComponent {
     money: 0,
     description: ''
   };
+
+  // New medical service object for form binding
+  newMedicalService: MedicineService = {
+    id: 0,
+    name: '',
+    money: 0,
+    description: ''
+  };
+
   constructor(private medicalSv: MedicalServiceService) {}
 
   ngOnInit() {
@@ -59,6 +68,53 @@ export class MedicalServiceComponent {
       error(err) {
         alert('Đã xảy ra lỗi');
       },
+    });
+  }
+
+  // Add new medical service method
+  addMedicalService() {
+    this.medicalSv.createMedicalService(
+      this.newMedicalService.name,
+      this.newMedicalService.money,
+      this.newMedicalService.description
+    ).subscribe({
+      next: (response) => {
+        // Reset form after successful submission
+        this.newMedicalService = {
+          id: 0,
+          name: '',
+          money: 0,
+          description: ''
+        };
+
+        // Reload data to show the new service
+        this.loaddata();
+        alert('Thêm dịch vụ mới thành công');
+      },
+      error: (err) => {
+        console.error('Error adding medical service:', err);
+        alert('Đã xảy ra lỗi khi thêm dịch vụ mới');
+      }
+    });
+  }
+
+  // Update medical service method
+  updateMedicalService() {
+    this.medicalSv.updateMedicalService(
+      this.itemout.id,
+      this.itemout.name,
+      this.itemout.money,
+      this.itemout.description
+    ).subscribe({
+      next: (response) => {
+        // Reload data to show the updated service
+        this.loaddata();
+        alert('Cập nhật dịch vụ thành công');
+      },
+      error: (err) => {
+        console.error('Error updating medical service:', err);
+        alert('Đã xảy ra lỗi khi cập nhật dịch vụ');
+      }
     });
   }
 }

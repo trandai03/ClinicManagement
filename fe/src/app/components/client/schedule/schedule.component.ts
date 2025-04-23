@@ -27,7 +27,7 @@ export class ScheduleComponent {
   //ngayban : Ngày mà bác sĩ có lịch trùng
   ngayban : Schedules[] = []
   disableDate : Date[] = [];
-  selectedTime: string | null = null; 
+  selectedTime: string | null = null;
   submited=false;
   listMajor!:Observable<Major[]>;
   listDoctor!:Observable<Doctor[]>;
@@ -41,7 +41,7 @@ export class ScheduleComponent {
   constructor(private formbuilder : FormBuilder,private majorsv: MajorService,
     private doctorsv : DoctorService, private schesv : ScheduleService,private bookingsv : BookingService,
         private hoursv : HourService){};
-  
+
   ngOnInit() {
     this.addForm = this.formbuilder.group({
       name:['',Validators.compose([Validators.minLength(6),Validators.required])],
@@ -141,7 +141,7 @@ export class ScheduleComponent {
   }
 
   uncheckRadio() {
-    this.selectedTime = null; 
+    this.selectedTime = null;
   }
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     this.listHourTrung = [];
@@ -150,8 +150,8 @@ export class ScheduleComponent {
     // console.log('gia tri that:',isoString);
 
     console.log('vip: ' + isoString)
-    this.bookingsv.getAllBooking('PENDING',idUser,isoString,isoString,null).subscribe({
-      next : (value)=> {        
+    this.bookingsv.getAllBooking('ACCEPTING',idUser,isoString,isoString,null).subscribe({
+      next : (value)=> {
         console.log('gia tri value : ' + value)
         value.forEach(e => this.listHourTrung.push(e.idHour));
         this.listHour = this.hoursv.getAllHour();
