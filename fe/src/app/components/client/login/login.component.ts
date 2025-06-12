@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RegisterService } from 'src/app/services/register.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,58 +10,46 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  pendingSecond = 60;
-  check: boolean = true;
-
   loginForm!: FormGroup;
-  captchaForm!: FormGroup;
+  isLoading = false;
 
   constructor(
-    private registerSv: RegisterService,
+    private authService: AuthService,
     private toastSv: ToastrService,
-    private formbuilder: FormBuilder
+    private formbuilder: FormBuilder,
+    private router: Router
   ) {
     this.loginForm = this.formbuilder.group({
-      gmail: ['', Validators.compose([Validators.required, Validators.email])],
-    });
-    this.captchaForm = this.formbuilder.group({
-      captcha: ['', Validators.compose([Validators.required, Validators.email])],
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  clickSend() {
-    const gmail = this.loginForm.get('gmail')?.value;
-    console.log(gmail);
+  login() {
     if (this.loginForm.valid) {
-      this.registerSv.registerUser(gmail).subscribe(
-        (res) => {
-          this.toastSv.success(
-            'Vui lòng mã gmail ra để nhận mã xác thực',
-            'Success'
-          );
-          this.pendingSecond = 60;
-          this.check = false;
-          setInterval(() => {
-            if (this.pendingSecond > 0) {
-              this.pendingSecond--;
-              // if (this.pendingSecond == 0) {
-              //   this.check = true;
-              // }
-            }
-          }, 1000);
-        },
-        (error) => {
-          this.toastSv.error('Đã xảy ra lỗi', 'Error');
-        }
-      );
-    } else {
-      this.toastSv.error('form khong hop le', 'Error');
-    }
-  }
+      this.isLoading = true;
+      const username = this.loginForm.get('username')?.value;
+      const password = this.loginForm.get('password')?.value;
 
-  validateCaptcha() {
-    const captcha = this.captchaForm.get('captcha')?.value;
-    const gmail = this.loginForm.get('gmail')?.value;
-    this.registerSv.validateCapcha(gmail,captcha).subscribe();
+      this.authService.login(username, password).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response) {
+            this.toastSv.success('Đăng nhập thành công', 'Success');
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.toastSv.error('Tài khoản hoặc mật khẩu không chính xác', 'Error');
+          console.error('Login error:', error);
+        }
+      });
+    } else {
+      this.toastSv.error('Vui lòng điền đầy đủ thông tin', 'Error');
+      // Đánh dấu tất cả fields là đã touched để hiển thị lỗi
+      Object.keys(this.loginForm.controls).forEach(key => {
+        this.loginForm.get(key)?.markAsTouched();
+      });
+    }
   }
 }

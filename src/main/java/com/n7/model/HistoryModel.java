@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +25,9 @@ public class HistoryModel {
     private Long id;
     private String medicine;
 
-    private Date fromDate;
+    private LocalDateTime fromDate;
 
-    private Date toDate;
+    private LocalDateTime toDate;
 
     private String bhyt;
 

@@ -12,10 +12,97 @@ export interface Schedule {
   };
 }
 
-export type Schedules =  {
-  id: number,
-  date: string,
-  session:string;
+// Interface phù hợp với backend ScheduleModel
+export interface Schedules {
+  id: number;
+  date: string;
+  idHour: number; // Thêm field này từ backend ScheduleModel
+}
+
+// Interface cho DoctorScheduleHourDTO từ backend
+export interface DoctorScheduleHour {
+  id: number;
+  idUser: number;
+  idHour: number;
+  date: string;
+  status: string; // AVAILABLE, UNAVAILABLE, BUSY
+  note?: string;
+  hourName?: string;
+  doctorName?: string;
+  doctorMajor?: string;
+}
+
+// Interface cho time slot khi đặt theo ngày (move từ component)
+export interface TimeSlot {
+  hourId: number;
+  hourName: string;
+  doctorId: number;
+  doctorName: string;
+  doctorRank?: {
+    id: number;
+    name: string;
+    code: string;
+    basePrice: number;
+    description?: string;
+  };
+}
+
+// Interface cho client schedule booking
+export interface ScheduleBookingInfo {
+  scheduleId: number;
+  doctorId: number;
+  hourId: number;
+  date: string;
+  isAvailable: boolean;
+  isBooked: boolean;
+  bookingInfo?: any;
+}
+
+// Interface cho booking mode state management
+export interface BookingModeState {
+  mode: 'BY_DOCTOR' | 'BY_DATE';
+  isLoading: boolean;
+  error: string | null;
+  selectedDoctor: number | null;
+  selectedHour: number | null;
+  selectedSlot: TimeSlot | null;
+  availableSlots: TimeSlot[];
+  disabledDates: Date[];
+  doctorSchedules: Schedules[];
+}
+
+// Constants cho booking status - simplified
+export const BOOKING_STATUS = {
+  PENDING: 'PENDING',
+  CONFIRMING: 'CONFIRMING',
+  ACCEPTING: 'ACCEPTING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  CANCELLED: 'CANCELLED'
+} as const;
+
+// Constants cho schedule status
+export const SCHEDULE_STATUS = {
+  AVAILABLE: 'AVAILABLE',
+  UNAVAILABLE: 'UNAVAILABLE',
+  BUSY: 'BUSY'
+} as const;
+
+// Type guards để kiểm tra type safety
+export function isValidSchedule(obj: any): obj is Schedules {
+  return obj && 
+         typeof obj.id === 'number' && 
+         typeof obj.date === 'string' && 
+         typeof obj.idHour === 'number';
+}
+
+export function isValidTimeSlot(obj: any): obj is TimeSlot {
+  return obj && 
+         typeof obj.hourId === 'number' && 
+         typeof obj.hourName === 'string' && 
+         typeof obj.doctorId === 'number' && 
+         typeof obj.doctorName === 'string';
 }
 
 export const schedules: Schedule[] = [

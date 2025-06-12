@@ -11,6 +11,7 @@ import { ContactComponent } from "./contact/contact.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { MedicineComponent } from "./medicine/medicine.component";
 import { MedicalServiceComponent } from "./medical-service/medical-service.component";
+import { DoctorRankComponent } from "./doctor-rank/doctor-rank.component";
 
 
 const router: Routes = [
@@ -33,6 +34,10 @@ const router: Routes = [
     {
         path: 'major',
         component: MajorComponent
+    },
+    {
+        path: 'doctor-rank',
+        component: DoctorRankComponent
     },
     {
         path: 'booking',

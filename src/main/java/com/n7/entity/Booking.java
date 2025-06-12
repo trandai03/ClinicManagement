@@ -26,7 +26,7 @@ public class Booking {
     private String fullName;
 
     @Column(length = 20)
-    private String dob;
+    private LocalDateTime dob;
 
     @Column(length = 20)
     private String phone;
@@ -55,6 +55,30 @@ public class Booking {
     @Column
     private String token;
 
+    @Column(name = "total_amount")
+    private Long totalAmount;
+
+    @Column(name="room_number")
+    private String roomNumber;
+
+    @Column(name="checked_in_time")
+    private LocalDateTime checkedInTime;
+
+    @Column(name="start_time")
+    private LocalDateTime startTime;
+
+    @Column(name="end_time")
+    private LocalDateTime endTime;
+
+    @Column(name="paid_at")
+    private LocalDateTime paidAt;
+
+    @Column(name = "payment_status")
+    private String paymentStatus;
+
+    @Column(name="payment_method")
+    private String paymentMethod;
+
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
@@ -66,7 +90,7 @@ public class Booking {
     @ToString.Exclude
     private User user;
 
-    public Booking(String fullName, String dob, String phone, String email, Gender gender,
+    public Booking(String fullName, LocalDateTime dob, String phone, String email, Gender gender,
                    String address, Date date, Long idHour, Status status, String note, String token) {
         this.fullName = fullName;
         this.dob = dob;

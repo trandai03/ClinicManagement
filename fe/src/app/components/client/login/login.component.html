@@ -1,21 +1,59 @@
 <div class="container">
-    <h2 *ngIf="check">Đăng nhập vào hệ thống</h2>
-    <form *ngIf="check" [formGroup]="loginForm" (ngSubmit)="clickSend()">
-        <div class="mb-6">
-            <label for="gmail" class="form-label">Gmail: </label>
-            <input type="email" class="form-control" name="gmail" formControlName="gmail" required>
-        </div>
-        <button (click)="clickSend()"  type="button" class="btn">Đăng nhập</button>
-    </form>
-    <h2 *ngIf="!check">Nhập mã capcha chúng tôi vừa gửi qua email của bạn</h2>
-    <form *ngIf="!check" [formGroup]="captchaForm" (ngSubmit)="validateCaptcha()">
-        <div class="mb-6">
-            <label for="gmail" class="form-label">Mã capcha: </label>
-            <input type="text" formControlName="captcha" class="form-control" name="captcha" required>
-        </div>
-        <div style="display: flex;">
-            <button type="submit" class="btn">Gửi</button>
-            <button style="margin-left: 15px;" (click)="clickSend()" type="button" class="btn" [disabled]="pendingSecond > 0">Gửi lại captcha {{pendingSecond}}</button>
-        </div>
-    </form>
+  <h2>Đăng nhập vào hệ thống</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="mb-6">
+      <label for="username" class="form-label"
+        >Tên đăng nhập hoặc Email:
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        name="username"
+        formControlName="username"
+        required
+      />
+      <div
+        *ngIf="
+          loginForm.get('username')?.invalid &&
+          loginForm.get('username')?.touched
+        "
+        class="error-message"
+      >
+        Vui lòng nhập tên đăng nhập hoặc email
+      </div>
+    </div>
+    <div class="mb-6">
+      <label for="password" class="form-label">Mật khẩu: </label>
+      <input
+        type="password"
+        class="form-control"
+        name="password"
+        formControlName="password"
+        required
+      />
+      <div
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        Vui lòng nhập mật khẩu
+      </div>
+    </div>
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading">Đang đăng nhập...</span>
+        <span *ngIf="!isLoading">Đăng nhập</span>
+      </button>
+    </div>
+    <div class="register-link">
+      <p>Chưa có tài khoản? <a routerLink="/public/dang-ky">Đăng ký ngay</a></p>
+      <p><a routerLink="/public/quen-mat-khau">Quên mật khẩu?</a></p>
+    </div>
+  </form>
 </div>

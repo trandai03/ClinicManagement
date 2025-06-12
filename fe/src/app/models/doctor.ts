@@ -14,6 +14,13 @@ export interface Doctor {
         name:string,
         description: string,
         image:string
+    },
+    doctorRank: {
+        id: number,
+        name:string,
+        description: string,
+        code: string,
+        basePrice: number,
     }
 }
 

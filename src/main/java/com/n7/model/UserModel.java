@@ -1,6 +1,7 @@
 package com.n7.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.n7.entity.DoctorRank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,9 @@ public class UserModel {
     private Long roleId;
     private boolean enabled;
     private MajorModel major;
+    private DoctorRankModel doctorRank;
 
-    public UserModel(Long id, String avatar, String fullName, String userName,String phone, String email,String description, Long roleId, boolean enabled, MajorModel major, String tt) {
+    public UserModel(Long id, String avatar, String fullName, String userName,String phone, String email,String description, Long roleId, boolean enabled, MajorModel major,DoctorRankModel doctorRank, String tt) {
         this.id = id;
         this.avatar = avatar;
         this.fullName = fullName;
@@ -33,5 +35,6 @@ public class UserModel {
         this.enabled = enabled;
         this.major = major;
         this.trangthai = tt;
+        this.doctorRank = doctorRank;
     }
 }

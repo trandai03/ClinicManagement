@@ -5,6 +5,7 @@ import com.n7.entity.Booking;
 import com.n7.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -40,4 +41,18 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
            "AND DATE(b.date) <= DATE(:endDate) " +
            "ORDER BY b.date")
     List<Booking> findUpcomingBookings(Status status, Date startDate, Date endDate);
+
+    @Query("SELECT COUNT(b) FROM Booking b " +
+           "WHERE b.status = :status " +
+           "AND (:doctorId IS NULL OR b.user.id = :doctorId) " +
+           "AND (:start IS NULL OR b.date >= :start) " )
+    Integer countBookingByStatus(Status status, Long doctorId,Date start);
+
+    @Query("SELECT b.status, COUNT(b) FROM Booking b " +
+            "WHERE (:doctorId IS NULL OR b.user.id = :doctorId) " +
+            "AND (:status IS NULL OR b.status >= :status) " +
+            "AND (:start IS NULL OR b.date >= :start) " +
+            "GROUP BY b.status")
+    List<Object[]> countBookingsGroupedByStatus(@Param("doctorId") Long doctorId, @Param("start") Date start,@Param("status") Status status);
+
 }

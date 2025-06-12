@@ -6,8 +6,10 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject, filter, map, of, switchMap } from 'rxjs';
 import { Doctor } from 'src/app/models/doctor';
+import { DoctorRank } from 'src/app/models/doctorRank';
 import { Major } from 'src/app/models/major';
 import { DoctorService } from 'src/app/services/doctor.service';
+import { DoctorRankService } from 'src/app/services/doctorRank.service';
 import { MajorService } from 'src/app/services/major.service';
 
 @Component({
@@ -18,6 +20,7 @@ import { MajorService } from 'src/app/services/major.service';
 export class DoctorsComponent {
   listDoctor: any;
   listMajor!: Observable<Major[]>;
+  listDoctorRank!: Observable<DoctorRank[]>;
   addForm!: FormGroup;
   submited = false;
   title = '';
@@ -45,6 +48,13 @@ export class DoctorsComponent {
       description: '',
       image: '',
     },
+    doctorRank: {
+      id: 0,
+      name: '',
+      description: '',
+      code: '',
+      basePrice: 0,
+    },
     description: '',
     trangthai: '',
   };
@@ -53,6 +63,7 @@ export class DoctorsComponent {
     private doctorsv: DoctorService,
     private formbuilder: FormBuilder,
     private majorsv: MajorService,
+    private doctorRanksv: DoctorRankService,
     private changref: ChangeDetectorRef
   ) {}
 
@@ -84,6 +95,7 @@ export class DoctorsComponent {
         Validators.compose([Validators.required, Validators.minLength(10)]),
       ],
       majorId: ['', Validators.required],
+      doctorRankId: ['', Validators.required],
       file: ['', Validators.required],
       trangthai: [''],
     });
@@ -117,6 +129,9 @@ export class DoctorsComponent {
     });
     this.listMajor = this.majorsv.getAllMajors();
     this.listMajor.subscribe();
+    this.listDoctorRank = this.doctorRanksv.getAllDoctorRanks();
+    this.listDoctorRank.subscribe();
+    console.log("listDoctorRank", this.listDoctorRank);
   }
 
   get f() {
@@ -152,6 +167,7 @@ export class DoctorsComponent {
         email,
         description,
         majorId,
+        doctorRankId,
       } = this.addForm.value;
       const formda = new FormData();
       if (this.fileanh1 !== null) {
@@ -167,6 +183,7 @@ export class DoctorsComponent {
           email,
           description,
           majorId,
+          doctorRankId,
         })
       );
       const binaryString = String.fromCharCode(...utf8Array);
@@ -196,6 +213,7 @@ export class DoctorsComponent {
       email,
       description,
       majorId,
+      doctorRankId,
       trangthai,
     } = this.addForm.value;
     if (
@@ -220,6 +238,7 @@ export class DoctorsComponent {
           email,
           description,
           majorId,
+          doctorRankId,
           trangthai,
         })
       );
@@ -258,6 +277,7 @@ export class DoctorsComponent {
       email: this.itemout.email,
       phone: this.itemout.phone,
       majorId: this.itemout.major.id,
+      doctorRankId: this.itemout.doctorRank.id,
       description: this.itemout.description,
       trangthai: this.itemout.trangthai,
     });

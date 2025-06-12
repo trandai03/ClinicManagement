@@ -4,3 +4,7 @@
 
 ## ng add angular-datatables
 
+## ng serve
+
+## ng build
+

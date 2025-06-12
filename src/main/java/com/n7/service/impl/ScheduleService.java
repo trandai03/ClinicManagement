@@ -2,8 +2,8 @@ package com.n7.service.impl;
 
 import com.n7.entity.Schedule;
 import com.n7.entity.ScheduleUser;
-import com.n7.entity.User;
 import com.n7.model.ScheduleModel;
+import com.n7.repository.HourRepo;
 import com.n7.repository.ScheduleRepo;
 import com.n7.repository.ScheduleUserRepo;
 import com.n7.service.IScheduleService;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ScheduleService implements IScheduleService {
     private final ScheduleRepo scheduleRepo;
     private final ScheduleUserRepo scheduleUserRepo;
+    private final HourRepo hourRepo;
 
     public List<ScheduleModel> getAllBy(Date date, Long i) {
         Optional<Schedule> op = scheduleRepo.findByHour_IdAndDate(i,date);
@@ -43,4 +44,13 @@ public class ScheduleService implements IScheduleService {
         scheduleModel.setIdHour(schedule.getHour().getId());
         return scheduleModel;
     }
+
+    public void createSchedule(ScheduleModel scheduleModel) {
+        Schedule schedule = new Schedule();
+        schedule.setDate(ConvertTimeUtils.stringToDate(scheduleModel.getDate()));
+        schedule.setHour(hourRepo.findById(scheduleModel.getIdHour()).orElse(null));
+        scheduleRepo.save(schedule);
+    }
+
+
 }

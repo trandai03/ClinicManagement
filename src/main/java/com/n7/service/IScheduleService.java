@@ -10,4 +10,6 @@ public interface IScheduleService {
     ScheduleModel convertToModel(Schedule schedule);
     List<ScheduleModel> getAllSchedule(Long idDoctor);
     List<ScheduleModel> getAllBy(Date date, Long i);
+    void createSchedule(ScheduleModel scheduleModel);
+
 }

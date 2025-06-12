@@ -27,7 +27,7 @@ public class User {
     @Column(length = 100)
     private String username;
 
-    @Column(length = 100,nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(length = 20)
@@ -53,27 +53,51 @@ public class User {
     @Column(length = 50)
     private String captcha;
 
+    @Column(length = 6)
+    private String otp;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_rank_id",referencedColumnName = "id")
+    private DoctorRank doctorRank;
+
+    private LocalDateTime otpExpiryTime;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
-
     @ManyToOne
-    @JoinColumn(name = "role_id",referencedColumnName = "id")
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "major_id",referencedColumnName = "id")
+    @JoinColumn(name = "major_id", referencedColumnName = "id")
     private Major major;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScheduleUser> listSchedule = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Booking> listBooking = new ArrayList<>();
 
     @OneToOne
     private Profile profile;
+
+    public boolean isOTPValid(String inputOTP) {
+        return this.otp != null &&
+                this.otp.equals(inputOTP) &&
+                this.otpExpiryTime != null &&
+                LocalDateTime.now().isBefore(this.otpExpiryTime);
+    }
+
+    public boolean isOTPExpired() {
+        return this.otpExpiryTime == null || LocalDateTime.now().isAfter(this.otpExpiryTime);
+    }
+
+    public void clearOTP() {
+        this.otp = null;
+        this.otpExpiryTime = null;
+    }
 }

@@ -55,12 +55,9 @@ public class HistoryService {
     }
 
     private History convertDtoToEntity(HistoryDTO historyDTO, History history){
-        Date toDate = ConvertTimeUtils.stringToDate1(historyDTO.getToDate());
-        Date fromDate = ConvertTimeUtils.stringToDate1(historyDTO.getFromDate());
-        Date dob = ConvertTimeUtils.stringToDate1(historyDTO.getDob());
-        history.setToDate(toDate);
-        history.setDob(dob);
-        history.setFromDate(fromDate);
+        history.setToDate(historyDTO.getToDate());
+        history.setDob(historyDTO.getDob());
+        history.setFromDate(historyDTO.getFromDate());
         history.setBhyt(historyDTO.getBhyt());
         history.setAddress(historyDTO.getAddress());
         history.setName(historyDTO.getFullName());
@@ -78,9 +75,9 @@ public class HistoryService {
         History history = historyRepo.findByBookingId(id).orElseThrow(() -> new RuntimeException("Not found"));
         paramsReport.put("fullName",history.getName());
         paramsReport.put("bhyt",history.getBhyt());
-        paramsReport.put("dob",ConvertTimeUtils.convertDate(history.getDob()));
-        paramsReport.put("fromDate",ConvertTimeUtils.convertDate(history.getFromDate()));
-        paramsReport.put("toDate",ConvertTimeUtils.convertDate(history.getToDate()));
+//        paramsReport.put("dob",ConvertTimeUtils.convertDate(history.getDob()));
+//        paramsReport.put("fromDate",ConvertTimeUtils.convertDate(history.getFromDate()));
+//        paramsReport.put("toDate",ConvertTimeUtils.convertDate(history.getToDate()));
         paramsReport.put("totalMoney",history.getTotalMoney().toString());
         paramsReport.put("reason",history.getMedicalSummary());
         paramsReport.put("gender",history.getGender());

@@ -27,6 +27,13 @@ export class DoctorDetailComponent {
       description: '',
       image: ''
     },
+    doctorRank: {
+      id: 0,
+      name: '',
+      description: '',
+      code: '',
+      basePrice: 0
+    },
     description: '',
     trangthai: ''
   }

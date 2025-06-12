@@ -1,5 +1,7 @@
 package com.n7.entity;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +17,17 @@ public class Hour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
+    @Column(name = "name")
     private String name;
 
-    public Hour(String name) {
-        this.name = name;
-    }
+    @Column(name = "session")
+    private String session;
+
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
+
+    
 }

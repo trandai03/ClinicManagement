@@ -19,11 +19,12 @@ import { DataTablesModule } from "angular-datatables"
 import { ToastrModule } from "ngx-toastr";
 import { MedicineComponent } from './medicine/medicine.component';
 import { MedicalServiceComponent } from './medical-service/medical-service.component';
+import { DoctorRankComponent } from './doctor-rank/doctor-rank.component';
 
 
 
 @NgModule({
-    declarations: [AdminComponent, HeaderComponent, FooterComponent, NavbarComponent, DoctorsComponent,DashboardComponent, MajorComponent, ArticleComponent, ContactComponent, BookingComponent, HistoryComponent, ContactComponent, ProfileComponent, MedicineComponent, MedicalServiceComponent],
+    declarations: [AdminComponent, HeaderComponent, FooterComponent, NavbarComponent, DoctorsComponent,DashboardComponent, MajorComponent, ArticleComponent, ContactComponent, BookingComponent, HistoryComponent, ContactComponent, ProfileComponent, MedicineComponent, MedicalServiceComponent, DoctorRankComponent],
     imports: [
       CommonModule, // <-- Import thêm để dùng forms sau này
       AdminRoutingModule,

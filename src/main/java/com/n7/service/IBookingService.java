@@ -1,6 +1,7 @@
 package com.n7.service;
 
 import com.n7.constant.Status;
+import com.n7.dto.AvailableSlotsDTO;
 import com.n7.dto.BookingDTO;
 import com.n7.entity.Booking;
 import com.n7.model.BookingModel;

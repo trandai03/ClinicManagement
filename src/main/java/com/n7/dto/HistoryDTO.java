@@ -5,19 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class HistoryDTO {
     private String fullName;
-    private String dob;
+    private LocalDateTime dob;
     private boolean gender;
     private String nation;
     private String bhyt;
     private String address;
-    private String fromDate;
-    private String toDate;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
     private String medicalSummary;
     private String medicineStr;
     private String serviceStr;

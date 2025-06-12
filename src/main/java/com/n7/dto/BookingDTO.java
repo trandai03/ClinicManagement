@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class BookingDTO {
 //    @NotBlank(message = "Name can not blank")
     private String name;
 //    @NotBlank(message = "Date of birth can not null")
-    private String dob;
+    private LocalDateTime dob;
 //    @NotBlank(message = "Phone can not null")
 //    @Size(min = 9,max = 12,message = "Min of phone must between 9 and 12")
     private String phone;

@@ -3,7 +3,9 @@ package com.n7.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class ConvertTimeUtils {
@@ -21,10 +23,10 @@ public class ConvertTimeUtils {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date date = dateFormat.parse(s);
-            System.out.println("gia tri ok: " +date);
+            System.out.println("gia tri ok: " + date);
             return date;
         } catch (ParseException e) {
-//            e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("co loi parse" + e.getMessage());
             return null;
         }
@@ -34,10 +36,10 @@ public class ConvertTimeUtils {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(s);
-            System.out.println("gia tri ok: " +date);
+            System.out.println("gia tri ok: " + date);
             return date;
         } catch (ParseException e) {
-//            e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("co loi parse" + e.getMessage());
             return null;
         }
@@ -47,5 +49,16 @@ public class ConvertTimeUtils {
     public static String dateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         return dateFormat.format(date);
+    }
+
+    // LocalDate utility methods
+    public static LocalDate stringToLocalDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.parse(dateString, formatter);
+    }
+
+    public static String localDateToString(LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return localDate.format(formatter);
     }
 }

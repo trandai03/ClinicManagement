@@ -1,6 +1,7 @@
 package com.n7.service.impl;
 
 import com.n7.constant.Status;
+import com.n7.dto.AvailableSlotsDTO;
 import com.n7.dto.BookingDTO;
 import com.n7.entity.*;
 import com.n7.exception.ResourceAlreadyExitsException;
@@ -12,15 +13,13 @@ import com.n7.service.IBookingService;
 import com.n7.utils.ConvertTimeUtils;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingService implements IBookingService {
@@ -40,8 +39,44 @@ public class BookingService implements IBookingService {
         Date en = null, st = null;
         if(start!=null) st = ConvertTimeUtils.stringToDate(start);
         if(end!=null) en = ConvertTimeUtils.stringToDate(end);
+        if(start == null && !status.equals(Status.SUCCESS)){
+            st = new Date();
+        }
         return bookingRepo.findByCustom(id,status,email,st,en).stream().map(this::convertEntityToModel).collect(Collectors.toList());
     }
+
+    public Integer countBookingByStatus(Status status,Long doctorId) {
+        Date start = null;
+        if(!status.equals(Status.SUCCESS)){
+            start = new Date();
+        }
+        return bookingRepo.countBookingByStatus(status,doctorId,start);
+    }
+    public Map<Status, Integer> getBookingCounts(Long doctorId) {
+        Date now = new Date();
+    
+        // SUCCESS không filter theo ngày, các status khác cần filter
+        List<Object[]> statusWithDate = bookingRepo.countBookingsGroupedByStatus(doctorId, now,null);
+        List<Object[]> successOnly = bookingRepo.countBookingsGroupedByStatus(doctorId, null,Status.SUCCESS);
+        log.info("withDate "+statusWithDate.toString());
+        log.info("success "+successOnly.toString());
+        Map<Status, Integer> counts = new EnumMap<>(Status.class);
+    
+        // Gộp 2 kết quả lại
+        for (Object[] row : statusWithDate) {
+            Status status = (Status) row[0];
+            counts.put(status, ((Long) row[1]).intValue());
+        }
+    
+        for (Object[] row : successOnly) {
+            Status status = (Status) row[0];
+            // Nếu đã tồn tại (vd: SUCCESS đã có) thì bỏ qua
+            counts.put(status, ((Long) row[1]).intValue());
+        }
+    log.info("counts "+counts.toString());
+        return counts;
+    }
+    
 
     @Transactional
     public String creatBooking(BookingDTO bookingDTO) {
@@ -182,6 +217,7 @@ public class BookingService implements IBookingService {
             scheduleRepo.deleteById(scheduleModel.getId());
         }
     }
+
 
     public BookingModel convertEntityToModel(Booking booking) {
         BookingModel bookingModel = new BookingModel();

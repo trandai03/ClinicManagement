@@ -27,4 +27,5 @@ public class UserDTO {
     private String email;
     private String trangthai;
     private Long majorId;
+    private Long doctorRankId;
 }

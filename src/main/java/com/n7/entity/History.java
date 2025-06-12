@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -27,13 +28,13 @@ public class History {
     private String service;
 
     @Column
-    private Date dob;
+    private LocalDateTime dob;
 
     @Column
-    private Date fromDate;
+    private LocalDateTime fromDate;
 
     @Column
-    private Date toDate;
+    private LocalDateTime toDate;
 
     @Column
     private String bhyt;

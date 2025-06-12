@@ -140,6 +140,24 @@
                   Major cannot be null
                 </p>
               </div>
+              <div class="col-md-8">
+                <label for="inputState" class="form-label">Cấp bậc </label>
+                <select
+                  id="inputState"
+                  class="form-select"
+                  formControlName="doctorRankId"
+                >
+                  <ng-container *ngFor="let item of listDoctorRank | async">
+                    <option [value]="item.id">{{ item.name }}</option>
+                  </ng-container>
+                </select>
+                <p
+                  class="text-danger"
+                  *ngIf="f['doctorRankId'].errors !== null && submited"
+                >
+                  DoctorRank cannot be null
+                </p>
+              </div>
               <div class="col-md-12">
                 <label for="inputDes" class="form-label">Mô tả</label>
                 <textarea
@@ -397,6 +415,23 @@
                   <ng-container *ngFor="let item of listMajor | async">
                     <option
                       [selected]="itemout.major.id == item.id"
+                      [value]="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-md-8">
+                <label for="inputState" class="form-label">Cấp bậc</label>
+                <select
+                  id="inputState"
+                  class="form-select"
+                  formControlName="doctorRankId"
+                >
+                  <ng-container *ngFor="let item of listDoctorRank | async">
+                    <option
+                      [selected]="itemout.doctorRank.id == item.id"
                       [value]="item.id"
                     >
                       {{ item.name }}

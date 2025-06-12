@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import DataTables from 'datatables.net';
 import { data } from 'jquery';
@@ -40,7 +41,7 @@ export class ScheduleComponent {
   dtElement!: DataTableDirective;
   hours = Hours;
   constructor(private scheSv: ScheduleService, private bookingsv : BookingService,private medicineSv: MedicineService,private medicalSv: MedicalServiceService,
-    private formbuilder : FormBuilder, private changref: ChangeDetectorRef, private historySv: HistoryService){};
+    private formbuilder : FormBuilder, private changref: ChangeDetectorRef, private historySv: HistoryService, private router: Router){};
 
   ngOnInit() {
     this.dtOption = {
@@ -56,13 +57,13 @@ export class ScheduleComponent {
 
     this.historyForm = this.formbuilder.group({
       fullName: '',
-      dob : new Date().toISOString().split('T')[0],
+      dob : new Date(),
       address : '',
       bhyt: '',
       nation: '',
       gender : true,
-      fromDate: new Date().toISOString().split('T')[0],
-      toDate: new Date().toISOString().split('T')[0],
+      fromDate: new Date().toISOString().slice(0, 19),
+      toDate: new Date().toISOString().slice(0, 19),
       medicalSummary: '',
       realQuantity: 1
     })
@@ -101,6 +102,25 @@ export class ScheduleComponent {
     });
 
   }
+
+  // ===== NEW EXAMINATION WORKFLOW METHODS =====
+  
+  /**
+   * Navigate to examination page for a specific booking
+   */
+  startExamination(bookingId: number) {
+    this.router.navigate(['/doctor/examination', bookingId]);
+  }
+
+  /**
+   * View examination details for completed bookings
+   */
+  viewExaminationDetail(bookingId: number) {
+    // Navigate to a read-only examination detail page or show modal
+    this.router.navigate(['/doctor/history'], { queryParams: { bookingId: bookingId } });
+  }
+
+  // ===== EXISTING METHODS =====
 
   onSearch() {
     const {start,end} = this.addForm.value;
@@ -286,7 +306,5 @@ export class ScheduleComponent {
       console.log('form khong hop le',this.historyForm.value);
     }
   }
-
-
 
 }

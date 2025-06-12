@@ -7,16 +7,32 @@ import { DoctorRoutingModule } from "./doctor-routing.module";
 import { DoctorComponent } from "./doctor.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ScheduleComponent } from './schedule/schedule.component';
+import { WorkScheduleComponent } from './schedule/work-schedule.component';
 import { BookingComponent } from './booking/booking.component';
 import { NotificationComponent } from './notification/notification.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataTablesModule } from "angular-datatables";
 import { HistoryComponent } from './history/history.component';
-
+import { ExaminationComponent } from './examination/examination.component';
+import { InProgressComponent } from './in-progress/in-progress.component';
 
 @NgModule({
-    declarations: [HeaderComponent,NavbarComponent,FooterComponent,DoctorComponent,DashboardComponent, ScheduleComponent, BookingComponent, NotificationComponent, ProfileComponent, HistoryComponent],
+    declarations: [
+        HeaderComponent,
+        NavbarComponent,
+        FooterComponent,
+        DoctorComponent,
+        DashboardComponent, 
+        ScheduleComponent, 
+        WorkScheduleComponent, 
+        BookingComponent, 
+        NotificationComponent, 
+        ProfileComponent, 
+        HistoryComponent, 
+        ExaminationComponent,
+        InProgressComponent
+    ],
     imports: [
       CommonModule,
       FormsModule,
@@ -24,5 +40,5 @@ import { HistoryComponent } from './history/history.component';
       ReactiveFormsModule,
       DataTablesModule
     ],
-  })
-  export class DoctorModule {}
+})
+export class DoctorModule {}

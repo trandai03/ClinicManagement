@@ -1,207 +1,669 @@
-<div [hidden]="ktra" class="pure-u-xl-1-2 pure-u-lg-1-1 pure-u-md-1-1 pure-u-sm-1-1 pure-u-1-1" [class.show]="ok">
-    <div class="outer_booking_form" style="margin-top: 30px; margin-left: 80px;">
-        <div class="booking_form">
-            <div class="inner_booking_form">
-                <form class="booking_register_form" [formGroup]="addForm" (ngSubmit)="onsb()">
-                    <div class="form_header">
-                        <p class="form_title">ĐĂNG KÝ KHÁM BỆNH</p>
-                        <button class="button_exit" (click)="ktra = !ktra" type="button" [hidden]="!ok"><i
-                                class="fa-solid fa-xmark"></i></button>
-                    </div>
-                    <div class="form_body">
-                        <!-- Hàng đầu trong form (họ tên + ngày sinh) -->
-                        <div class="pure-g">
-                            <div class="pure-u-1-1 pure-u-sm-1-2">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Họ và tên
-                                    </p>
-                                    <input class="form_input_text_1" type="text" name="name" id="name"
-                                        placeholder="Nhập họ và tên" formControlName="name">
-                                    <p class="text-danger" *ngIf="f['name'].errors !== null && submited ">Vui lòng điền
-                                        đủ thông tin</p>
-                                </div>
-                            </div>
+<div
+  [hidden]="ktra"
+  class="pure-u-xl-1-2 pure-u-lg-1-1 pure-u-md-1-1 pure-u-sm-1-1 pure-u-1-1"
+  [class.show]="ok"
+>
+  <div class="outer_booking_form" style="margin-top: 30px; margin-left: 80px">
+    <div class="booking_form">
+      <div class="inner_booking_form">
+        <form
+          class="booking_register_form"
+          [formGroup]="addForm"
+          (ngSubmit)="onsb()"
+        >
+          <div class="form_header">
+            <p class="form_title">ĐĂNG KÝ KHÁM BỆNH</p>
+            <button
+              class="button_exit"
+              (click)="ktra = !ktra"
+              type="button"
+              [hidden]="!ok"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="form_body">
+            <!-- Hàng đầu trong form (họ tên + ngày sinh) -->
+            <div class="pure-g">
+              <div class="pure-u-1-1 pure-u-sm-1-2">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Họ và tên
+                  </p>
+                  <input
+                    class="form_input_text_1"
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Nhập họ và tên"
+                    formControlName="name"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="f['name'].errors !== null && submited"
+                  >
+                    Vui lòng điền đủ thông tin
+                  </p>
+                </div>
+              </div>
 
-                            <div class="pure-u-1-1 pure-u-sm-1-2">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Ngày sinh
-                                    </p>
-                                    <input class="form_input_text_1" type="date" name="dateOfBirth" id="dateOfBirth"
-                                        placeholder="Chọn ngày sinh" formControlName="dob">
-                                    <p class="text-danger" *ngIf="f['dob'].errors !== null && submited ">Vui lòng điền
-                                        đủ thông tin</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Hàng 2 trong form (sđt + email) -->
-                        <div class="pure-g">
-                            <div class="pure-u-1-1 pure-u-sm-1-2">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Số điện
-                                        thoại</p>
-                                    <input class="form_input_text_1" type="text" name="phone" id="phone"
-                                        placeholder="Nhập số điện thoại" formControlName="phone">
-                                    <p class="text-danger" *ngIf="f['phone'].errors !== null && submited ">Vui lòng nhập
-                                        đúng định dạng</p>
-                                </div>
-                            </div>
-
-                            <div class="pure-u-1-1 pure-u-sm-1-2">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Email</p>
-                                    <input class="form_input_text_1" type="email" name="email" id="email"
-                                        placeholder="Nhập email" formControlName="email">
-                                    <p class="text-danger" *ngIf="f['email'].errors !== null && submited ">Vui lòng nhập
-                                        đúng định dạng</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Hàng 3 trong form(giới tinh + quốc tịch) -->
-                        <div class="pure-g">
-                            <div class="pure-u-1-1 pure-u-sm-1-2">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Giới tính
-                                    </p>
-                                    <div class="form_radio pure-g">
-                                        <div class="pure-u-1-1 pure-u-sm-1-2">
-                                            <input style="width: 20px;height: 20px;" type="radio" id="male"
-                                                name="gender" value="MALE" formControlName="gender">
-                                            <label style="font-size: 20px;" for="male">Nam</label>
-                                        </div>
-                                        <div class="pure-u-1-1 pure-u-sm-1-2">
-                                            <input style="width: 20px;height: 20px;" type="radio" id="female"
-                                                name="gender" value="FEMALE" formControlName="gender">
-                                            <label style="font-size: 20px;" for="female">Nữ</label><br>
-                                        </div>
-                                    </div>
-                                    <p class="text-danger" *ngIf="f['gender'].errors !== null && submited ">Vui lòng
-                                        điền đủ thông tin</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Hàng 4 trong form(tỉnh, quận, xã) -->
-                        <div class="pure-g">
-                            <div class="pure-u-1-1">
-                                <div class="form_element">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup>Địa chỉ
-                                    </p>
-                                    <input class="form_input_text_1" type="text" name="name" id="name"
-                                        placeholder="Nhập địa chỉ" formControlName="address">
-                                    <p class="text-danger" *ngIf="f['address'].errors !== null && submited ">Vui lòng
-                                        điền đủ thông tin</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Hàng 6 (Khoa) -->
-                        <div class="form_element">
-                            <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                        style="color: red; font-size: 7px;"></i></sup>Chọn chuyên khoa
-                            </p>
-                            <div class="form_dropdown">
-                                <select class="dropdown" formControlName="idMajor" (change)="onselectkhoa()">
-                                    <option value="" disabled selected hidden>Chọn chuyên khoa</option>
-                                    <ng-container *ngFor="let item of listMajor | async">
-                                        <option [value]="item.id">{{item.name}}</option>
-                                    </ng-container>
-                                </select>
-                            </div>
-                            <p class="text-danger" *ngIf="f['idMajor'].errors !== null && submited ">Vui lòng điền đủ
-                                thông tin</p>
-                        </div>
-
-                        <!-- Hàng 7(Bác sĩ) -->
-                        <div class="form_element">
-                            <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                        style="color: red; font-size: 7px;"></i></sup>Chọn bác sĩ </p>
-                            <div class="form_dropdown">
-                                <select class="dropdown" formControlName="idUser" (change)="onselectDoctor()">
-                                    <option value="" disabled selected hidden>Chọn bác sĩ</option>
-                                    <ng-container *ngFor="let item of listDoctor | async">
-                                        <option [value]="item.id">{{item.fullName}}</option>
-                                    </ng-container>
-                                </select>
-                            </div>
-                            <p class="text-danger" *ngIf="f['idUser'].errors !== null && submited ">Vui lòng điền đủ
-                                thông tin</p>
-                        </div>
-
-                        <!-- Hàng 8(Lịch) -->
-                        <div class="form_element">
-                            <div class="pure-g">
-                                <div class="pure-u-1-1 pure-u-sm-1-2">
-                                    <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                style="color: red; font-size: 7px;"></i></sup> Chọn ngày muốn
-                                        thăm khám</p>
-                                    <div class="form_pickdate">
-                                        <mat-form-field appearance="fill">
-                                            <mat-label>Choose a date</mat-label>
-                                            <input [matDatepickerFilter]="myFilter" matInput [matDatepicker]="picker" (dateChange)="addEvent('change', $event)" formControlName="date" [min]="minDate">
-                                            <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
-                                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                            <mat-datepicker touchUi #picker></mat-datepicker>
-                                        </mat-form-field>
-                                    </div>
-                                    <p class="text-danger" *ngIf="f['date'].errors !== null && submited ">Vui lòng điền
-                                        đủ thông tin</p>
-                                </div>
-                                <div class="pure-u-1-1 pure-u-sm-1-2">
-                                    <!-- Hàng 9(đặt lịch) -->
-                                    <div class="form_element">
-                                        <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                                    style="color: red; font-size: 7px;"></i></sup>Chọn chọn thời gian
-                                            khám
-                                        </p>
-                                        <div class="form_dropdown">
-                                            <select class="dropdown drdownspe" formControlName="idHour">
-                                                <option value="" disabled selected hidden>Chọn chọn thời gian khám
-                                                </option>
-                                                <ng-container *ngFor="let item of listHour | async">
-                                                    <option *ngIf="!listHourTrung.includes(item.id)" [value]="item.id">
-                                                        {{item.name}}</option>
-                                                </ng-container>
-                                            </select>
-                                        </div>
-                                        <p class="text-danger" *ngIf="f['idHour'].errors !== null && submited ">Vui lòng
-                                            điền đủ thông tin</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Hàng 10(mô tả) -->
-                        <div class="form_element">
-                            <p class="form_lable"><sup><i class="fa-solid fa-asterisk"
-                                        style="color: red; font-size: 7px;"></i></sup>Nhập vấn đề sức
-                                khỏe cần thăm khám</p>
-                            <div class="form_textarea">
-                                <textarea name="reason" id="reason" rows="5" required
-                                    placeholder="Nhập tình trạng sức khỏe của bạn" formControlName="note"></textarea>
-                            </div>
-                            <p class="text-danger" *ngIf="f['note'].errors !== null && submited ">Vui lòng điền đủ thông
-                                tin</p>
-                        </div>
-                        <!-- Hàng 10(nút) -->
-                        <div class="form_element">
-                            <div class="outer_form_button">
-                                <button *ngIf="profileInfor" (click)="autoFill()"  style="margin-right: 10px;" type="button" class="form_button">Điền tự động</button>
-                                <button type="submit" class="form_button">Đặt lịch hẹn</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
+              <div class="pure-u-1-1 pure-u-sm-1-2">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Ngày sinh
+                  </p>
+                  <input
+                    class="form_input_text_1"
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    placeholder="Chọn ngày sinh"
+                    formControlName="dob"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="f['dob'].errors !== null && submited"
+                  >
+                    Vui lòng điền đủ thông tin
+                  </p>
+                </div>
+              </div>
             </div>
-        </div>
+
+            <!-- Hàng 2 trong form (sđt + email) -->
+            <div class="pure-g">
+              <div class="pure-u-1-1 pure-u-sm-1-2">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Số điện thoại
+                  </p>
+                  <input
+                    class="form_input_text_1"
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    placeholder="Nhập số điện thoại"
+                    formControlName="phone"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="f['phone'].errors !== null && submited"
+                  >
+                    Vui lòng nhập đúng định dạng
+                  </p>
+                </div>
+              </div>
+
+              <div class="pure-u-1-1 pure-u-sm-1-2">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Email
+                  </p>
+                  <input
+                    class="form_input_text_1"
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Nhập email"
+                    formControlName="email"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="f['email'].errors !== null && submited"
+                  >
+                    Vui lòng nhập đúng định dạng
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hàng 3 trong form(giới tinh + quốc tịch) -->
+            <div class="pure-g">
+              <div class="pure-u-1-1 pure-u-sm-1-2">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Giới tính
+                  </p>
+                  <div class="form_radio pure-g">
+                    <div class="pure-u-1-1 pure-u-sm-1-2">
+                      <input
+                        style="width: 20px; height: 20px"
+                        type="radio"
+                        id="male"
+                        name="gender"
+                        value="MALE"
+                        formControlName="gender"
+                      />
+                      <label style="font-size: 20px" for="male">Nam</label>
+                    </div>
+                    <div class="pure-u-1-1 pure-u-sm-1-2">
+                      <input
+                        style="width: 20px; height: 20px"
+                        type="radio"
+                        id="female"
+                        name="gender"
+                        value="FEMALE"
+                        formControlName="gender"
+                      />
+                      <label style="font-size: 20px" for="female">Nữ</label
+                      ><br />
+                    </div>
+                  </div>
+                  <p
+                    class="text-danger"
+                    *ngIf="f['gender'].errors !== null && submited"
+                  >
+                    Vui lòng điền đủ thông tin
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hàng 4 trong form(tỉnh, quận, xã) -->
+            <div class="pure-g">
+              <div class="pure-u-1-1">
+                <div class="form_element">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i></sup
+                    >Địa chỉ
+                  </p>
+                  <input
+                    class="form_input_text_1"
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Nhập địa chỉ"
+                    formControlName="address"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="f['address'].errors !== null && submited"
+                  >
+                    Vui lòng điền đủ thông tin
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hàng 6 (Khoa) -->
+            <div class="form_element">
+              <p class="form_lable">
+                <sup
+                  ><i
+                    class="fa-solid fa-asterisk"
+                    style="color: red; font-size: 7px"
+                  ></i></sup
+                >Chọn chuyên khoa
+              </p>
+              <div class="form_dropdown">
+                <select
+                  class="dropdown"
+                  formControlName="idMajor"
+                  (change)="onselectkhoa()"
+                >
+                  <option value="" disabled selected hidden>
+                    Chọn chuyên khoa
+                  </option>
+                  <ng-container *ngFor="let item of listMajor | async">
+                    <option [value]="item.id">{{ item.name }}</option>
+                  </ng-container>
+                </select>
+              </div>
+              <p
+                class="text-danger"
+                *ngIf="f['idMajor'].errors !== null && submited"
+              >
+                Vui lòng điền đủ thông tin
+              </p>
+            </div>
+
+            <!-- Chế độ đặt lịch -->
+            <div class="form_element">
+              <p class="form_lable">Chọn cách đặt lịch</p>
+              <div class="booking_mode_selection">
+                <div
+                  class="booking_mode_option"
+                  [class.active]="bookingMode === 'BY_DOCTOR'"
+                  (click)="setBookingMode('BY_DOCTOR')"
+                >
+                  <div class="mode_icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                  </div>
+                  <span class="mode_text">Theo bác sĩ</span>
+                  <p class="mode_description">
+                    Chọn bác sĩ cụ thể và xem lịch trống của bác sĩ đó
+                  </p>
+                </div>
+                <div
+                  class="booking_mode_option"
+                  [class.active]="bookingMode === 'BY_DATE'"
+                  (click)="setBookingMode('BY_DATE')"
+                >
+                  <div class="mode_icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                  </div>
+                  <span class="mode_text">Theo ngày</span>
+                  <p class="mode_description">
+                    Chọn ngày muốn khám và hệ thống sẽ hiển thị bác sĩ có lịch
+                    trống
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hàng 7(Bác sĩ) - Hiển thị khi chọn mode BY_DOCTOR -->
+            <div class="form_element" *ngIf="bookingMode === 'BY_DOCTOR'">
+              <p class="form_lable">
+                <sup
+                  ><i
+                    class="fa-solid fa-asterisk"
+                    style="color: red; font-size: 7px"
+                  ></i></sup
+                >Chọn bác sĩ
+              </p>
+              <div class="form_dropdown">
+                <select
+                  class="dropdown"
+                  formControlName="idUser"
+                  (change)="onselectDoctor()"
+                >
+                  <option value="" disabled selected hidden>Chọn bác sĩ</option>
+                  <ng-container *ngFor="let item of listDoctor | async">
+                    <option [value]="item.id">
+                      {{ item.doctorRank.name }} {{ item.fullName }} - 
+                      {{ formatCurrency(item.doctorRank.basePrice) }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+              <p
+                class="text-danger"
+                *ngIf="
+                  f['idUser'].errors !== null &&
+                  submited &&
+                  bookingMode === 'BY_DOCTOR'
+                "
+              >
+                Vui lòng điền đủ thông tin
+              </p>
+            </div>
+
+            <!-- Hàng 8(Lịch) -->
+            <div class="form_element">
+              <div class="pure-g">
+                <div class="pure-u-1-1 pure-u-sm-1-2">
+                  <p class="form_lable">
+                    <sup
+                      ><i
+                        class="fa-solid fa-asterisk"
+                        style="color: red; font-size: 7px"
+                      ></i
+                    ></sup>
+                    Chọn ngày muốn thăm khám
+                  </p>
+                  <div class="form_pickdate">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Choose a date</mat-label>
+                      <input
+                        [matDatepickerFilter]="myFilter"
+                        matInput
+                        [matDatepicker]="picker"
+                        (dateChange)="addEvent('change', $event)"
+                        formControlName="date"
+                        [min]="minDate"
+                      />
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <p
+                    class="text-danger"
+                    *ngIf="f['date'].errors !== null && submited"
+                  >
+                    Vui lòng điền đủ thông tin
+                  </p>
+                </div>
+
+                <!-- Chọn thời gian -->
+                <div class="pure-u-1-1 pure-u-sm-1-2">
+                  <div class="form_element">
+                    <p class="form_lable">
+                      <sup
+                        ><i
+                          class="fa-solid fa-asterisk"
+                          style="color: red; font-size: 7px"
+                        ></i></sup
+                      >Chọn thời gian khám
+                    </p>
+
+                    <!-- Hiển thị khi chọn mode BY_DOCTOR -->
+                    <div
+                      *ngIf="bookingMode === 'BY_DOCTOR'"
+                      class="form_dropdown"
+                    >
+                      <!-- Debug info -->
+                      <!-- <div
+                        style="font-size: 12px; color: #666; margin-bottom: 5px"
+                      >
+                        DEBUG: listHour items:
+                        {{ (listHour | async)?.length || 0 }}, Booked:
+                        {{ listHourTrung?.length || 0 }}
+                      </div> -->
+
+                      <select
+                        class="dropdown drdownspe"
+                        formControlName="idHour"
+                      >
+                        <option value="" disabled selected hidden>
+                          Chọn thời gian khám
+                        </option>
+                        <ng-container *ngFor="let item of listHour | async">
+                          <option [value]="item.id">
+                            {{ item.name }}
+                          </option>
+                        </ng-container>
+                      </select>
+                    </div>
+
+                    <!-- Hiển thị khi chọn mode BY_DATE -->
+                    <div
+                      *ngIf="bookingMode === 'BY_DATE'"
+                      class="by_date_selection"
+                    >
+                      <!-- Session Selection Button -->
+                      <div class="session_selection">
+                        <button
+                          type="button"
+                          class="session_select_btn"
+                          [disabled]="
+                            !addForm.get('date')?.value ||
+                            !addForm.get('idMajor')?.value
+                          "
+                          (click)="openSessionModal()"
+                        >
+                          <i class="fa-solid fa-clock"></i>
+                          {{
+                            selectedSession
+                              ? getSessionName(selectedSession)
+                              : "Chọn ca khám"
+                          }}
+                        </button>
+
+                        <small
+                          class="session_hint"
+                          *ngIf="
+                            !addForm.get('date')?.value ||
+                            !addForm.get('idMajor')?.value
+                          "
+                        >
+                          Vui lòng chọn chuyên khoa và ngày khám trước
+                        </small>
+
+                        <div class="selected_slot_info" *ngIf="selectedSlot">
+                          <div class="selected_slot_card">
+                            <div class="slot_icon">
+                              <i class="fa-solid fa-check-circle"></i>
+                            </div>
+                            <div class="slot_details">
+                              <span class="slot_time">{{
+                                selectedSlot.hourName
+                              }}</span>
+                              <span class="slot_doctor"
+                                >{{
+                                  selectedSlot.doctorRank?.name || "Bác sĩ"
+                                }}
+                                {{ selectedSlot.doctorName }}</span
+                              >
+                              <span
+                                class="slot_price"
+                                *ngIf="selectedSlot.doctorRank?.basePrice"
+                              >
+                                <i class="fa-solid fa-money-bill"></i>
+                                {{
+                                  formatCurrency(
+                                    selectedSlot.doctorRank?.basePrice || 0
+                                  )
+                                }}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p
+                      class="text-danger"
+                      *ngIf="f['idHour'].errors !== null && submited"
+                    >
+                      Vui lòng điền đủ thông tin
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hàng 10(mô tả) -->
+            <div class="form_element">
+              <p class="form_lable">
+                <sup
+                  ><i
+                    class="fa-solid fa-asterisk"
+                    style="color: red; font-size: 7px"
+                  ></i></sup
+                >Nhập vấn đề sức khỏe cần thăm khám
+              </p>
+              <div class="form_textarea">
+                <textarea
+                  name="reason"
+                  id="reason"
+                  rows="5"
+                  required
+                  placeholder="Nhập tình trạng sức khỏe của bạn"
+                  formControlName="note"
+                ></textarea>
+              </div>
+              <p
+                class="text-danger"
+                *ngIf="f['note'].errors !== null && submited"
+              >
+                Vui lòng điền đủ thông tin
+              </p>
+            </div>
+            <!-- Hàng 10(nút) -->
+            <div class="form_element">
+              <div class="outer_form_button">
+                <button
+                  *ngIf="profileInfor"
+                  (click)="autoFill()"
+                  style="margin-right: 10px"
+                  type="button"
+                  class="form_button"
+                >
+                  Điền tự động
+                </button>
+                <button type="submit" class="form_button">Đặt lịch hẹn</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Session Selection Modal -->
+<div
+  class="modal_overlay"
+  *ngIf="showSessionModal"
+  (click)="closeSessionModal()"
+>
+  <div class="session_modal" (click)="$event.stopPropagation()">
+    <div class="modal_header">
+      <h3>Chọn ca khám</h3>
+      <button type="button" class="close_btn" (click)="closeSessionModal()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal_body">
+      <p class="modal_desc">
+        Vui lòng chọn ca khám phù hợp với lịch trình của bạn:
+      </p>
+
+      <div class="session_options">
+        <div class="session_option" (click)="selectSession('MORNING')">
+          <div class="session_icon morning">
+            <i class="fa-solid fa-sun"></i>
+          </div>
+          <div class="session_info">
+            <h4>Ca sáng</h4>
+            <p>7:00 - 11:00</p>
+          </div>
+          <div class="session_arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <div class="session_option" (click)="selectSession('AFTERNOON')">
+          <div class="session_icon afternoon">
+            <i class="fa-solid fa-cloud-sun"></i>
+          </div>
+          <div class="session_info">
+            <h4>Ca chiều</h4>
+            <p>13:00 - 15:00</p>
+          </div>
+          <div class="session_arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <div class="session_option" (click)="selectSession('EVENING')">
+          <div class="session_icon evening">
+            <i class="fa-solid fa-moon"></i>
+          </div>
+          <div class="session_info">
+            <h4>Ca tối</h4>
+            <p>15:00 - 17:00</p>
+          </div>
+          <div class="session_arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slots Popup -->
+<div class="modal_overlay" *ngIf="showSlotsPopup" (click)="closeSlotsPopup()">
+  <div class="slots_popup" (click)="$event.stopPropagation()">
+    <div class="popup_header">
+      <h3>
+        {{ selectedSession ? getSessionName(selectedSession) : "Lịch khám" }}
+      </h3>
+      <button type="button" class="close_btn" (click)="closeSlotsPopup()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <div class="popup_body">
+      <!-- Loading state -->
+      <div *ngIf="loadingSlots" class="loading_slots">
+        <div class="loading_spinner">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+        <p>Đang tải lịch trống...</p>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="slotsError && !loadingSlots" class="slots_error">
+        <div class="error_icon">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+        </div>
+        <p>{{ slotsError }}</p>
+        <button
+          type="button"
+          class="retry_button"
+          (click)="loadSlotsForSession(selectedSession!)"
+        >
+          <i class="fa-solid fa-retry"></i>
+          Thử lại
+        </button>
+      </div>
+
+      <!-- Slots Grid -->
+      <div
+        *ngIf="!loadingSlots && !slotsError && availableSlots.length > 0"
+        class="popup_slots_grid"
+      >
+        <div
+          *ngFor="let slot of availableSlots; trackBy: trackBySlot"
+          class="popup_slot_card"
+          [class.selected]="
+            selectedSlot?.hourId === slot.hourId &&
+            selectedSlot?.doctorId === slot.doctorId
+          "
+          (click)="selectTimeSlot(slot); closeSlotsPopup()"
+        >
+          <div class="slot_time_info">
+            <span class="time_text">{{ slot.hourName }}</span>
+            <span class="doctor_name">
+              {{ slot.doctorRank?.name || "Bác sĩ" }} {{ slot.doctorName }}
+            </span>
+            <span class="doctor_price" *ngIf="slot.doctorRank?.basePrice">
+              <i class="fa-solid fa-money-bill"></i>
+              {{ formatCurrency(slot.doctorRank?.basePrice || 0) }}
+            </span>
+          </div>
+          <div class="slot_status available">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- No slots available -->
+      <div
+        *ngIf="!loadingSlots && !slotsError && availableSlots.length === 0"
+        class="no_slots_popup"
+      >
+        <div class="no_slots_icon">
+          <i class="fa-solid fa-calendar-xmark"></i>
+        </div>
+        <p>Không có lịch trống cho ca này</p>
+        <small>Vui lòng chọn ca khác hoặc ngày khác</small>
+      </div>
+    </div>
+  </div>
 </div>
