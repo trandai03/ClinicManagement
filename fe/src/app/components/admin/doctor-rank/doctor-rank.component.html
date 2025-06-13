@@ -1,0 +1,407 @@
+<main id="main" class="main">
+  <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
+    <h1>Danh sách cấp bậc bác sĩ</h1>
+  </div>
+  <!-- End Page Title -->
+
+  <button
+    type="button"
+    class="btn btn-outline-success rounded-pill"
+    data-bs-toggle="modal"
+    data-bs-target="#basicModal"
+    (click)="addForm.reset(); submited = false"
+  >
+    <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
+  </button>
+  <br />
+  <br />
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body" style="margin-top: 20px">
+            <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<!-- Modal thêm thông tin cấp bậc bác sĩ -->
+<div class="card">
+  <div class="card-body" style="padding: 0px">
+    <div class="modal fade" id="basicModal" #basicModal>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thêm cấp bậc bác sĩ mới</h2>
+            <button
+              #pro
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onsave()">
+              <div class="col-md-6">
+                <label for="inputName" class="form-label">Tên cấp bậc</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="name"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['name'].errors !== null && submited"
+                >
+                  Tên không được để trống và tối thiểu 3 ký tự
+                </p>
+              </div>
+              <div class="col-md-6">
+                <label for="inputCode" class="form-label">Mã cấp bậc</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="code"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['code'].errors !== null && submited"
+                >
+                  Mã không được để trống và tối thiểu 2 ký tự
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputDescription" class="form-label">Mô tả</label>
+                <textarea
+                  class="form-control"
+                  style="height: 120px"
+                  formControlName="description"
+                ></textarea>
+                <p
+                  class="text-danger"
+                  *ngIf="f['description'].errors !== null && submited"
+                >
+                  Mô tả không được để trống và tối thiểu 6 ký tự
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputBasePrice" class="form-label"
+                  >Giá cơ bản (VND)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="basePrice"
+                  min="0"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['basePrice'].errors !== null && submited"
+                >
+                  Giá cơ bản không được để trống và phải lớn hơn 0
+                </p>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Đóng
+                </button>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal xem thông tin -->
+    <div class="modal fade" id="basicModalxem">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Thông tin cấp bậc bác sĩ</h2>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3">
+              <div class="col-md-6">
+                <label for="inputName" class="form-label">Tên cấp bậc</label>
+                <input
+                  [value]="itemout.name"
+                  type="text"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="inputCode" class="form-label">Mã cấp bậc</label>
+                <input
+                  [value]="itemout.code"
+                  type="text"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label for="inputDescription" class="form-label">Mô tả</label>
+                <textarea
+                  [value]="itemout.description"
+                  class="form-control"
+                  style="height: 120px"
+                  readonly
+                ></textarea>
+              </div>
+              <div class="col-md-12">
+                <label for="inputBasePrice" class="form-label"
+                  >Giá cơ bản</label
+                >
+                <input
+                  [value]="formatCurrency(itemout.basePrice)"
+                  type="text"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal cập nhật thông tin -->
+    <div class="modal fade" id="basicModalsua">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Cập nhật thông tin cấp bậc bác sĩ</h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Multi Columns Form -->
+            <form class="row g-3" [formGroup]="addForm" (ngSubmit)="onupdate()">
+              <div class="col-md-6">
+                <label for="inputName" class="form-label">Tên cấp bậc</label>
+                <input
+                  type="text"
+                  [value]="itemout.name"
+                  class="form-control"
+                  formControlName="name"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['name'].errors !== null && submited"
+                >
+                  Tên không được để trống và tối thiểu 3 ký tự
+                </p>
+              </div>
+              <div class="col-md-6">
+                <label for="inputCode" class="form-label">Mã cấp bậc</label>
+                <input
+                  type="text"
+                  [value]="itemout.code"
+                  class="form-control"
+                  formControlName="code"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['code'].errors !== null && submited"
+                >
+                  Mã không được để trống và tối thiểu 2 ký tự
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputDescription" class="form-label">Mô tả</label>
+                <textarea
+                  [value]="itemout.description"
+                  class="form-control"
+                  formControlName="description"
+                  style="height: 120px"
+                ></textarea>
+                <p
+                  class="text-danger"
+                  *ngIf="f['description'].errors !== null && submited"
+                >
+                  Mô tả không được để trống và tối thiểu 6 ký tự
+                </p>
+              </div>
+              <div class="col-md-12">
+                <label for="inputBasePrice" class="form-label"
+                  >Giá cơ bản (VND)</label
+                >
+                <input
+                  type="number"
+                  [value]="itemout.basePrice"
+                  class="form-control"
+                  formControlName="basePrice"
+                  min="0"
+                />
+                <p
+                  class="text-danger"
+                  *ngIf="f['basePrice'].errors !== null && submited"
+                >
+                  Giá cơ bản không được để trống và phải lớn hơn 0
+                </p>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Hủy
+                </button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+              </div>
+            </form>
+            <!-- End Multi Columns Form -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal xác nhận xóa -->
+    <div class="modal fade" id="basicModalxoa" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">
+              Bạn có muốn xóa cấp bậc có id: {{ itemout.id }}
+            </h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Tên:</strong> {{ itemout.name }}</p>
+            <p><strong>Mã:</strong> {{ itemout.code }}</p>
+            <p>
+              <strong>Giá cơ bản:</strong>
+              {{ formatCurrency(itemout.basePrice) }}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              (click)="xoa(itemout.id)"
+            >
+              Xóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div
+    class="spinner-border"
+    style="width: 100px; height: 100px; margin-left: 48%"
+    role="status"
+  >
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>
+
+<ng-template #loaded>
+  <!-- Table with hoverable rows -->
+  <table
+    datatable
+    [dtOptions]="dtOption"
+    [dtTrigger]="dtTrigger"
+    class="table table-hover"
+  >
+    <thead>
+      <tr>
+        <th style="text-align: center">ID</th>
+        <th style="text-align: center">Tên cấp bậc</th>
+        <th style="text-align: center" scope="col">Mã</th>
+        <th style="text-align: center" scope="col">Mô tả</th>
+        <th style="text-align: center" scope="col">Giá cơ bản</th>
+        <th style="text-align: center" scope="col">Hành động</th>
+      </tr>
+    </thead>
+    <tbody style="text-align: center">
+      <tr *ngFor="let item of ldoctorRanks">
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.name }}</td>
+        <td>
+          <span class="badge bg-primary">{{ item.code }}</span>
+        </td>
+        <td>{{ item.description }}</td>
+        <td>
+          <strong>{{ formatCurrency(item.basePrice) }}</strong>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#basicModalxem"
+            (click)="xem(item)"
+          >
+            <i class="bi bi-eye"></i></button
+          >&nbsp;&nbsp;
+          <button
+            type="button"
+            class="btn btn-warning rounded-pill"
+            data-bs-toggle="modal"
+            (click)="xem(item)"
+            data-bs-target="#basicModalsua"
+          >
+            <i class="bi bi-wrench-adjustable"></i></button
+          >&nbsp;&nbsp;
+          <button
+            type="button"
+            class="btn btn-danger rounded-pill"
+            data-bs-toggle="modal"
+            (click)="xem(item)"
+            data-bs-target="#basicModalxoa"
+          >
+            <i class="bi bi-trash3"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

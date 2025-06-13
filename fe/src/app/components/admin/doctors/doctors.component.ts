@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, Subject, filter, map, of, switchMap } from 'rxjs';
 import { Doctor } from 'src/app/models/doctor';
 import { DoctorRank } from 'src/app/models/doctorRank';
@@ -64,7 +65,8 @@ export class DoctorsComponent {
     private formbuilder: FormBuilder,
     private majorsv: MajorService,
     private doctorRanksv: DoctorRankService,
-    private changref: ChangeDetectorRef
+    private changref: ChangeDetectorRef,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -192,10 +194,10 @@ export class DoctorsComponent {
       this.doctorsv.createDoctor(formda).subscribe({
         next: (value) => {
           this.loaddata();
-          alert('Đã tạo thành công!!!');
+          this.toastr.success('Đã tạo thành công!!!');
         },
-        error(value) {
-          alert('Có lỗi rồi!!!');
+        error: (err) => {
+          this.toastr.error(err.message, 'Lỗi');
         },
       });
     } else {
@@ -248,11 +250,10 @@ export class DoctorsComponent {
       this.doctorsv.updateDoctor(formda, this.itemout.id).subscribe({
         next: (value) => {
           this.loaddata();
-          alert('Đã cập nhật thành công thành công!!!');
+          this.toastr.success('Đã cập nhật thành công thành công!!!');
         },
-        error(err) {
-          console.log(err);
-          alert('Có lỗi rồi!!!' + err.message);
+        error: (err) => {
+          this.toastr.error(err.message, 'Lỗi');
         },
       });
     }
@@ -285,10 +286,10 @@ export class DoctorsComponent {
   resetpass(id: number) {
     this.doctorsv.resetPassword(id, this.itemout.email).subscribe({
       next: (value) => {
-        alert('Đã reset password thành công!!!');
+        this.toastr.success('Đã reset password thành công!!!');
       },
-      error(err) {
-        alert('Đã có lỗi xảy ra');
+      error: (err) => {
+        this.toastr.error(err.message, 'Lỗi');
       },
     });
   }
@@ -301,11 +302,10 @@ export class DoctorsComponent {
     this.doctorsv.restoreStatus(id).subscribe({
       next: (value) => {
         this.loaddata();
-        alert('Khôi phục thành công');
+        this.toastr.success('Khôi phục thành công');
       },
-      error(err) {
-        console.log('co loi' + err);
-        alert('có lỗi rồi');
+      error: (err) => {
+        this.toastr.error(err.message, 'Lỗi');
       },
     });
   }

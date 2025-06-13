@@ -62,7 +62,7 @@ public class ExaminationCompletionDTO {
 
     public static class ServiceData {
         private Long serviceId;
-        private java.math.BigDecimal cost;
+        private Long cost;
         private String requestNotes;
 
         // Getters and setters
@@ -74,11 +74,11 @@ public class ExaminationCompletionDTO {
             this.serviceId = serviceId;
         }
 
-        public java.math.BigDecimal getCost() {
+        public Long getCost() {
             return cost;
         }
 
-        public void setCost(java.math.BigDecimal cost) {
+        public void setCost(Long cost) {
             this.cost = cost;
         }
 

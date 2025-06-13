@@ -1,0 +1,71 @@
+// Doctor Rank Component Styles
+
+.badge {
+  font-size: 0.875em;
+  padding: 0.5em 0.75em;
+}
+
+.table {
+  th, td {
+    vertical-align: middle;
+  }
+  
+  .btn {
+    margin: 0 2px;
+  }
+}
+
+.modal-dialog {
+  max-width: 600px;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-outline-success {
+  border-color: #198754;
+  color: #198754;
+  
+  &:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: #fff;
+  }
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 0.5rem;
+}
+
+.pagetitle h1 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+// Input number styling
+input[type="number"] {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+// Responsive table
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}

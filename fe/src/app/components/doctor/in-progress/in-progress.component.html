@@ -1,0 +1,185 @@
+<main id="main" class="main">
+  <div class="in-progress-container">
+    <div class="page-header">
+      <div class="header-left">
+        <h2><i class="fas fa-activity"></i> Bệnh nhân đang khám</h2>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/doctor/home">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active">Đang khám/Chờ kết quả</li>
+          </ol>
+        </nav>
+        <p class="subtitle">
+          Danh sách bệnh nhân đã được chỉ định xét nghiệm/dịch vụ
+        </p>
+      </div>
+      <div class="header-actions">
+        <button
+          class="btn btn-primary"
+          (click)="refreshData()"
+          [disabled]="loading"
+        >
+          <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+          Làm mới
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Đang tải dữ liệu...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      class="empty-state"
+      *ngIf="!loading && inProgressBookings.length === 0"
+    >
+      <i class="fas fa-clipboard-list"></i>
+      <h3>Không có bệnh nhân nào đang chờ</h3>
+      <p>
+        Hiện tại không có bệnh nhân nào đang thực hiện xét nghiệm hoặc dịch vụ
+      </p>
+    </div>
+
+    <!-- Bookings List -->
+    <div
+      class="bookings-grid"
+      *ngIf="!loading && inProgressBookings.length > 0"
+    >
+      <div class="booking-card" *ngFor="let booking of inProgressBookings">
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="patient-info">
+            <h3>{{ booking?.name || "Chưa có tên" }}</h3>
+            <div class="patient-details">
+              <span
+                ><i class="fas fa-id-card"></i> BN:
+                {{ booking?.id || "N/A" }}</span
+              >
+              <span
+                ><i class="fas fa-venus-mars"></i>
+                {{ booking?.gender === "MALE" ? "Nam" : "Nữ" }}</span
+              >
+              <span
+                ><i class="fas fa-phone"></i>
+                {{ booking?.phone || "Chưa có SĐT" }}</span
+              >
+            </div>
+          </div>
+        
+        </div>
+
+        <!-- Appointment Info -->
+        <div class="appointment-info">
+          <div class="appointment-time">
+            <i class="fas fa-calendar-alt"></i>
+            <span
+              >{{ booking?.date | date : "dd/MM/yyyy" }} - Khung giờ
+              {{ booking?.idHour || "N/A" }}</span
+            >
+          </div>
+          <div class="major-info">
+            <i class="fas fa-stethoscope"></i>
+            <span>{{ booking?.major || "Chưa xác định" }}</span>
+          </div>
+        </div>
+
+        <!-- Service Requests -->
+        <div class="service-requests">
+          <h4><i class="fas fa-list"></i> Dịch vụ đã chỉ định:</h4>
+          <div class="service-list">
+            <div
+              class="service-item"
+              *ngFor="let service of booking?.serviceRequests"
+            >
+              <div class="service-info">
+                <span class="service-name">{{
+                  service?.serviceName || "Dịch vụ không xác định"
+                }}</span>
+                <span
+                  class="service-type"
+                  [style.color]="
+                    service?.serviceType === 'LAB_TEST' ? '#e91e63' : '#3f51b5'
+                  "
+                >
+                  {{
+                    service?.serviceType === "LAB_TEST"
+                      ? "Xét nghiệm"
+                      : "Dịch vụ"
+                  }}
+                </span>
+              </div>
+              <div class="service-status">
+                <span
+                  class="status-badge"
+                  [style.background-color]="
+                    getStatusColor(service?.status || 'REQUESTED')
+                  "
+                  [style.color]="'white'"
+                >
+                  {{ getStatusText(service?.status || "REQUESTED") }}
+                </span>
+                <span class="service-cost">{{
+                  service?.cost || 0 | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          <button
+            class="btn btn-outline-info"
+            (click)="viewServiceResults(booking)"
+          >
+            <i class="fas fa-eye"></i>
+            Xem kết quả
+          </button>
+          <button
+            class="btn btn-success"
+            (click)="continueExamination(booking)"
+            [disabled]="!allServicesCompleted(booking)"
+          >
+            <i class="fas fa-stethoscope"></i>
+            {{
+              allServicesCompleted(booking) ? "Tiếp tục khám" : "Chờ kết quả"
+            }}
+          </button>
+        </div>
+
+        <!-- Completion Status -->
+        <div class="completion-status" *ngIf="allServicesCompleted(booking)">
+          <i class="fas fa-check-circle"></i>
+          <span>Tất cả dịch vụ đã hoàn thành - Có thể tiếp tục khám</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div
+      class="summary-stats"
+      *ngIf="!loading && inProgressBookings.length > 0"
+    >
+      <div class="stat-item">
+        <i class="fas fa-users"></i>
+        <span class="stat-value">{{ inProgressBookings.length }}</span>
+        <span class="stat-label">Bệnh nhân đang chờ</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-check-circle"></i>
+        <span class="stat-value">{{ getCompletedCount() }}</span>
+        <span class="stat-label">Sẵn sàng tiếp tục</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-clock"></i>
+        <span class="stat-value">{{ getWaitingOverOneHourCount() }}</span>
+        <span class="stat-label">Chờ > 1 giờ</span>
+      </div>
+    </div>
+  </div>
+</main>

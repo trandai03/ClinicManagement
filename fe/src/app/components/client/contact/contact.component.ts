@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
@@ -12,7 +13,11 @@ export class ContactComponent {
   addForm!: FormGroup;
   submited = false;
 
-  constructor(private formbuilder : FormBuilder, private contactsv : ContactService){};
+  constructor(
+    private formbuilder: FormBuilder, 
+    private contactsv: ContactService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.addForm = this.formbuilder.group({
@@ -29,17 +34,17 @@ export class ContactComponent {
     if(this.addForm.valid) {
       const {name,dob,phone,email,note} = this.addForm.value;
       this.contactsv.createContact(name,dob,phone,email,note).subscribe({
-        next(value) {
-            alert('Đã gửi góp ý thành công')
+        next: (value) => {
+          this.toastr.success('Đã gửi góp ý thành công');
         },
-        error(err) {
-            console.log('gia tri : ' + err)
-            alert('Server Error: ' + err);
+        error: (err) => {
+          console.log('gia tri : ' + err);
+          this.toastr.error('Server Error: ' + err);
         },
       });
     }
     else {
-      alert('Vui lòng điền đầy đủ thông tin')
+      this.toastr.warning('Vui lòng điền đầy đủ thông tin');
     }
   }
 }

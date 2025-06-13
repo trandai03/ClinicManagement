@@ -1,119 +1,219 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Trang chủ</h1>
-      <!-- <nav>
+      <h1><i class="bi bi-house-fill"></i> Dashboard - Trang chủ</h1>
+      <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Pages</li>
-          <li class="breadcrumb-item active">Blank</li>
+          <li class="breadcrumb-item active">Trang chủ</li>
         </ol>
-      </nav> -->
-    </div><!-- End Page Title -->
+      </nav>
+    </div>
 
     <section class="section">
+      <!-- Workflow Status Cards -->
       <div class="row">
-        <!-- Sales Card -->
-        <div class="col-xxl-6 col-md-6">
+        <!-- Card 1: Lịch hẹn chờ xác nhận -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">Chờ xác nhận</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-calendar-day"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{bookingCounts.CONFIRMING || 0}}</h6>
+                  <span class="text-muted small pt-2 ps-1">lịch hẹn</span>
+                </div>
+              </div>
+              <div class="mt-3">
+                <a routerLink="/doctor/booking" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-arrow-right"></i> Xem chi tiết
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Lịch khám hôm nay -->
+        <div class="col-xxl-3 col-md-6">
           <div class="card info-card sales-card">
             <div class="card-body">
-              <h2 class="card-title">Lịch hẹn đang chờ xác nhận</h2>
-
+              <h5 class="card-title">Khám hôm nay</h5>
               <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <h1><i class="bi bi-browser-safari" style="font-size: 35px;"></i>&nbsp;&nbsp;{{idcho}}</h1>
+                  <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{bookingCounts.ACCEPTING || 0}}</h6>
+                  <span class="text-muted small pt-2 ps-1">bệnh nhân</span>
                 </div>
               </div>
+              <div class="mt-3">
+                <a routerLink="/doctor/today-schedule" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-arrow-right"></i> Bắt đầu khám
+                </a>
+              </div>
             </div>
-
           </div>
-        </div><!-- End Sales Card -->
-        <div class="col-xxl-6 col-md-6">
-          <div class="card info-card sales-card">
+        </div>
+
+        <!-- Card 3: Đang khám/Chờ kết quả -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card warning-card">
             <div class="card-body">
-              <h2 class="card-title">Lịch hẹn sắp tới</h2>
-
+              <h5 class="card-title">Đang khám</h5>
               <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <h1><i class="bi bi-bell-fill" style="font-size: 35px;"></i>&nbsp;&nbsp;{{idsap}}</h1>
+                  <i class="bi bi-activity"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{bookingCounts.IN_PROGRESS || 0}}</h6>
+                  <span class="text-muted small pt-2 ps-1">bệnh nhân</span>
                 </div>
               </div>
+              <div class="mt-3">
+                <a routerLink="/doctor/in-progress" class="btn btn-sm btn-outline-warning">
+                  <i class="bi bi-arrow-right"></i> Tiếp tục khám
+                </a>
+              </div>
             </div>
-
           </div>
-        </div><!-- End Sales Card -->
+        </div>
 
-        <!-- Revenue Card -->
-        <!-- <div class="col-xxl-6 col-md-6">
-          <div class="card info-card revenue-card"> -->
-
-            <!-- <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div> -->
-
-            <!-- <div class="card-body">
-              <h2 class="card-title">Lịch hẹn đã khám</h2>
-
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">                  
-                  <h1><i class="bi bi-calendar2-check-fill" style="font-size: 35px;"></i>&nbsp;&nbsp;122</h1>
-                </div>
-              
-              </div>
-            </div>
-
-          </div> -->
-        <!-- </div> -->
-        <!-- End Revenue Card -->
-
-        <!-- Customers Card -->
-        <!-- <div class="col-xxl-6 col-xl-6">
-
-          <div class="card info-card customers-card"> -->
-
-            <!-- <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div> -->
-
-            <!-- <div class="card-body">
-              <h2 class="card-title">Lịch hẹn đã hủy</h2>
-
+        <!-- Card 4: Đã khám xong -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card success-card">
+            <div class="card-body">
+              <h5 class="card-title">Hoàn thành</h5>
               <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <h1><i class="bi bi-calendar2-x-fill" style="font-size: 35px;"></i>&nbsp;&nbsp;155</h1>
+                  <i class="bi bi-check-circle"></i>
                 </div>
-                
+                <div class="ps-3">
+                  <h6>{{bookingCounts.SUCCESS || 0}}</h6>
+                  <span class="text-muted small pt-2 ps-1">hôm nay</span>
+                </div>
               </div>
-
+              <div class="mt-3">
+                <a routerLink="/doctor/completed-examinations" class="btn btn-sm btn-outline-success">
+                  <i class="bi bi-arrow-right"></i> Xem lịch sử
+                </a>
+              </div>
             </div>
-          </div> -->
+          </div>
+        </div>
+      </div>
 
-        <!-- </div> -->
-        <!-- End Customers Card -->  
-        <!-- <div class="col-lg-12">
-            <h2>Thống kê lịch khám</h2>
-            <div style="height: 300px; width: 300px;" class="card flex justify-content-center">
-                <p-chart type="pie" [data]="data" [options]="options"></p-chart>
+      <!-- Quick Actions Section -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="bi bi-lightning-fill"></i> Thao tác nhanh</h5>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="d-grid gap-2">
+                    <a routerLink="/doctor/work-schedule" class="btn btn-primary btn-lg">
+                      <i class="bi bi-calendar-plus"></i>
+                      <br>Quản lý lịch làm việc
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-grid gap-2">
+                    <a routerLink="/doctor/today-schedule" class="btn btn-info btn-lg">
+                      <i class="bi bi-clock-history"></i>
+                      <br>Xem lịch khám hôm nay
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-grid gap-2">
+                    <a routerLink="/doctor/notification" class="btn btn-secondary btn-lg">
+                      <i class="bi bi-bell"></i>
+                      <br>Thông báo mới
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Schedule Preview -->
+      <div class="row mt-4" *ngIf="todayBookings && todayBookings.length > 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="bi bi-calendar-check"></i> Lịch khám hôm nay</h5>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Giờ khám</th>
+                      <th>Bệnh nhân</th>
+                      <th>Ghi chú</th>
+                      <th>Trạng thái</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let booking of todayBookings.slice(0, 5)">
+                      <td>{{getHourText(booking.idHour)}}</td>
+                      <td>
+                        <strong>{{booking.name}}</strong><br>
+                        <small class="text-muted">{{booking.gender}} - {{booking.dob}}</small>
+                      </td>
+                      <td>{{booking.note || 'Không có'}}</td>
+                      <td>
+                        <span class="badge" [ngClass]="getStatusBadgeClass(booking.status)">
+                          {{getStatusText(booking.status)}}
+                        </span>
+                      </td>
+                      <td>
+                        <button 
+                          *ngIf="booking.status === 'ACCEPTING'" 
+                          class="btn btn-sm btn-primary"
+                          (click)="startExamination(booking.id)">
+                          <i class="bi bi-play-fill"></i> Khám
+                        </button>
+                        <button 
+                          *ngIf="booking.status === 'IN_PROGRESS'" 
+                          class="btn btn-sm btn-warning"
+                          (click)="continueExamination(booking.id)">
+                          <i class="bi bi-arrow-right"></i> Tiếp tục
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="text-center mt-3" *ngIf="todayBookings.length > 5">
+                <a routerLink="/doctor/today-schedule" class="btn btn-outline-primary">
+                  Xem tất cả {{todayBookings.length}} lịch hẹn
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="row mt-4" *ngIf="!todayBookings || todayBookings.length === 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body text-center py-5">
+              <i class="bi bi-calendar-check" style="font-size: 4rem; color: #ccc;"></i>
+              <h4 class="mt-3">Không có lịch khám hôm nay</h4>
+              <p class="text-muted">Bạn đã hoàn thành tất cả lịch khám hoặc chưa có lịch hẹn nào.</p>
+              <a routerLink="/doctor/work-schedule" class="btn btn-primary">
+                <i class="bi bi-calendar-plus"></i> Quản lý lịch làm việc
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

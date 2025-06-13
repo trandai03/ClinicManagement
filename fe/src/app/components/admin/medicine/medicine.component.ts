@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Medicine } from 'src/app/models/medicine';
 import { MedicineService } from 'src/app/services/medician.service';
 
@@ -35,7 +36,10 @@ export class MedicineComponent {
     unit: 'VI',
   };
 
-  constructor(private medicineSv: MedicineService) {}
+  constructor(
+    private medicineSv: MedicineService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.dtOption = {
@@ -68,10 +72,10 @@ export class MedicineComponent {
     this.medicineSv.deleteMedicine(id).subscribe({
       next: (value) => {
         this.loaddata();
-        alert('Đã xóa thành công');
+        this.toastr.success('Đã xóa thành công', 'Thành công');
       },
-      error(err) {
-        alert('Đã xảy ra lỗi');
+      error: (err) => {
+        this.toastr.error('Đã xảy ra lỗi', 'Lỗi');
       },
     });
   }
@@ -97,11 +101,11 @@ export class MedicineComponent {
 
         // Reload data to show the new medicine
         this.loaddata();
-        alert('Thêm thuốc mới thành công');
+        this.toastr.success('Thêm thuốc mới thành công', 'Thành công');
       },
       error: (err) => {
         console.error('Error adding medicine:', err);
-        alert('Đã xảy ra lỗi khi thêm thuốc mới');
+        this.toastr.error('Đã xảy ra lỗi khi thêm thuốc mới', 'Lỗi');
       }
     });
   }
@@ -118,11 +122,11 @@ export class MedicineComponent {
       next: (response) => {
         // Reload data to show the updated medicine
         this.loaddata();
-        alert('Cập nhật thuốc thành công');
+        this.toastr.success('Cập nhật thuốc thành công', 'Thành công');
       },
       error: (err) => {
         console.error('Error updating medicine:', err);
-        alert('Đã xảy ra lỗi khi cập nhật thuốc');
+        this.toastr.error('Đã xảy ra lỗi khi cập nhật thuốc', 'Lỗi');
       }
     });
   }

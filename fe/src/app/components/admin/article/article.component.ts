@@ -92,10 +92,10 @@ export class ArticleComponent {
       this.articleSv.createArticle(formda).subscribe({
         next: (value) => {
           this.loaddata();
-          alert('Đã tạo thành công!!!');
+          this.toastr.success('Đã tạo thành công!!!', 'Thành công');
         },
-        error(value) {
-          alert('Có lỗi rồi!!!');
+        error: (value) => {
+          this.toastr.error('Có lỗi rồi!!!', 'Lỗi');
         },
       });
     }
@@ -121,11 +121,11 @@ export class ArticleComponent {
         next: (value) => {
           console.log(value);
           this.loaddata();
-          alert('Đã cập nhật thành công thành công!!!');
+          this.toastr.success('Đã cập nhật thành công!!!', 'Thành công');
         },
-        error(value) {
+        error: (value) => {
           console.log(value);
-          alert('Có lỗi rồi!!!');
+          this.toastr.error('Có lỗi rồi!!!', 'Lỗi');
         },
       });
     }
@@ -153,10 +153,10 @@ export class ArticleComponent {
     this.articleSv.delete(id).subscribe({
       next: (value) => {
         this.loaddata();
-        alert(value.message);
+        this.toastr.success(String(value.message), 'Thành công');
       },
-      error(err) {
-        alert('Đã có lỗi xảy ra');
+      error: (err) => {
+        this.toastr.error('Đã có lỗi xảy ra', 'Lỗi');
       },
     });
   }

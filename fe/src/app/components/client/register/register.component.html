@@ -1,0 +1,193 @@
+<div class="container">
+  <h2>Đăng ký tài khoản</h2>
+
+  <!-- Form đăng ký -->
+  <form
+    *ngIf="!showVerification"
+    [formGroup]="registerForm"
+    (ngSubmit)="register()"
+  >
+    <div class="mb-6">
+      <label for="fullName" class="form-label">Họ và tên: </label>
+      <input
+        type="text"
+        class="form-control"
+        name="fullName"
+        formControlName="fullName"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('fullName')?.invalid &&
+          registerForm.get('fullName')?.touched
+        "
+        class="error-message"
+      >
+        Vui lòng nhập họ và tên
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="username" class="form-label">Tên đăng nhập: </label>
+      <input
+        type="text"
+        class="form-control"
+        name="username"
+        formControlName="username"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('username')?.invalid &&
+          registerForm.get('username')?.touched
+        "
+        class="error-message"
+      >
+        Vui lòng nhập tên đăng nhập
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="contactMethod" class="form-label"
+        >Email hoặc Số điện thoại:
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        name="contactMethod"
+        formControlName="contactMethod"
+        placeholder="Nhập email hoặc số điện thoại"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('contactMethod')?.invalid &&
+          registerForm.get('contactMethod')?.touched
+        "
+        class="error-message"
+      >
+        Vui lòng nhập email hoặc số điện thoại hợp lệ
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="password" class="form-label">Mật khẩu: </label>
+      <input
+        type="password"
+        class="form-control"
+        name="password"
+        formControlName="password"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        Mật khẩu phải có ít nhất 6 ký tự
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="confirmPassword" class="form-label"
+        >Xác nhận mật khẩu:
+      </label>
+      <input
+        type="password"
+        class="form-control"
+        name="confirmPassword"
+        formControlName="confirmPassword"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('confirmPassword')?.invalid &&
+          registerForm.get('confirmPassword')?.touched
+        "
+        class="error-message"
+      >
+        Mật khẩu xác nhận không khớp
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading">Đang đăng ký...</span>
+        <span *ngIf="!isLoading">Đăng ký</span>
+      </button>
+    </div>
+
+    <div class="login-link">
+      <p>
+        Đã có tài khoản? <a routerLink="/public/dang-nhap">Đăng nhập ngay</a>
+      </p>
+    </div>
+  </form>
+
+  <!-- Form xác thực OTP -->
+  <div *ngIf="showVerification">
+    <h2>Xác thực tài khoản</h2>
+    <p class="verification-message">
+      Chúng tôi đã gửi mã xác thực đến {{ contactMethod }}. Vui lòng nhập mã để
+      hoàn tất đăng ký.
+    </p>
+
+    <form [formGroup]="verificationForm" (ngSubmit)="verifyOTP()">
+      <div class="mb-6">
+        <label for="otp" class="form-label">Mã xác thực: </label>
+        <input
+          type="text"
+          class="form-control"
+          name="otp"
+          formControlName="otp"
+          placeholder="Nhập mã 6 số"
+          maxlength="6"
+          required
+        />
+        <div
+          *ngIf="
+            verificationForm.get('otp')?.invalid &&
+            verificationForm.get('otp')?.touched
+          "
+          class="error-message"
+        >
+          Vui lòng nhập mã xác thực
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn"
+          [disabled]="verificationForm.invalid || isVerifying"
+        >
+          <span *ngIf="isVerifying">Đang xác thực...</span>
+          <span *ngIf="!isVerifying">Xác thực</span>
+        </button>
+      </div>
+
+      <div class="resend-section">
+        <button
+          type="button"
+          class="btn-link"
+          (click)="resendOTP()"
+          [disabled]="resendCountdown > 0"
+        >
+          <span *ngIf="resendCountdown > 0"
+            >Gửi lại sau {{ resendCountdown }}s</span
+          >
+          <span *ngIf="resendCountdown === 0">Gửi lại mã</span>
+        </button>
+        <button type="button" class="btn-link" (click)="backToRegister()">
+          Quay lại
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

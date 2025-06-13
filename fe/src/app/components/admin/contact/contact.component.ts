@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Contact } from 'src/app/models/contact';
 import { ContactService } from 'src/app/services/contact.service';
 
@@ -24,7 +25,10 @@ export class ContactComponent {
     gmail: '',
     phone: ''
   };
-  constructor(private contactSv: ContactService){};
+  constructor(
+    private contactSv: ContactService,
+    private toastr: ToastrService
+  ){};
 
   ngOnInit() {
     this.dtOption = {
@@ -58,10 +62,10 @@ export class ContactComponent {
     this.contactSv.deleteContact(id).subscribe({
       next : (value) => {
           this.loaddata();
-          alert('Đã xóa thành công')
+          this.toastr.success('Đã xóa thành công', 'Thành công');
       },
-      error(err) {
-          alert('Đã xảy ra lỗi')
+      error: (err) => {
+          this.toastr.error('Đã xảy ra lỗi', 'Lỗi');
       },
     })
   }

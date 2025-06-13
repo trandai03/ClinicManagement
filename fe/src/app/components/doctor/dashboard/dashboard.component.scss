@@ -13,3 +13,177 @@
 //     flex: 1;
 //     box-shadow: 10px 10px 5px #aaaaaa;
 // }
+
+// Enhanced Dashboard Styling
+.info-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    
+    &.rounded-circle {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+  }
+
+  h6 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #2c3e50;
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+  }
+}
+
+// Specific card colors
+.revenue-card .card-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.sales-card .card-icon {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+.warning-card .card-icon {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%) !important;
+  color: #856404 !important;
+}
+
+.success-card .card-icon {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  color: #155724 !important;
+}
+
+// Quick Actions Section
+.btn-lg {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  
+  i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Today's Schedule Preview
+.table-responsive {
+  .table {
+    th {
+      background-color: #f8f9fa;
+      border-top: none;
+      font-weight: 600;
+      color: #495057;
+    }
+    
+    td {
+      vertical-align: middle;
+    }
+  }
+}
+
+// Status badges
+.badge {
+  &.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+  }
+  
+  &.bg-primary {
+    background-color: #0d6efd !important;
+  }
+  
+  &.bg-info {
+    background-color: #0dcaf0 !important;
+  }
+  
+  &.bg-success {
+    background-color: #198754 !important;
+  }
+  
+  &.bg-danger {
+    background-color: #dc3545 !important;
+  }
+}
+
+// Loading states
+.loading-overlay {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1;
+  }
+}
+
+// Empty state
+.empty-state {
+  i {
+    opacity: 0.3;
+  }
+  
+  h4 {
+    color: #6c757d;
+    margin-top: 1rem;
+  }
+  
+  p {
+    color: #adb5bd;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .info-card {
+    margin-bottom: 1rem;
+    
+    h6 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .btn-lg {
+    padding: 1rem 0.5rem;
+    
+    i {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInUp 0.5s ease-out;
+}

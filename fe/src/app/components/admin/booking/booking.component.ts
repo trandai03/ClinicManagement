@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Booking } from 'src/app/models/booking';
 import { BookingService } from 'src/app/services/booking.service';
 
@@ -27,7 +28,10 @@ export class BookingComponent {
     email: '',
     phone: ''
   };
-  constructor(private bookingSv: BookingService){};
+  constructor(
+    private bookingSv: BookingService,
+    private toastr: ToastrService
+  ){};
 
   ngOnInit() {
     this.dtoption = {
@@ -52,10 +56,10 @@ export class BookingComponent {
     this.bookingSv.delete(id).subscribe({
       next:(value) =>{
           this.loaddata();
-          alert(value.message);
+          this.toastr.success("Xóa thành công", 'Thành công');
       },
-      error(err) {
-          alert(err.message)
+      error: (err) => {
+          this.toastr.error(err.message, 'Lỗi');
       },
     })
   }

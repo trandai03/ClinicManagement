@@ -2,6 +2,7 @@ package com.n7.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -51,14 +53,14 @@ public class ServiceRequest {
     @Column(name = "result_notes")
     private String resultNotes;
 
-    @Column(name = "cost", precision = 10, scale = 2)
-    private BigDecimal cost;
+    @Column(name = "cost")
+    private Long cost;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "requested_at")
-    private Instant requestedAt;
+    private LocalDateTime requestedAt;
 
     @Column(name = "completed_at")
-    private Instant completedAt;
+    private LocalDateTime completedAt;
 
 }

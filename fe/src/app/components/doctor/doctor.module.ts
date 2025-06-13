@@ -6,14 +6,14 @@ import { FooterComponent } from "./footer/footer.component";
 import { DoctorRoutingModule } from "./doctor-routing.module";
 import { DoctorComponent } from "./doctor.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
-import { ScheduleComponent } from './schedule/schedule.component';
-import { WorkScheduleComponent } from './schedule/work-schedule.component';
+import { TodayScheduleComponent } from './today-schedule/today-schedule.component';
+import { WorkScheduleComponent } from './today-schedule/work-schedule.component';
 import { BookingComponent } from './booking/booking.component';
 import { NotificationComponent } from './notification/notification.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataTablesModule } from "angular-datatables";
-import { HistoryComponent } from './history/history.component';
+import { CompletedExaminationsComponent } from './completed-examinations/completed-examinations.component';
 import { ExaminationComponent } from './examination/examination.component';
 import { InProgressComponent } from './in-progress/in-progress.component';
 
@@ -24,12 +24,12 @@ import { InProgressComponent } from './in-progress/in-progress.component';
         FooterComponent,
         DoctorComponent,
         DashboardComponent, 
-        ScheduleComponent, 
+        TodayScheduleComponent, 
         WorkScheduleComponent, 
         BookingComponent, 
         NotificationComponent, 
         ProfileComponent, 
-        HistoryComponent, 
+        CompletedExaminationsComponent, 
         ExaminationComponent,
         InProgressComponent
     ],

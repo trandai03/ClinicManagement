@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Booking } from 'src/app/models/booking';
 import { Hours } from 'src/app/models/hour';
 import { BookingService, BookingCounts } from 'src/app/services/booking.service';
@@ -54,7 +55,8 @@ export class BookingComponent implements OnInit, OnDestroy {
   
   constructor(
     private bookingSv: BookingService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -149,25 +151,13 @@ export class BookingComponent implements OnInit, OnDestroy {
   loadAllCounts() {
     const doctorId = storageUtils.get('userId') || null;
     
-    // Load counts for doctor-relevant statuses only
-    this.bookingSv.getAllBooking('CONFIRMING', doctorId, null, null, null).subscribe(res => {
-      this.confirmingCount = res.length;
-    });
-    
-    this.bookingSv.getAllBooking('ACCEPTING', doctorId, null, null, null).subscribe(res => {
-      this.acceptingCount = res.length;
-    });
-    
-    this.bookingSv.getAllBooking('IN_PROGRESS', doctorId, null, null, null).subscribe(res => {
-      this.inProgressCount = res.length;
-    });
-    
-    this.bookingSv.getAllBooking('AWAITING_RESULTS', doctorId, null, null, null).subscribe(res => {
-      this.awaitingResultsCount = res.length;
-    });
-    
-    this.bookingSv.getAllBooking('SUCCESS', doctorId, null, null, null).subscribe(res => {
-      this.successCount = res.length;
+    this.bookingSv.getBookingCounts(doctorId).subscribe(res => {
+      this.confirmingCount = res.CONFIRMING;
+      this.acceptingCount = res.ACCEPTING;
+      this.inProgressCount = res.IN_PROGRESS;
+      this.awaitingResultsCount = res.AWAITING_RESULTS;
+      this.successCount = res.SUCCESS;
+      console.log('Loaded counts from fallback method:', res);
     });
   }
 
@@ -207,10 +197,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           this.bookingSv.clearCountsCache(doctorId);
         }
         this.loaddata();
-        alert('Đã xác nhận thành công');
+        this.toastr.success('Đã xác nhận thành công');
       },
       error: (err) => {
-        alert('Đã xảy ra lỗi khi xác nhận');
+        this.toastr.error('Đã xảy ra lỗi khi xác nhận');
       }
     });
   }
@@ -224,10 +214,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           this.bookingSv.clearCountsCache(doctorId);
         }
         this.loaddata();
-        alert('Đã hủy thành công');
+        this.toastr.success('Đã hủy thành công');
       },
       error: (err) => {
-        alert('Có lỗi: ' + err);
+        this.toastr.error('Có lỗi: ' + err);
       }
     });
   }
@@ -242,10 +232,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           this.bookingSv.clearCountsCache(doctorId);
         }
         this.loaddata();
-        alert('Đã xác nhận lịch hẹn');
+        this.toastr.success('Đã xác nhận lịch hẹn');
       },
       error: (err) => {
-        alert('Có lỗi khi xác nhận: ' + err);
+        this.toastr.error('Có lỗi khi xác nhận: ' + err);
       }
     });
   }
@@ -259,10 +249,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           this.bookingSv.clearCountsCache(doctorId);
         }
         this.loaddata();
-        alert('Đã chấp nhận lịch hẹn');
+        this.toastr.success('Đã chấp nhận lịch hẹn');
       },
       error: (err) => {
-        alert('Có lỗi khi chấp nhận: ' + err);
+        this.toastr.error('Có lỗi khi chấp nhận: ' + err);
       }
     });
   }
@@ -278,7 +268,7 @@ export class BookingComponent implements OnInit, OnDestroy {
         this.router.navigate(['/doctor/examination', bookingId]);
       },
       error: (err) => {
-        alert('Có lỗi khi bắt đầu khám: ' + err);
+        this.toastr.error('Có lỗi khi bắt đầu khám: ' + err);
       }
     });
   }
@@ -306,7 +296,7 @@ export class BookingComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error updating booking status:', err);
-        alert('Có lỗi: ' + err);
+        this.toastr.error('Có lỗi: ' + err);
       }
     });
   }
@@ -320,10 +310,10 @@ export class BookingComponent implements OnInit, OnDestroy {
           this.bookingSv.clearCountsCache(doctorId);
         }
         this.loaddata();
-        alert('Đã hoàn thành khám');
+        this.toastr.success('Đã hoàn thành khám');
       },
       error: (err) => {
-        alert('Có lỗi khi hoàn thành: ' + err);
+        this.toastr.error('Có lỗi khi hoàn thành: ' + err);
       }
     });
   }

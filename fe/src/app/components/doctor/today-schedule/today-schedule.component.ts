@@ -6,6 +6,7 @@ import { DataTableDirective } from 'angular-datatables';
 import DataTables from 'datatables.net';
 import { data } from 'jquery';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Booking } from 'src/app/models/booking';
 import { Hours } from 'src/app/models/hour';
 import { Schedule } from 'src/app/models/schedule';
@@ -17,11 +18,11 @@ import { ScheduleService } from 'src/app/services/schedule.service';
 import { storageUtils } from 'src/app/utils/storage';
 
 @Component({
-  selector: 'app-schedule',
-  templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss']
+  selector: 'app-today-schedule',
+  templateUrl: './today-schedule.component.html',
+  styleUrls: ['./today-schedule.component.scss']
 })
-export class ScheduleComponent {
+export class TodayScheduleComponent {
   totalMoney: number = 0;
   lschedule : any;
   lbooking : any;
@@ -41,7 +42,7 @@ export class ScheduleComponent {
   dtElement!: DataTableDirective;
   hours = Hours;
   constructor(private scheSv: ScheduleService, private bookingsv : BookingService,private medicineSv: MedicineService,private medicalSv: MedicalServiceService,
-    private formbuilder : FormBuilder, private changref: ChangeDetectorRef, private historySv: HistoryService, private router: Router){};
+    private formbuilder : FormBuilder, private changref: ChangeDetectorRef, private historySv: HistoryService, private router: Router, private toastr: ToastrService){};
 
   ngOnInit() {
     this.dtOption = {
@@ -68,11 +69,8 @@ export class ScheduleComponent {
       realQuantity: 1
     })
 
-    this.bookingsv.getAllBooking('ACCEPTING',storageUtils.get('userId') || null,null,null,null).subscribe(res => {
-      this.lbooking = res;
-      this.changref.detectChanges()
-      this.dtTrigger.next(null)
-    })
+    // Mặc định load lịch hôm nay thay vì tất cả lịch ACCEPTING
+    this.loadTodaySchedule();
 
     this.medicineSv.getAllMedicine().subscribe((res) => {
       this.lmedicineAPI = res;
@@ -82,7 +80,7 @@ export class ScheduleComponent {
       })
       this.lmedicineAPI = [{
         "id": 0,
-        "name": "--Todo--",
+        "name": "-- Chọn thuốc --",
         "quantity": 0,
         "money": 0,
         "unit": "",
@@ -95,12 +93,28 @@ export class ScheduleComponent {
       this.lserviceAPI = res;
       this.lserviceAPI = [{
         "id": 0,
-        "name": "--Todo--",
+        "name": "-- Chọn dịch vụ --",
         "money": 0,
         "description": ""
     },...this.lserviceAPI];
     });
 
+  }
+
+  // ===== NEW METHODS FOR TODAY SCHEDULE =====
+  
+  /**
+   * Load today's schedule by default
+   */
+  loadTodaySchedule() {
+    let date = new Date();
+    let todayFormatted = formatDate(date, 'dd/MM/yyyy', 'en-US');
+    
+    this.bookingsv.getAllBooking('ACCEPTING', storageUtils.get('userId') || null, todayFormatted, todayFormatted, null).subscribe(res => {
+      this.lbooking = res;
+      this.changref.detectChanges();
+      this.dtTrigger.next(null);
+    });
   }
 
   // ===== NEW EXAMINATION WORKFLOW METHODS =====
@@ -116,8 +130,8 @@ export class ScheduleComponent {
    * View examination details for completed bookings
    */
   viewExaminationDetail(bookingId: number) {
-    // Navigate to a read-only examination detail page or show modal
-    this.router.navigate(['/doctor/history'], { queryParams: { bookingId: bookingId } });
+    // Navigate to completed examinations page
+    this.router.navigate(['/doctor/completed-examinations'], { queryParams: { bookingId: bookingId } });
   }
 
   // ===== EXISTING METHODS =====
@@ -207,8 +221,8 @@ export class ScheduleComponent {
           this.lbooking = value;
           this.xacnhankham();
       },
-      error(err) {
-          alert('Đã xảy ra lỗi: ' + err)
+      error: (err) => {
+          this.toastr.error('Đã xảy ra lỗi: ' + err, 'Lỗi');
       },
     })
   }
@@ -295,14 +309,14 @@ export class ScheduleComponent {
       .subscribe({
         next: (value) => {
           this.loaddata();
-          alert('Xác nhận thành công!');
+          this.toastr.success('Xác nhận thành công!', 'Thành công');
         },
-        error(err) {
-          console.log(err)
-          alert('Đã có lỗi xảy ra: ' + err.error.message);
+        error: (err) => {
+          console.log(err);
+          this.toastr.error('Đã có lỗi xảy ra: ' + err.error.message, 'Lỗi');
         },
       });
-    }else {
+    } else {
       console.log('form khong hop le',this.historyForm.value);
     }
   }

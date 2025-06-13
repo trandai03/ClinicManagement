@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -89,6 +90,10 @@ public class Booking {
     @JoinColumn(name = "doctor_id",referencedColumnName = "id")
     @ToString.Exclude
     private User user;
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<ServiceRequest> serviceRequests;
 
     public Booking(String fullName, LocalDateTime dob, String phone, String email, Gender gender,
                    String address, Date date, Long idHour, Status status, String note, String token) {

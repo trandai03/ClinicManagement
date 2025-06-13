@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { MedicineService, medicineServices } from 'src/app/models/medicineService';
 import { MedicalServiceService } from 'src/app/services/medical-service.service';
 
@@ -31,7 +32,10 @@ export class MedicalServiceComponent {
     description: ''
   };
 
-  constructor(private medicalSv: MedicalServiceService) {}
+  constructor(
+    private medicalSv: MedicalServiceService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.dtOption = {
@@ -63,10 +67,10 @@ export class MedicalServiceComponent {
     this.medicalSv.deleteMedicalService(id).subscribe({
       next: (value) => {
         this.loaddata();
-        alert('Đã xóa thành công');
+        this.toastr.success('Đã xóa thành công', 'Thành công');
       },
-      error(err) {
-        alert('Đã xảy ra lỗi');
+      error: (err) => {
+        this.toastr.error('Đã xảy ra lỗi', 'Lỗi');
       },
     });
   }
@@ -89,11 +93,11 @@ export class MedicalServiceComponent {
 
         // Reload data to show the new service
         this.loaddata();
-        alert('Thêm dịch vụ mới thành công');
+        this.toastr.success('Thêm dịch vụ mới thành công', 'Thành công');
       },
       error: (err) => {
         console.error('Error adding medical service:', err);
-        alert('Đã xảy ra lỗi khi thêm dịch vụ mới');
+        this.toastr.error('Đã xảy ra lỗi khi thêm dịch vụ mới', 'Lỗi');
       }
     });
   }
@@ -109,11 +113,11 @@ export class MedicalServiceComponent {
       next: (response) => {
         // Reload data to show the updated service
         this.loaddata();
-        alert('Cập nhật dịch vụ thành công');
+        this.toastr.success('Cập nhật dịch vụ thành công', 'Thành công');
       },
       error: (err) => {
         console.error('Error updating medical service:', err);
-        alert('Đã xảy ra lỗi khi cập nhật dịch vụ');
+        this.toastr.error('Đã xảy ra lỗi khi cập nhật dịch vụ', 'Lỗi');
       }
     });
   }

@@ -28,6 +28,7 @@ public class BookingModel {
     private String note;
     private String nameDoctor;
     private String major;
+    private List<ServiceRequestModel> serviceRequests;
 
     public static BookingModel fromEntity(Booking booking) {
         return BookingModel.builder()
@@ -44,6 +45,7 @@ public class BookingModel {
                 .name(booking.getFullName())
                 .nameDoctor(booking.getUser().getFullname())
                 .major(booking.getUser().getMajor().getName())
+                .serviceRequests(ServiceRequestModel.fromEntityToModals(booking.getServiceRequests()))
                 .build();
     }
 

@@ -1,0 +1,27 @@
+/* Các CSS đặc biệt đã được loại bỏ để tránh layout bị lệch */
+
+/* Fix cho vấn đề layout bị lệch khi toggle sidebar */
+.main {
+  transition: margin-left 0.3s ease;
+}
+
+/* Desktop mode (screen width >= 1200px) */
+@media (min-width: 1200px) {
+  /* Mặc định - Sidebar hiển thị */
+  
+
+  /* Khi sidebar bị ẩn */
+  body.toggle-sidebar .main {
+    margin-left: 0;
+  }
+}
+
+/* Mobile mode (screen width < 1200px) */
+@media (max-width: 1199px) {
+  /* Mặc định - Sidebar ẩn */
+  .main {
+    margin-left: 0;
+  }
+
+
+}

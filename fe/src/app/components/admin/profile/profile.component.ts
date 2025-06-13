@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { storageUtils } from 'src/app/utils/storage';
 
@@ -17,7 +18,8 @@ export class ProfileComponent {
 
   constructor(
     private doctorsv: DoctorService,
-    private formbuilder: FormBuilder
+    private formbuilder: FormBuilder,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -46,12 +48,12 @@ export class ProfileComponent {
       this.doctorsv
         .changPass(storageUtils.get('userId') || 0, oldpass, newpass)
         .subscribe({
-          next(value) {
-            alert('Đã cập nhật mật khẩu thành công');
+          next: (value) => {
+            this.toastr.success('Đã cập nhật mật khẩu thành công', 'Thành công');
           },
-          error(err) {
-            console.log(err)
-            alert('Đã có lỗi xảy ra: ' + err.error.message);
+          error: (err) => {
+            console.log(err);
+            this.toastr.error('Đã có lỗi xảy ra: ' + err.error.message, 'Lỗi');
           },
         });
     }

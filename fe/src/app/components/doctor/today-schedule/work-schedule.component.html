@@ -1,0 +1,496 @@
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Quản lý lịch làm việc</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/doctor">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Lịch làm việc</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
+      <p>Đang tải dữ liệu...</p>
+    </div>
+  </div>
+
+  <section class="section" *ngIf="!loading">
+    <!-- Header Controls -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-primary active">
+            <i class="fa-solid fa-calendar-week"></i> Tuần
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6 text-end">
+        <button
+          type="button"
+          class="btn btn-success me-2"
+          (click)="openScheduleModal()"
+        >
+          <i class="fa-solid fa-plus"></i> Thêm lịch làm việc
+        </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="openUnavailableModal()"
+        >
+          <i class="fa-solid fa-ban"></i> Báo bận
+        </button>
+      </div>
+    </div>
+
+    <!-- Week Navigation -->
+    <div class="row mb-3" *ngIf="currentWeek">
+      <div class="col-12">
+        <div class="week-navigation">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="previousWeek()"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <div class="week-info">
+            <h5 class="mb-0">
+              {{ formatDateDisplay(currentWeek.startDate) }} -
+              {{ formatDateDisplay(currentWeek.endDate) }}
+            </h5>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="nextWeek()"
+          >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            (click)="goToToday()"
+          >
+            Hôm nay
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Week View -->
+    <div class="row" *ngIf="currentWeek">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="week-calendar">
+              <div class="week-header">
+                <div
+                  class="day-header"
+                  *ngFor="let day of currentWeek.days"
+                  [class.today]="day.isToday"
+                  [class.weekend]="day.isWeekend"
+                >
+                  <div class="day-name">{{ getDayName(day.date) }}</div>
+                  <div class="day-date">{{ day.date.getDate() }}</div>
+                  <div class="day-status">
+                    <span
+                      *ngIf="hasAvailableHours(day)"
+                      class="badge bg-success"
+                    >
+                      {{ getAvailableHoursCount(day) }} slot
+                    </span>
+                    <span
+                      *ngIf="!hasAvailableHours(day)"
+                      class="badge bg-secondary"
+                    >
+                      Nghỉ
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="week-body">
+                <div
+                  class="day-column"
+                  *ngFor="let day of currentWeek.days"
+                  [class.today]="day.isToday"
+                  [class.weekend]="day.isWeekend"
+                >
+                  <div class="day-schedules">
+                    <div
+                      class="schedule-slot"
+                      *ngFor="let schedule of day.schedules"
+                      [class.available]="schedule.isAvailable"
+                      [class.booked]="schedule.isBooked"
+                      [title]="schedule.hourName"
+                    >
+                      <span *ngIf="schedule.isAvailable">{{
+                        schedule.hourName
+                      }}</span>
+                    </div>
+                  </div>
+
+                  <div class="day-actions">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="openScheduleModal(day.dateString)"
+                      title="Thêm lịch"
+                    >
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deleteSchedule(day.dateString)"
+                      *ngIf="hasAvailableHours(day)"
+                      title="Xóa lịch"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule List -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Danh sách lịch làm việc</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Ngày</th>
+                    <th>Thời gian làm việc</th>
+                    <th>Tổng số slot</th>
+                    <th>Ghi chú</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let schedule of workingSchedules">
+                    <td>
+                      <strong>{{ schedule.date }}</strong>
+                      <span
+                        *ngIf="schedule.isFullDay"
+                        class="badge bg-primary ms-2"
+                      >
+                        Cả ngày
+                      </span>
+                    </td>
+                    <td>
+                      <div class="time-slots">
+                        <span
+                          class="badge bg-success me-1 mb-1"
+                          *ngFor="let hour of schedule.hours"
+                        >
+                          {{ hour.hourName }}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge bg-info">
+                        {{ schedule.hours.length }} / {{ allHours.length }}
+                      </span>
+                    </td>
+                    <td>{{ schedule.note || "Không có ghi chú" }}</td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary me-1"
+                        (click)="openScheduleModal(schedule.date)"
+                        title="Chỉnh sửa"
+                      >
+                        <i class="fa-solid fa-edit"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="deleteSchedule(schedule.date)"
+                        title="Xóa"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="workingSchedules.length === 0">
+                    <td colspan="5" class="text-center text-muted">
+                      <i class="fa-solid fa-calendar-xmark fa-2x mb-2"></i>
+                      <p>Chưa có lịch làm việc nào</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Schedule Modal -->
+<div
+  class="modal fade"
+  [class.show]="showScheduleModal"
+  [style.display]="showScheduleModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-calendar-plus"></i>
+          {{ selectedDate ? "Chỉnh sửa lịch làm việc" : "Thêm lịch làm việc" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="closeModals()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form [formGroup]="scheduleForm" (ngSubmit)="onScheduleSubmit()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="scheduleDate" class="form-label">
+                  <i class="fa-solid fa-calendar"></i> Ngày làm việc
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="scheduleDate"
+                  formControlName="date"
+                  [min]="todayString"
+                />
+                <div
+                  *ngIf="
+                    scheduleForm.get('date')?.invalid &&
+                    scheduleForm.get('date')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Vui lòng chọn ngày
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-3">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="isFullDay"
+                    formControlName="isFullDay"
+                    (change)="onFullDayToggle()"
+                  />
+                  <label class="form-check-label" for="isFullDay">
+                    <i class="fa-solid fa-clock"></i> Làm cả ngày
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="!scheduleForm.get('isFullDay')?.value">
+            <label class="form-label">
+              <i class="fa-solid fa-clock"></i> Chọn giờ làm việc
+            </label>
+            <div class="hour-selection">
+              <div class="row">
+                <div
+                  class="col-md-3 col-sm-4 col-6 mb-2"
+                  *ngFor="let hour of allHours"
+                >
+                  <div
+                    class="hour-option"
+                    [class.selected]="isHourSelected(hour.id)"
+                    (click)="toggleHourSelection(hour.id)"
+                  >
+                    <i class="fa-solid fa-clock"></i>
+                    {{ hour.name }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                scheduleForm.get('selectedHours')?.invalid &&
+                scheduleForm.get('selectedHours')?.touched
+              "
+              class="text-danger"
+            >
+              Vui lòng chọn ít nhất một giờ làm việc
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="scheduleNote" class="form-label">
+              <i class="fa-solid fa-note-sticky"></i> Ghi chú (tùy chọn)
+            </label>
+            <textarea
+              class="form-control"
+              id="scheduleNote"
+              formControlName="note"
+              rows="3"
+              placeholder="Nhập ghi chú về lịch làm việc..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModals()"
+          >
+            Hủy
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="scheduleForm.invalid || savingSchedule"
+          >
+            <span *ngIf="savingSchedule">
+              <i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...
+            </span>
+            <span *ngIf="!savingSchedule">
+              <i class="fa-solid fa-save"></i> Lưu lịch
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Unavailable Modal -->
+<div
+  class="modal fade"
+  [class.show]="showUnavailableModal"
+  [style.display]="showUnavailableModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-ban"></i> Báo bận</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModals()"
+        ></button>
+      </div>
+
+      <form [formGroup]="unavailableForm" (ngSubmit)="onUnavailableSubmit()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="fromDate" class="form-label">
+                  <i class="fa-solid fa-calendar"></i> Từ ngày
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fromDate"
+                  formControlName="fromDate"
+                  [min]="todayString"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="toDate" class="form-label">
+                  <i class="fa-solid fa-calendar"></i> Đến ngày
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="toDate"
+                  formControlName="toDate"
+                  [min]="getMinDateForUnavailable()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="reason" class="form-label">
+              <i class="fa-solid fa-exclamation-triangle"></i> Lý do
+            </label>
+            <select class="form-control" id="reason" formControlName="reason">
+              <option value="">Chọn lý do</option>
+              <option value="sick">Ốm đau</option>
+              <option value="vacation">Nghỉ phép</option>
+              <option value="training">Đào tạo</option>
+              <option value="conference">Hội nghị</option>
+              <option value="personal">Việc riêng</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="unavailableNote" class="form-label">
+              <i class="fa-solid fa-note-sticky"></i> Ghi chú chi tiết
+            </label>
+            <textarea
+              class="form-control"
+              id="unavailableNote"
+              formControlName="note"
+              rows="3"
+              placeholder="Nhập ghi chú chi tiết về việc báo bận..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModals()"
+          >
+            Hủy
+          </button>
+          <button
+            type="submit"
+            class="btn btn-warning"
+            [disabled]="unavailableForm.invalid"
+          >
+            <i class="fa-solid fa-ban"></i> Báo bận
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="showScheduleModal || showUnavailableModal"
+  *ngIf="showScheduleModal || showUnavailableModal"
+  (click)="closeModals()"
+></div>

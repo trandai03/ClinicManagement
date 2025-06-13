@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MatDatepickerInputEvent,
 } from '@angular/material/datepicker';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, map, of, forkJoin, catchError, finalize, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Doctor } from 'src/app/models/doctor';
 import { Hour } from 'src/app/models/hour';
@@ -61,7 +62,7 @@ export class ScheduleComponent {
 
   constructor(private formbuilder : FormBuilder,private majorsv: MajorService,
     private doctorsv : DoctorService, private schesv : ScheduleService,private bookingsv : BookingService,
-        private hoursv : HourService){};
+        private hoursv : HourService, private toastr: ToastrService){};
 
   ngOnInit() {
     this.addForm = this.formbuilder.group({
@@ -254,13 +255,13 @@ export class ScheduleComponent {
     // Custom validation cho mode BY_DATE
     if (this.bookingMode === 'BY_DATE') {
       if (!this.selectedSlot) {
-        alert('Vui lòng chọn một khung giờ khám');
+        this.toastr.warning('Vui lòng chọn một khung giờ khám');
         return;
       }
       
       // Đảm bảo idUser và idHour được set từ selectedSlot
       if (!this.addForm.get('idUser')?.value || !this.addForm.get('idHour')?.value) {
-        alert('Có lỗi với thông tin bác sĩ hoặc giờ khám. Vui lòng chọn lại.');
+        this.toastr.warning('Có lỗi với thông tin bác sĩ hoặc giờ khám. Vui lòng chọn lại.');
         return;
       }
     }
@@ -268,12 +269,12 @@ export class ScheduleComponent {
     // Validation cho mode BY_DOCTOR
     if (this.bookingMode === 'BY_DOCTOR') {
       if (!this.addForm.get('idUser')?.value) {
-        alert('Vui lòng chọn bác sĩ');
+        this.toastr.warning('Vui lòng chọn bác sĩ');
         return;
       }
       
       if (!this.addForm.get('idHour')?.value) {
-        alert('Vui lòng chọn giờ khám');
+        this.toastr.warning('Vui lòng chọn giờ khám');
         return;
       }
     }
@@ -290,12 +291,11 @@ export class ScheduleComponent {
                       this.submited = false;
                       this.resetFormAfterSubmit();
                       
-                      alert('Đặt lịch thành công! Hãy mở email để xác nhận lịch đăng ký');
-                      // redirect đến 1 trang nào đó với nội dung là đã thêm thành công, đang chờ duyệt , check email để nhận kết quả
+                      this.toastr.success('Đặt lịch thành công! Hãy mở email để xác nhận lịch đăng ký');
                     },
                     error: (err) => {
                         console.error('Đã có lỗi xảy ra khi tạo booking: ', err);
-                        alert('Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
+                        this.toastr.error('Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
                         this.submited = false;
                     }
                   })
@@ -699,7 +699,7 @@ export class ScheduleComponent {
   // Mở modal chọn ca
   openSessionModal() {
     if (!this.addForm.get('date')?.value || !this.addForm.get('idMajor')?.value) {
-      alert('Vui lòng chọn chuyên khoa và ngày khám trước');
+      this.toastr.warning('Vui lòng chọn chuyên khoa và ngày khám trước');
       return;
     }
     

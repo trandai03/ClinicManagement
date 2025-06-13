@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, Subject, delay, of } from 'rxjs';
 import { apiResponse } from 'src/app/models/apiResponse';
 import { Major, majors } from 'src/app/models/major';
@@ -30,7 +31,7 @@ export class MajorComponent {
     description: '',
     image: ''
   };
-  constructor(private majorSv: MajorService, private formbuilder: FormBuilder, private changRef : ChangeDetectorRef) { };
+  constructor(private majorSv: MajorService, private formbuilder: FormBuilder, private changRef : ChangeDetectorRef, private toastr: ToastrService) { };
 
   ngOnInit() {
     this.dtOption = {
@@ -84,11 +85,11 @@ export class MajorComponent {
       this.majorSv.createMajor(formda).subscribe({
         next:(value) => {
           this.loaddata()
-          alert('Đã tạo thành công!!!')
+          this.toastr.success('Đã tạo thành công!!!')
         },
-        error(value) {
-          alert('Có lỗi rồi!!!')
-        }
+        error: (err) => {
+          this.toastr.error(err.message, 'Lỗi');
+      },
       })
     }
   }
@@ -110,11 +111,11 @@ export class MajorComponent {
       this.majorSv.updateMajor(formda,this.itemout.id).subscribe({
         next:(value) => {
           this.loaddata();
-          alert('Đã cập nhật thành công thành công!!!')
+          this.toastr.success('Đã cập nhật thành công thành công!!!')
         },
-        error(value) {
-          alert('Có lỗi rồi!!!')
-        }
+        error: (err) => {
+          this.toastr.error(err.message, 'Lỗi');
+      },
       })
     }
   }
@@ -142,10 +143,10 @@ export class MajorComponent {
     this.majorSv.delete(id).subscribe({
      next:(value) => {
         this.loaddata()
-        alert(value.message)
+        this.toastr.success('Đã xóa thành công!')
      }, 
-     error(err) {
-         alert('Đã có lỗi xảy ra')
+     error: (err) => {
+         this.toastr.error(err.message, 'Lỗi')
      },
     })
   }
