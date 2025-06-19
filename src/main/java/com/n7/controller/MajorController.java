@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.n7.dto.MajorDTO;
 import com.n7.entity.Major;
 import com.n7.exception.ResourceAlreadyExitsException;
+import com.n7.model.CustomUserDetail;
 import com.n7.model.MajorModel;
 import com.n7.response.ErrorResponse;
 import com.n7.response.SuccessResponse;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,6 +88,8 @@ public class MajorController {
 
     @GetMapping(value = "majors")
     public ResponseEntity<?> getAllMajor() {
+
+
         try{
             List<MajorModel> list = majorService.getAll();
             return ResponseEntity.ok(new SuccessResponse<>("Get success",list));

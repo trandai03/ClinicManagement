@@ -1,10 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { storageUtils } from '../utils/storage';
 
 export const doctorGuard: CanActivateFn = (route, state) => {
-  if (route.data['role'] == storageUtils.get('roleId')) return true;
-  inject(Router).navigate(['login']);
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  // Kiểm tra đăng nhập
+  if (!authService.isLogin()) {
+    router.navigate(['/public/dang-nhap']);
+    return false;
+  }
+
+  // Kiểm tra role doctor (roleId = '2')
+  if (authService.isDoctor()) {
+    return true;
+  }
+
+  // Nếu không phải doctor, điều hướng về trang tương ứng với role hiện tại
+  authService.navigateToRoleDashboard();
   return false;
-};
+}; 

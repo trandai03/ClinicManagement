@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { BookingService } from 'src/app/services/booking.service';
-import { RegisterService } from 'src/app/services/register.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { storageUtils } from 'src/app/utils/storage';
 import { DatePipe, formatDate } from '@angular/common';
 
@@ -23,7 +23,7 @@ export class ProfileComponent {
 
   profileForm!:FormGroup
 
-  constructor(private formbuilder: FormBuilder,private registerSv: RegisterService, private bookingSv: BookingService) {
+  constructor(private formbuilder: FormBuilder,private authSv: AuthService, private bookingSv: BookingService) {
     var pro = storageUtils.get('profile');
     this.profileForm = this.formbuilder.group({
       fullName: [pro.fullName || ''],
@@ -95,7 +95,7 @@ export class ProfileComponent {
       dob = dobformat
     }
       const id = storageUtils.get('profile').id;
-      this.registerSv.saveProffile({fullName,dob,gender,phone,bhyt,address,id}).subscribe();
+      this.authSv.saveProffile({fullName,dob,gender,phone,bhyt,address,id}).subscribe();
     }
     else {
       console.log('form khong hop le')

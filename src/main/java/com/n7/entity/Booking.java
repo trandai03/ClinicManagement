@@ -27,7 +27,7 @@ public class Booking {
     private String fullName;
 
     @Column(length = 20)
-    private LocalDateTime dob;
+    private Date dob;
 
     @Column(length = 20)
     private String phone;
@@ -80,6 +80,13 @@ public class Booking {
     @Column(name="payment_method")
     private String paymentMethod;
 
+    @Column(name="results_conclusion")
+    private String resultsConclusion;
+
+    @Column(name="results_notes")
+    private String resultsNotes;
+
+
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
@@ -95,7 +102,7 @@ public class Booking {
     @ToString.Exclude
     private List<ServiceRequest> serviceRequests;
 
-    public Booking(String fullName, LocalDateTime dob, String phone, String email, Gender gender,
+    public Booking(String fullName, Date dob, String phone, String email, Gender gender,
                    String address, Date date, Long idHour, Status status, String note, String token) {
         this.fullName = fullName;
         this.dob = dob;

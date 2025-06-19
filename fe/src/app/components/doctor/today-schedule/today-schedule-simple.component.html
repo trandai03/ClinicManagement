@@ -1,0 +1,127 @@
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1><i class="bi bi-clock-history"></i> Lịch khám hôm nay</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="doctor/home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Lịch khám hôm nay</li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="section">
+    <div class="row">
+      <!-- Filter Card -->
+      <div class="col-12">
+        <div class="card info-card sales-card">
+          <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-filter me-2"></i>Bộ lọc
+              </h5>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary btn-sm" (click)="loadTodayBookings()">
+                  <i class="bi bi-calendar-day me-1"></i>Hôm nay
+                </button>
+                <button class="btn btn-primary btn-sm" (click)="refreshData()" [disabled]="loading">
+                  <i class="bi bi-arrow-clockwise me-1"></i>
+                  <span *ngIf="!loading">Làm mới</span>
+                  <span *ngIf="loading">Đang tải...</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- Loading indicator -->
+            <div *ngIf="loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+              </div>
+              <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
+            </div>
+
+            <!-- Data table - exactly 6 columns to match original -->
+            <div *ngIf="!loading" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" 
+                     class="table table-bordered table-striped table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th style="text-align: center">STT</th>
+                    <th style="text-align: center">Ngày khám</th>
+                    <th style="text-align: center">Giờ khám</th>
+                    <th style="text-align: center">Thông tin bệnh nhân</th>
+                    <th style="text-align: center">Ghi chú</th>
+                    <th style="text-align: center">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr *ngFor="let booking of bookings; let i = index; trackBy: trackByFn" style="height: 80px">
+                    <td>{{i + 1}}</td>
+                    <td>
+                      <span class="fw-medium">{{formatDate(booking.date)}}</span>
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">{{getHourText(booking.idHour)}}</span>
+                    </td>
+                    <td class="text-start">
+                      <div class="d-flex flex-column">
+                        <strong>{{booking.name}}</strong>
+                        <small class="text-muted">
+                          {{getGenderText(booking.gender)}} - {{formatDate(booking.dob)}}
+                        </small>
+                        <small class="text-muted">
+                          <i class="bi bi-envelope me-1"></i>{{booking.email}}
+                        </small>
+                        <small class="text-muted">
+                          <i class="bi bi-phone me-1"></i>{{booking.phone}}
+                        </small>
+                      </div>
+                    </td>
+                    <td>
+                      <small>{{booking.note || 'Không có'}}</small>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-1 justify-content-center flex-wrap">
+                        <button type="button" 
+                                class="btn btn-sm btn-primary"
+                                (click)="startExamination(booking.id)"
+                                title="Bắt đầu khám">
+                          <i class="bi bi-play-circle"></i>
+                          <span class="d-none d-lg-inline ms-1">Bắt đầu khám</span>
+                        </button>
+                        <button type="button" 
+                                class="btn btn-sm btn-info"
+                                (click)="viewBookingInfo(booking)"
+                                title="Xem thông tin">
+                          <i class="bi bi-info-circle"></i>
+                          <span class="d-none d-lg-inline ms-1">Xem</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Empty state -->
+                  <tr *ngIf="bookings.length === 0">
+                    <td colspan="6" class="text-center py-5">
+                      <div class="text-muted">
+                        <i class="bi bi-calendar-x display-4"></i>
+                        <p class="mt-2 mb-0">Không có lịch khám nào</p>
+                        <small>Chưa có lịch khám hôm nay</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main> 

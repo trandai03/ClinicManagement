@@ -1,10 +1,12 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import {
   MatDatepickerInputEvent,
 } from '@angular/material/datepicker';
 import { ToastrService } from 'ngx-toastr';
+import { ToastService } from 'src/app/services/toast.service';
 import { Observable, map, of, forkJoin, catchError, finalize, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Doctor } from 'src/app/models/doctor';
 import { Hour } from 'src/app/models/hour';
@@ -42,6 +44,8 @@ export class ScheduleComponent {
   sessionSlots: { [key: string]: TimeSlot[] } = {}; // Slots theo ca
   showSessionModal: boolean = false;
   showSlotsPopup: boolean = false;
+  // Thêm property để lưu trữ sessions có sẵn
+  availableSessions: ('MORNING' | 'AFTERNOON' | 'EVENING')[] = [];
   
   //ngayban : Ngày mà bác sĩ có lịch trùng
   ngayban : Schedules[] = []
@@ -62,7 +66,7 @@ export class ScheduleComponent {
 
   constructor(private formbuilder : FormBuilder,private majorsv: MajorService,
     private doctorsv : DoctorService, private schesv : ScheduleService,private bookingsv : BookingService,
-        private hoursv : HourService, private toastr: ToastrService){};
+        private hoursv : HourService, private toastr: ToastrService, private toastService: ToastService){};
 
   ngOnInit() {
     this.addForm = this.formbuilder.group({
@@ -98,46 +102,45 @@ export class ScheduleComponent {
   setBookingMode(mode: 'BY_DOCTOR' | 'BY_DATE') {
     this.bookingMode = mode;
     
-    // Reset các field tương ứng
+    // Reset tất cả fields liên quan bao gồm cả chuyên khoa
+    this.addForm.patchValue({
+      idMajor: '',
+      idUser: '',
+      idHour: '',
+      date: ''
+    });
+    
+    // Clear tất cả data và state cho cả 2 mode
+    this.listDoctor = of([]);
+    this.listHour = of([]);
+    this.availableSlots = [];
+    this.selectedSlot = null;
+    this.loadingSlots = false;
+    this.slotsError = null;
+    this.listHourTrung = [];
+    this.ngayban = [];
+    this.disableDate = [];
+    this.doctorAvailableDates = [];
+    this.doctorAvailableDatesAsDate = [];
+    
+    // Clear BY_DATE specific data
+    this.majorAvailableDates = [];
+    this.majorAvailableDatesAsDate = [];
+    this.availableSessions = [];
+    this.sessionSlots = {};
+    this.selectedSession = null;
+    this.showSessionModal = false;
+    this.showSlotsPopup = false;
+    
+    // Update validators tùy theo mode
     if (mode === 'BY_DOCTOR') {
-      this.addForm.patchValue({
-        idUser: '',
-        idHour: ''
-      });
-      // Clear available slots
-      this.availableSlots = [];
-      this.selectedSlot = null;
-      this.loadingSlots = false;
-      this.slotsError = null;
-      this.listHour = of([]);
-      this.listHourTrung = [];
-      
-      // Update validators - bác sĩ bắt buộc
+      // Bác sĩ bắt buộc cho mode BY_DOCTOR
       this.addForm.get('idUser')?.setValidators([Validators.required]);
       this.addForm.get('idHour')?.setValidators([Validators.required]);
     } else {
-      this.addForm.patchValue({
-        idUser: '',
-        idHour: ''
-      });
-      
-      // Update validators - bác sĩ không bắt buộc khi đặt theo ngày, nhưng idHour vẫn bắt buộc
+      // Bác sĩ không bắt buộc cho mode BY_DATE, nhưng idHour vẫn bắt buộc
       this.addForm.get('idUser')?.clearValidators();
       this.addForm.get('idHour')?.setValidators([Validators.required]);
-      
-      // Clear doctor-specific data
-      this.listDoctor = of([]);
-      this.listHour = of([]);
-      this.listHourTrung = [];
-      this.ngayban = [];
-      this.disableDate = [];
-      this.doctorAvailableDates = [];
-      this.doctorAvailableDatesAsDate = [];
-      
-      // Nếu đã chọn ngày và khoa, load available slots
-      if (this.addForm.get('date')?.value && this.addForm.get('idMajor')?.value) {
-        this.loadAvailableSlotsByDate();
-      }
     }
     
     this.addForm.get('idUser')?.updateValueAndValidity();
@@ -186,6 +189,7 @@ export class ScheduleComponent {
           hourName: slot.hourName,
           doctorId: slot.doctorId,
           doctorName: slot.doctorName,
+          session: slot.session,
           doctorRank: slot.doctorRankId ? {
             id: slot.doctorRankId,
             name: slot.doctorRankName,
@@ -203,7 +207,12 @@ export class ScheduleComponent {
           return a.doctorName.localeCompare(b.doctorName);
         });
 
+        // Phân loại slots theo ca và kiểm tra sessions có sẵn
+        this.sessionSlots = this.categorizeSlotsBySession(this.availableSlots);
+        this.availableSessions = this.checkAvailableSessions(this.availableSlots);
+
         console.log('Available slots loaded:', this.availableSlots.length);
+        console.log('Available sessions:', this.availableSessions);
       },
       error: (err) => {
         console.error('Error in loadAvailableSlotsByDate:', err);
@@ -255,13 +264,13 @@ export class ScheduleComponent {
     // Custom validation cho mode BY_DATE
     if (this.bookingMode === 'BY_DATE') {
       if (!this.selectedSlot) {
-        this.toastr.warning('Vui lòng chọn một khung giờ khám');
+        this.toastService.showWarning('Vui lòng chọn một khung giờ khám');
         return;
       }
       
       // Đảm bảo idUser và idHour được set từ selectedSlot
       if (!this.addForm.get('idUser')?.value || !this.addForm.get('idHour')?.value) {
-        this.toastr.warning('Có lỗi với thông tin bác sĩ hoặc giờ khám. Vui lòng chọn lại.');
+        this.toastService.showWarning('Có lỗi với thông tin bác sĩ hoặc giờ khám. Vui lòng chọn lại.');
         return;
       }
     }
@@ -269,12 +278,12 @@ export class ScheduleComponent {
     // Validation cho mode BY_DOCTOR
     if (this.bookingMode === 'BY_DOCTOR') {
       if (!this.addForm.get('idUser')?.value) {
-        this.toastr.warning('Vui lòng chọn bác sĩ');
+        this.toastService.showWarning('Vui lòng chọn bác sĩ');
         return;
       }
       
       if (!this.addForm.get('idHour')?.value) {
-        this.toastr.warning('Vui lòng chọn giờ khám');
+        this.toastService.showWarning('Vui lòng chọn giờ khám');
         return;
       }
     }
@@ -290,12 +299,15 @@ export class ScheduleComponent {
                       // Reset form và trạng thái
                       this.submited = false;
                       this.resetFormAfterSubmit();
-                      
-                      this.toastr.success('Đặt lịch thành công! Hãy mở email để xác nhận lịch đăng ký');
+                      if(storageUtils.get('roleId')==3){
+                        this.toastService.showSuccess('Đặt lịch thành công!');
+                      }else{
+                        this.toastService.showSuccess('Đặt lịch thành công! Hãy chờ đợi lịch được duyệt');
+                      }
                     },
                     error: (err) => {
                         console.error('Đã có lỗi xảy ra khi tạo booking: ', err);
-                        this.toastr.error('Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
+                        this.toastService.showError('Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
                         this.submited = false;
                     }
                   })
@@ -551,7 +563,10 @@ export class ScheduleComponent {
         // Convert DoctorScheduleHour[] to Hour[] for dropdown
         const hoursForDropdown: Hour[] = workingHours.map(schedule => ({
           id: schedule.idHour,
-          name: schedule.hourName || `Giờ ${schedule.idHour}`
+          name: schedule.hourName || `Giờ ${schedule.idHour}`,
+          session: schedule.idHour <= 4 ? 'Sáng' : 'Chiều',
+          startTime: schedule.hourName?.split(' - ')[0] || '',
+          endTime: schedule.hourName?.split(' - ')[1] || ''
         }));
         
         // Set list hours available từ API response
@@ -642,16 +657,35 @@ export class ScheduleComponent {
     };
 
     slots.forEach(slot => {
-      if (slot.hourId >= 1 && slot.hourId <= 4) { // 7h-11h
+      // Sử dụng trường session từ TimeSlot thay vì dựa vào hourId
+      if (slot.session === 'MORNING') {
         sessions.MORNING.push(slot);
-      } else if (slot.hourId >= 5 && slot.hourId <= 6) { // 13h-15h  
+      } else if (slot.session === 'AFTERNOON') {
         sessions.AFTERNOON.push(slot);
-      } else if (slot.hourId >= 7 && slot.hourId <= 8) { // 15h-17h
+      } else if (slot.session === 'EVENING') {
         sessions.EVENING.push(slot);
       }
     });
 
     return sessions;
+  }
+
+  // Kiểm tra session nào có TimeSlot
+  checkAvailableSessions(slots: TimeSlot[]): ('MORNING' | 'AFTERNOON' | 'EVENING')[] {
+    const sessionMap = this.categorizeSlotsBySession(slots);
+    const availableSessions: ('MORNING' | 'AFTERNOON' | 'EVENING')[] = [];
+    
+    if (sessionMap['MORNING'].length > 0) {
+      availableSessions.push('MORNING');
+    }
+    if (sessionMap['AFTERNOON'].length > 0) {
+      availableSessions.push('AFTERNOON');
+    }
+    if (sessionMap['EVENING'].length > 0) {
+      availableSessions.push('EVENING');
+    }
+    
+    return availableSessions;
   }
 
   // Lấy tên ca bằng tiếng Việt
@@ -699,7 +733,7 @@ export class ScheduleComponent {
   // Mở modal chọn ca
   openSessionModal() {
     if (!this.addForm.get('date')?.value || !this.addForm.get('idMajor')?.value) {
-      this.toastr.warning('Vui lòng chọn chuyên khoa và ngày khám trước');
+      this.toastService.showWarning('Vui lòng chọn chuyên khoa và ngày khám trước');
       return;
     }
     
@@ -743,6 +777,7 @@ export class ScheduleComponent {
           hourName: slot.hourName,
           doctorId: slot.doctorId,
           doctorName: slot.doctorName,
+          session: slot.session,
           doctorRank: slot.doctorRankId ? {
             id: slot.doctorRankId,
             name: slot.doctorRankName,
@@ -830,15 +865,19 @@ export class ScheduleComponent {
   }
 
   autoFill() {
+    const dob = new Date(this.profileInfor.dob);
+    const formattedDob = dob.toISOString().split('T')[0]; // "2003-06-28"
+  
     this.addForm.patchValue({
       name: this.profileInfor.fullName,
-      dob:  new Date(this.profileInfor.dob),
-      phone:    this.profileInfor.phone,
-      email:  this.profileInfor.gmail,
-      address:  this.profileInfor.address,
+      dob: formattedDob,
+      phone: this.profileInfor.phone,
+      email: this.profileInfor.gmail,
+      address: this.profileInfor.address,
       gender: this.profileInfor.gender
-    })
+    });
   }
+  
 
   // Format currency for Vietnamese display
   formatCurrency(price: number): string {

@@ -33,11 +33,12 @@ export class DashboardComponent {
 
     this.bookingsv.getAllBooking('SUCCESS',null,null,null,null).subscribe(res => {
       console.log('so luong ngay')
+      console.log(res)
       console.log(this.slbenhnhan.get('03'))
       res.forEach(e => {
-        if(e.date.slice(6,10)=='2025') {
-          const count = this.slbenhnhan.get(e.date.slice(0,2)) ?? 0;
-          this.slbenhnhan.set(e.date.slice(0,2), count + 1);
+        if(e.date.slice(0,4)=='2025') {
+          const count = this.slbenhnhan.get(e.date.slice(5,7)) ?? 0;
+          this.slbenhnhan.set(e.date.slice(5,7), count + 1);
           const count1 = this.slkhoa.get(e.major) ?? 0;
           console.log(e.major, this.slbenhnhan.get(e.major))
           this.slkhoa.set(e.major,(count1 + 1))
@@ -72,13 +73,15 @@ export class DashboardComponent {
   autoplay(dataparam : any) {
     console.log('da chay vao chart')
     new Chart('myChart', {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
         datasets: [{
           label: 'Thống kê số bệnh nhân đã đến khám trong năm 2025',
           data: dataparam,
-          borderWidth: 1
+          borderWidth: 1,
+          fill: false,
+          tension: 0.1
         }]
       },
       options: {
@@ -114,15 +117,15 @@ export class DashboardComponent {
   }
   autoplay3(labelkhoa: any, dsbenhnhan : any) {
     new Chart('myChart3', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: labelkhoa,
         datasets: [{
           label: '',
           data: dsbenhnhan,
-          fill: false,
+          
           borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
+          
         }]
       }
     })

@@ -1,254 +1,584 @@
 <main id="main" class="main">
-  <div class="pagetitle" style="margin-top: 20px; margin-bottom: 20px">
-    <h1><i class="bi bi-check-circle"></i> Bệnh nhân đã khám xong</h1>
+  <div class="pagetitle">
+    <h1><i class="bi bi-check-circle"></i> Danh sách bệnh nhân đã khám xong</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/doctor/home">Trang chủ</a></li>
-        <li class="breadcrumb-item active">Đã khám xong</li>
+        <li class="breadcrumb-item"><a href="doctor/home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Bệnh nhân đã khám xong</li>
       </ol>
     </nav>
   </div>
-  <!-- End Page Title -->
-
-  <!-- <button type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal"
-      data-bs-target="#basicModal">
-      <i class="bi bi-person-plus-fill"></i> &nbsp;Thêm mới
-    </button> -->
-  <br />
 
   <section class="section">
     <div class="row">
-      <div class="col-lg-12">
+      <!-- Filter Card -->
+      <div class="col-12">
+        <div class="card info-card sales-card">
+          <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-filter me-2"></i>Bộ lọc
+              </h5>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="refreshData()"
+                [disabled]="loading"
+              >
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                <span *ngIf="!loading">Làm mới</span>
+                <span *ngIf="loading">Đang tải...</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="col-12">
         <div class="card">
-          <div class="card-body" style="margin-top: 20px">
-            <ng-container [ngTemplateOutlet]="loaded"></ng-container>
+          <div class="card-body">
+            <!-- Loading indicator -->
+            <div *ngIf="loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+              </div>
+              <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
+            </div>
+
+            <!-- Data table - exactly 10 columns -->
+            <div *ngIf="!loading" class="table-responsive">
+              <table
+                datatable
+                [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger"
+                class="table table-bordered table-striped table-hover"
+              >
+                <thead class="table-light">
+                  <tr>
+                    <th style="text-align: center">STT</th>
+                    <th style="text-align: center">Họ tên</th>
+                    <th style="text-align: center">Giới tính</th>
+                    <th style="text-align: center">Ngày sinh</th>
+                    <th style="text-align: center">Ngày khám</th>
+                    <th style="text-align: center">Giờ khám</th>
+                    <th style="text-align: center">Email</th>
+                    <th style="text-align: center">Số điện thoại</th>
+                    <th style="text-align: center">Ghi chú</th>
+                    <th style="text-align: center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr
+                    *ngFor="
+                      let booking of bookings;
+                      let i = index;
+                      trackBy: trackByFn
+                    "
+                  >
+                    <td>{{ i + 1 }}</td>
+                    <td class="text-start">
+                      <strong>{{ booking.name }}</strong>
+                    </td>
+                    <td>
+                      <span
+                        class="badge"
+                        [class]="
+                          booking.gender === 'MALE' ? 'bg-primary' : 'bg-pink'
+                        "
+                      >
+                        {{ getGenderText(booking.gender) }}
+                      </span>
+                    </td>
+                    <td>{{ formatDate(booking.dob) }}</td>
+                    <td>
+                      <span class="fw-medium">{{
+                        formatDate(booking.date)
+                      }}</span>
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">{{
+                        getHourText(booking.idHour)
+                      }}</span>
+                    </td>
+                    <td>
+                      <small>{{ booking.email }}</small>
+                    </td>
+                    <td>
+                      <small>{{ booking.phone }}</small>
+                    </td>
+                    <td>
+                      <small>{{ booking.note || "Không có" }}</small>
+                    </td>
+                    <td>
+                      <div
+                        class="d-flex gap-1 justify-content-center flex-wrap"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-info"
+                          (click)="viewBookingInfo(booking)"
+                          data-bs-toggle="modal"
+                          data-bs-target="#examinationDetailsModal"
+                          title="Xem thông tin chi tiết"
+                        >
+                          <i class="bi bi-eye"></i>
+                          <span class="d-none d-lg-inline ms-1">Chi tiết</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-primary"
+                          (click)="exportReport(booking)"
+                          title="Xuất báo cáo"
+                        >
+                          <i class="bi bi-download"></i>
+                          <span class="d-none d-lg-inline ms-1">Báo cáo</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="bookings.length === 0">
+                    <td colspan="10" class="text-center py-5">
+                      <div class="text-muted">
+                        <i class="bi bi-inbox display-4"></i>
+                        <p class="mt-2 mb-0">Không có dữ liệu</p>
+                        <small>Chưa có bệnh nhân nào đã khám xong</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-</main>
-<!-- End #main -->
 
-<!-- // Day la modal xem thonng tin chi tiet chuyen ngành-->
-<div class="card">
-  <div class="card-body" style="padding: 0px">
-    <!-- End Basic Modal-->
-    <div class="modal fade" id="basicModalxem">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title">Thông tin chi tiết lịch hẹn</h2>
-          </div>
-          <div class="modal-body">
-            <!-- Multi Columns Form -->
-            <form class="row g-3">
-              <div class="col-md-12">
-                <label for="inputName5" class="form-label">Tên bệnh nhân</label>
-                <input
-                  [value]="itemout.name"
-                  type="text"
-                  class="form-control"
-                  id="inputName5"
-                  readonly
-                />
-              </div>
-              <div class="col-md-12">
-                <label for="inputName5" class="form-label">Ngày sinh</label>
-                <input
-                  [value]="itemout.dob"
-                  type="text"
-                  class="form-control"
-                  id="inputName5"
-                  readonly
-                />
-              </div>
-              <div class="col-md-12">
-                <label for="inputEmail5" class="form-label">Ghi chú</label>
-                <textarea
-                  [value]="itemout.note"
-                  class="form-control"
-                  id="inputEmail5"
-                  style="height: 120px"
-                  readonly
-                ></textarea>
-              </div>
-              <div class="col-md-12">
-                <label for="inputName55" class="form-label">Ngày đăng</label>
-                <input
-                  [value]="itemout.date"
-                  type="text"
-                  class="form-control"
-                  id="inputName55"
-                  readonly
-                />
-              </div>
-            </form>
-            <!-- End Multi Columns Form -->
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Basic Modal-->
-    <div class="modal fade" id="basicModalsua" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title">
-              Thêm lịch hẹn có id: {{ itemout.id }} vào thời khóa biểu
-            </h2>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">Ngày khám : {{ itemout.date }}</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Hủy
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-              (click)="xacnhan(itemout.id)"
-            >
-              Đồng ý
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Basic Modal-->
-    <div class="modal fade" id="basicModalxoa" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title">
-              Bạn có chắc chắn hủy lịch hẹn có id: {{ itemout.id }}
-            </h2>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">Ngày khám : {{ itemout.date }}</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Quay lại
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-              (click)="huy(itemout.id)"
-            >
-              Đồng ý
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<ng-template #loading>
+  <!-- Modal Chi tiết phiên khám -->
   <div
-    class="spinner-border"
-    style="width: 100px; height: 100px; margin-left: 48%"
-    role="status"
+    class="modal fade"
+    id="examinationDetailsModal"
+    tabindex="-1"
+    aria-labelledby="examinationDetailsModalLabel"
+    aria-hidden="true"
+    data-bs-backdrop="static"
   >
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</ng-template>
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="examinationDetailsModalLabel">
+            <i class="bi bi-clipboard-check me-2"></i>
+            Chi tiết phiên khám bệnh
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeDetailsModal()"
+          ></button>
+        </div>
 
-<ng-template #loaded>
-  <!-- Table with hoverable rows -->
-  <table
-    datatable
-    [dtOptions]="dtOption"
-    [dtTrigger]="dtTrigger"
-    class="table table-hover"
-  >
-    <thead>
-      <tr>
-        <th style="text-align: center">Id</th>
-        <th style="text-align: center">Tên bệnh nhân</th>
-        <th style="text-align: center">Ngày sinh</th>
-        <th style="text-align: center">Giới tính</th>
-        <th style="text-align: center">Ngày khám</th>
-        <th style="text-align: center">Khung giờ</th>
-        <th style="text-align: center">Trạng thái</th>
-        <th style="text-align: center">Hành động</th>
-      </tr>
-    </thead>
-    <tbody class="text-center">
-      <tr *ngFor="let item of lbooking; let i = index">
-        <th>{{ item.id }}</th>
-        <td>{{ item.name }}</td>
-        <td>{{ item.dob }}</td>
-        <td>{{ item.gender }}</td>
-        <td>{{ item.date }}</td>
-        <td>{{ hours[item.idHour - 1] }}</td>
-        <td>Khám thành công</td>
-        <td>
+        <div class="modal-body" style="max-height: 80vh; overflow-y: auto">
+          <!-- Loading State -->
+          <div *ngIf="loadingDetails" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p class="mt-2 text-muted">Đang tải chi tiết phiên khám...</p>
+          </div>
+
+          <!-- Content -->
+          <div
+            *ngIf="
+              !loadingDetails &&
+              examinationDetails &&
+              examinationDetails.booking
+            "
+          >
+            <!-- Thông tin bệnh nhân -->
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                  <i class="bi bi-person-circle me-2"></i>Thông tin bệnh nhân
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Họ tên:</strong>
+                      {{ examinationDetails.booking.name }}
+                    </p>
+                    <p>
+                      <strong>Email:</strong>
+                      {{ examinationDetails.booking.email }}
+                    </p>
+                    <p>
+                      <strong>Số điện thoại:</strong>
+                      {{ examinationDetails.booking.phone }}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Giới tính:</strong>
+                      <span
+                        class="badge"
+                        [class]="
+                          examinationDetails.booking.gender === 'MALE'
+                            ? 'bg-primary'
+                            : 'bg-pink'
+                        "
+                      >
+                        {{
+                          getGenderText(examinationDetails.booking.gender || "")
+                        }}
+                      </span>
+                    </p>
+                    <p>
+                      <strong>Ngày sinh:</strong>
+                      {{ formatDate(examinationDetails.booking.dob || "") }}
+                    </p>
+                    <p>
+                      <strong>Trạng thái:</strong>
+                      <span
+                        class="badge"
+                        [class]="
+                          getStatusBadgeClass(
+                            examinationDetails.booking.status || ''
+                          )
+                        "
+                      >
+                        {{
+                          examinationDetails.booking.status === "SUCCESS"
+                            ? "Hoàn thành"
+                            : examinationDetails.booking.status
+                        }}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Thông tin lịch khám -->
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                  <i class="bi bi-calendar-check me-2"></i>Thông tin lịch khám
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Ngày khám:</strong>
+                      {{ formatDate(examinationDetails.booking.date || "") }}
+                    </p>
+                    <p>
+                      <strong>Giờ khám:</strong>
+                      <span class="badge bg-secondary">{{
+                        examinationDetails.booking.hourName ||
+                          getHourText(examinationDetails.booking.hourId || 0)
+                      }}</span>
+                    </p>
+                    <p>
+                      <strong>Phòng khám:</strong>
+                      {{
+                        examinationDetails.booking.roomNumber || "Chưa xác định"
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Thời gian bắt đầu:</strong>
+                      {{
+                        formatDateTime(examinationDetails.booking.startTime) ||
+                          "Chưa có"
+                      }}
+                    </p>
+                    <p>
+                      <strong>Thời gian kết thúc:</strong>
+                      {{
+                        formatDateTime(examinationDetails.booking.endTime) ||
+                          "Chưa có"
+                      }}
+                    </p>
+                    <p>
+                      <strong>Triệu chứng ban đầu:</strong>
+                      {{
+                        examinationDetails.booking.initialSymptoms || "Chưa có"
+                      }}
+                    </p>
+                  </div>
+                </div>
+                <div class="row" *ngIf="examinationDetails.booking.doctorNotes">
+                  <div class="col-12">
+                    <p><strong>Ghi chú của bác sĩ:</strong></p>
+                    <div class="bg-light p-3 rounded">
+                      {{ examinationDetails.booking.doctorNotes }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Danh sách dịch vụ -->
+            <div
+              class="card mb-4"
+              *ngIf="
+                examinationDetails.serviceRequests &&
+                examinationDetails.serviceRequests.length > 0
+              "
+            >
+              <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">
+                  <i class="bi bi-gear me-2"></i>Dịch vụ y tế ({{
+                    examinationDetails.serviceRequests.length
+                  }})
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Tên dịch vụ</th>
+                        <th>Loại</th>
+                        <th>Trạng thái</th>
+                        <th>Chi phí</th>
+                        <th>Ghi chú yêu cầu</th>
+                        <th>Kết quả</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let service of examinationDetails.serviceRequests;
+                          let i = index
+                        "
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <strong>{{ service.serviceName }}</strong>
+                        </td>
+                        <td>
+                          <span class="badge bg-secondary">{{
+                            service.serviceType
+                          }}</span>
+                        </td>
+                        <td>
+                          <span
+                            class="badge"
+                            [class]="getStatusBadgeClass(service.status)"
+                            >{{ service.status }}</span
+                          >
+                        </td>
+                        <td>{{ formatCurrency(service.cost) }}</td>
+                        <td>{{ service.requestNotes || "Không có" }}</td>
+                        <td>{{ service.resultNotes || "Chưa có kết quả" }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Đơn thuốc -->
+            <div
+              class="card mb-4"
+              *ngIf="
+                examinationDetails.prescriptions &&
+                examinationDetails.prescriptions.length > 0
+              "
+            >
+              <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                  <i class="bi bi-capsule me-2"></i>Đơn thuốc ({{
+                    examinationDetails.prescriptions.length
+                  }})
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Tên thuốc</th>
+                        <th>Số lượng</th>
+                        <th>Liều dùng</th>
+                        <th>Hướng dẫn</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let prescription of examinationDetails.prescriptions;
+                          let i = index
+                        "
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <strong>{{ prescription.medicineName }}</strong>
+                        </td>
+                        <td>{{ prescription.quantity }}</td>
+                        <td>{{ prescription.dosage }}</td>
+                        <td>{{ prescription.instructions }}</td>
+                        <td>{{ formatCurrency(prescription.unitPrice) }}</td>
+                        <td>{{ formatCurrency(prescription.totalPrice) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Thông tin thanh toán -->
+            <div class="card mb-4">
+              <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">
+                  <i class="bi bi-credit-card me-2"></i>Thông tin thanh toán
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <table class="table table-borderless">
+                      <tr>
+                        <td>
+                          <strong style="padding-top: 0px">Phí khám:</strong>
+                        </td>
+                        <td class="text-end">
+                          {{
+                            formatCurrency(
+                              examinationDetails.paymentInfo.consultationFee
+                            )
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Phí dịch vụ:</strong></td>
+                        <td class="text-end">
+                          {{
+                            formatCurrency(
+                              examinationDetails.paymentInfo.servicesFee
+                            )
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Phí thuốc:</strong></td>
+                        <td class="text-end">
+                          {{
+                            formatCurrency(
+                              examinationDetails.paymentInfo.medicinesFee
+                            )
+                          }}
+                        </td>
+                      </tr>
+                      <tr class="border-top">
+                        <td>
+                          <strong class="text-primary">Tổng cộng:</strong>
+                        </td>
+                        <td class="text-end">
+                          <strong class="text-primary fs-5">{{
+                            formatCurrency(
+                              examinationDetails.paymentInfo.totalAmount
+                            )
+                          }}</strong>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Phương thức thanh toán:</strong>
+                      <span class="badge bg-info">{{
+                        examinationDetails.paymentInfo.paymentMethod === "CASH"
+                          ? "Tiền mặt"
+                          : examinationDetails.paymentInfo.paymentMethod
+                      }}</span>
+                    </p>
+                    <p>
+                      <strong>Trạng thái thanh toán:</strong>
+                      <span
+                        class="badge"
+                        [class]="
+                          getStatusBadgeClass(
+                            examinationDetails.paymentInfo.paymentStatus
+                          )
+                        "
+                      >
+                        {{
+                          examinationDetails.paymentInfo.paymentStatus ===
+                          "PAID"
+                            ? "Đã thanh toán"
+                            : examinationDetails.paymentInfo.paymentStatus
+                        }}
+                      </span>
+                    </p>
+                    <p *ngIf="examinationDetails.paymentInfo.paidAt">
+                      <strong>Thời gian thanh toán:</strong>
+                      {{
+                        formatDateTime(examinationDetails.paymentInfo.paidAt)
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trường hợp không có dịch vụ và thuốc -->
+            <div
+              *ngIf="
+                (!examinationDetails.serviceRequests ||
+                  examinationDetails.serviceRequests.length === 0) &&
+                (!examinationDetails.prescriptions ||
+                  examinationDetails.prescriptions.length === 0)
+              "
+              class="alert alert-info"
+            >
+              <i class="bi bi-info-circle me-2"></i>
+              Phiên khám này chỉ bao gồm khám lâm sàng cơ bản, không có dịch vụ
+              bổ sung hoặc đơn thuốc.
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div
+            *ngIf="!loadingDetails && !examinationDetails"
+            class="alert alert-warning"
+          >
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Không thể tải chi tiết phiên khám. Vui lòng thử lại sau.
+          </div>
+        </div>
+
+        <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-primary rounded-pill"
-            data-bs-toggle="modal"
-            data-bs-target="#basicModalxem"
-            (click)="xem(item)"
+            class="btn btn-primary"
+            (click)="exportReport(selectedBooking!)"
+            *ngIf="selectedBooking"
           >
-            <i class="bi bi-eye"></i></button
-          >&nbsp;&nbsp;
-          <button
-            type="button"
-            class="btn btn-success rounded-pill"
-            (click)="exportResult(item.id)"
-          >
-            <i class="bi bi-download"></i>
+            <i class="bi bi-download me-1"></i>Xuất báo cáo
           </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- End Table with hoverable rows -->
-  <!-- <div class="card">
-        <div class="card-body"> -->
-  <!-- <nav aria-label="Page navigation example">
-      <ul class="pagination" style="justify-content: center; margin-top: 20px">
-        <li class="page-item">
-          <a class="page-link" href="#">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav> -->
-  <!-- End Basic Pagination -->
-</ng-template>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            (click)="closeDetailsModal()"
+          >
+            <i class="bi bi-x-circle me-1"></i>Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

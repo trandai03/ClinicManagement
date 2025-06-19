@@ -1,0 +1,33 @@
+/* Simple Active State Override for Booking Mode */
+.booking_mode_option.active {
+  border-color: #fff !important;
+  border-width: 3px !important;
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.05) !important;
+  animation: none !important;
+}
+
+.booking_mode_option.active .mode_icon i {
+  color: #fff !important;
+  transform: scale(1.2) !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+
+.booking_mode_option.active .mode_text {
+  color: #fff !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  letter-spacing: 0.5px !important;
+}
+
+.booking_mode_option.active .mode_description {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 600 !important;
+}
+
+.booking_mode_option.active::after,
+.booking_mode_option.active::before {
+  display: none !important;
+} 

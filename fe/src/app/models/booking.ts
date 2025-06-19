@@ -5,12 +5,15 @@ export interface Booking {
     dob:string,
     email:string,
     phone:string,
+    address?: string,
     date: string,
     idHour: number,
+    hourName?: string,
     status: string,
     note: string,
     nameDoctor: string,
-    major: string
+    major: string,
+    totalMoney: number
 }
 
 export type BookingDTO = {

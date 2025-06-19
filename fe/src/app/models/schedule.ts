@@ -38,6 +38,7 @@ export interface TimeSlot {
   hourName: string;
   doctorId: number;
   doctorName: string;
+  session: string;
   doctorRank?: {
     id: number;
     name: string;

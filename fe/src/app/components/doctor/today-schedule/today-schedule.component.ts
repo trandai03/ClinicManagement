@@ -47,9 +47,18 @@ export class TodayScheduleComponent {
   ngOnInit() {
     this.dtOption = {
       pagingType: 'full_numbers',
-      renderer: 'true',
-      retrieve:true,
-      info:false
+      destroy: true,
+      retrieve: true,
+      info: false,
+      columnDefs: [
+        { orderable: false, targets: [4, 5] }, // Disable sorting on note and action columns
+        { width: '8%', targets: 0 },   // STT
+        { width: '15%', targets: 1 },  // Ngày
+        { width: '12%', targets: 2 },  // Thời gian
+        { width: '35%', targets: 3 },  // Thông tin bệnh nhân
+        { width: '15%', targets: 4 },  // Ghi chú
+        { width: '15%', targets: 5 }   // Hành động
+      ]
     }
     this.addForm = this.formbuilder.group({
       start : ['',Validators.required],

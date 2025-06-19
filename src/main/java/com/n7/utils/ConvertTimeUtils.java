@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -14,9 +16,12 @@ public class ConvertTimeUtils {
         return dateFormat.format(date);
     }
 
-    public static String convertLocalDatetime(LocalDateTime localDateTime) {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(localDateTime).toString();
+    public static String convertLocalDatetime(LocalDateTime dateTime) {
+        if (dateTime == null) return "";
+        ZonedDateTime zdt = dateTime.atZone(ZoneId.systemDefault());
+        Date date = Date.from(zdt.toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return sdf.format(date);
     }
 
     public static Date stringToDate(String s) {
@@ -60,5 +65,11 @@ public class ConvertTimeUtils {
     public static String localDateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return localDate.format(formatter);
+    }
+
+    public static String convertLocalDate(Date date) {
+        if (date == null) return "";
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(date);
     }
 }

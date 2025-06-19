@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,10 +20,10 @@ public class BookingModel {
     private Long id;
     private String name;
     private Gender gender;
-    private LocalDateTime dob;
+    private Date dob;
     private String email;
     private String phone;
-    private String date;
+    private Date date;
     private Long idHour;
     private String status;
     private String note;
@@ -38,7 +39,7 @@ public class BookingModel {
                 .dob(booking.getDob())
                 .email(booking.getEmail())
                 .phone(booking.getPhone())
-                .date(booking.getDate().toString())
+                .date(booking.getDate())
                 .idHour(booking.getIdHour())
                 .status(booking.getStatus().name())
                 .note(booking.getNote())

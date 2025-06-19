@@ -1,0 +1,113 @@
+<div class="container mt-4">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Đang tải...</span>
+    </div>
+    <p class="mt-3">Đang tải thông tin thanh toán...</p>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="!loading" class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-check-circle me-2"></i>
+            Thanh toán thành công!
+          </h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="paymentStatus === '0'" class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Thanh toán MoMo đã được xử lý thành công!</strong>
+          </div>
+          <div
+            *ngIf="paymentStatus && paymentStatus !== '0'"
+            class="alert alert-warning"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Trạng thái thanh toán:</strong> {{ paymentMessage }}
+          </div>
+          <div *ngIf="!paymentStatus" class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Thanh toán đã hoàn tất!</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Actions -->
+    <div class="col-12 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-download me-2"></i>
+            Xuất báo cáo và hóa đơn
+          </h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!bookingId || !historyId" class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Không tìm thấy thông tin khám bệnh để xuất báo cáo.
+          </div>
+          <div *ngIf="bookingId && historyId" class="row g-3">
+            <div class="col-md-6">
+              <button
+                type="button"
+                class="btn btn-primary btn-lg w-100"
+                (click)="exportInvoice()"
+                [disabled]="exportingInvoice"
+              >
+                <i
+                  class="fas fa-file-invoice me-2"
+                  *ngIf="!exportingInvoice"
+                ></i>
+                <i
+                  class="fas fa-spinner fa-spin me-2"
+                  *ngIf="exportingInvoice"
+                ></i>
+                {{ exportingInvoice ? "Đang xuất..." : "Xuất hóa đơn" }}
+              </button>
+            </div>
+            <div class="col-md-6">
+              <button
+                type="button"
+                class="btn btn-success btn-lg w-100"
+                (click)="exportPrescription()"
+                [disabled]="exportingPrescription"
+              >
+                <i
+                  class="fas fa-prescription me-2"
+                  *ngIf="!exportingPrescription"
+                ></i>
+                <i
+                  class="fas fa-spinner fa-spin me-2"
+                  *ngIf="exportingPrescription"
+                ></i>
+                {{ exportingPrescription ? "Đang xuất..." : "Xuất đơn thuốc" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Actions -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body text-center">
+          <button
+            type="button"
+            class="btn btn-info btn-lg"
+            (click)="finishAndGoToSchedule()"
+          >
+            <i class="fas fa-calendar-check me-2"></i>
+            Quay lại lịch khám
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

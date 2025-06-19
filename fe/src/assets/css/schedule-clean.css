@@ -1,0 +1,48 @@
+/* Clean Override for Booking Mode - No Duplicates */
+
+/* Remove all animations and effects */
+
+
+/* Single, clean active state */
+.booking_mode_option.active {
+  border-color: #fff !important;
+  border-width: 3px !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25) !important;
+  transform: scale(1.05) !important;
+  animation: none !important;
+}
+
+.booking_mode_option.active .mode_icon i {
+  color: #fff !important;
+  transform: scale(1.2) !important;
+  text-shadow: none !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+.booking_mode_option.active .mode_text {
+  color: #fff !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+}
+
+.booking_mode_option.active .mode_description {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+/* Remove all pseudo elements */
+.booking_mode_option.active::before,
+.booking_mode_option.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Ensure no shimmer effects */
+.booking_mode_option::before {
+  display: none !important;
+} 

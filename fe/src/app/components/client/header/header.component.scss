@@ -34,7 +34,7 @@
 
 .header_right_top {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -78,7 +78,7 @@
 
 .header_right_list {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -319,10 +319,6 @@
     .navbar_menu li a::after {
         left: 20px;
         transform: none;
-    }
-
-    .navbar_menu li:hover a::after {
-        width: 30%;
     }
 
     .navbar_menu li a.active-link::after {

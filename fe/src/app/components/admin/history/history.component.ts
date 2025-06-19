@@ -25,7 +25,8 @@ export class HistoryComponent {
     nameDoctor: '',
     major: '',
     email: '',
-    phone: ''
+    phone: '',
+    totalMoney: 0
   };
   constructor(private bookingSv: BookingService){};
 

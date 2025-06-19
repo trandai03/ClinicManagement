@@ -70,7 +70,6 @@
               >
             </div>
           </div>
-        
         </div>
 
         <!-- Appointment Info -->
@@ -183,3 +182,310 @@
     </div>
   </div>
 </main>
+
+<!-- Modal xem kết quả -->
+<div
+  class="modal fade"
+  [class.show]="showResultsModal"
+  [style.display]="showResultsModal ? 'block' : 'none'"
+  id="resultsModal"
+  tabindex="-1"
+  aria-labelledby="resultsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resultsModalLabel">
+          <i class="fas fa-file-medical-alt"></i>
+          Kết quả xét nghiệm - {{ selectedBookingResults?.name }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeResultsModal()"
+          aria-label="Close"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="selectedBookingResults">
+        <!-- Thông tin bệnh nhân -->
+        <div class="patient-info-header">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Mã BN:</strong> {{ selectedBookingResults.id }}</p>
+              <p><strong>Họ tên:</strong> {{ selectedBookingResults.name }}</p>
+              <p>
+                <strong>Ngày khám:</strong>
+                {{ selectedBookingResults.date | date : "dd/MM/yyyy" }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                <strong>Giới tính:</strong>
+                {{ selectedBookingResults.gender === "MALE" ? "Nam" : "Nữ" }}
+              </p>
+              <p><strong>SĐT:</strong> {{ selectedBookingResults.phone }}</p>
+              <p>
+                <strong>Chuyên khoa:</strong> {{ selectedBookingResults.major }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách kết quả xét nghiệm -->
+        <div
+          class="services-results"
+          *ngIf="
+            selectedBookingResults.serviceRequests &&
+            selectedBookingResults.serviceRequests.length > 0
+          "
+        >
+          <h6><i class="fas fa-list-alt"></i> Kết quả dịch vụ đã thực hiện:</h6>
+
+          <div
+            class="service-result-item"
+            *ngFor="let service of selectedBookingResults.serviceRequests"
+          >
+            <div class="service-header">
+              <div class="service-title">
+                <h6>{{ service.serviceName }}</h6>
+                <span
+                  class="service-type-badge"
+                  [style.background-color]="
+                    service.serviceType === 'LAB_TEST' ? '#e91e63' : '#3f51b5'
+                  "
+                >
+                  {{
+                    service.serviceType === "LAB_TEST"
+                      ? "Xét nghiệm"
+                      : "Dịch vụ"
+                  }}
+                </span>
+                <span
+                  class="status-badge"
+                  [style.background-color]="getStatusColor(service.status)"
+                  [style.color]="'white'"
+                >
+                  {{ getStatusText(service.status) }}
+                </span>
+              </div>
+              <div class="service-cost">
+                {{ service.cost | currency : "VND" : "symbol" : "1.0-0" }}
+              </div>
+            </div>
+
+            <!-- Ghi chú yêu cầu -->
+            <div class="result-section" *ngIf="service.requestNotes">
+              <h6><i class="fas fa-clipboard-list"></i> Ghi chú yêu cầu:</h6>
+              <p class="notes-text">{{ service.requestNotes }}</p>
+            </div>
+
+            <!-- Ghi chú kết quả -->
+            <div class="result-section" *ngIf="service.resultNotes">
+              <h6><i class="fas fa-notes-medical"></i> Ghi chú kết quả:</h6>
+              <p class="notes-text">{{ service.resultNotes }}</p>
+            </div>
+
+            <!-- File kết quả PDF -->
+            <div class="result-section" *ngIf="hasResultsFile(service)">
+              <h6><i class="fas fa-file-pdf"></i> File kết quả chi tiết:</h6>
+              <div class="file-download">
+                <button
+                  class="btn btn-outline-danger"
+                  (click)="openFileInNewTab(service.labResultsFile!)"
+                >
+                  <i class="fas fa-download"></i>
+                  Xem file kết quả
+                </button>
+                <small class="text-muted">Click để mở file trong tab mới</small>
+              </div>
+            </div>
+
+            <!-- Hình ảnh kết quả -->
+            <div class="result-section" *ngIf="hasResultImages(service)">
+              <h6><i class="fas fa-images"></i> Hình ảnh kết quả:</h6>
+              <div class="images-gallery">
+                <div
+                  class="image-item"
+                  *ngFor="
+                    let imageUrl of getResultImagesList(service);
+                    let i = index
+                  "
+                >
+                  <div
+                    class="image-preview"
+                    (click)="openImageInNewTab(imageUrl)"
+                  >
+                    <img
+                      [src]="imageUrl"
+                      [alt]="'Hình ảnh kết quả ' + (i + 1)"
+                      class="result-image"
+                      (error)="onImageError($event)"
+                    />
+                    <div class="image-overlay">
+                      <i class="fas fa-search-plus"></i>
+                      <span>Click để xem lớn</span>
+                    </div>
+                  </div>
+                  <small class="image-caption">Hình {{ i + 1 }}</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nhận xét của bác sĩ -->
+            <div class="result-section" *ngIf="service.labComments">
+              <h6>
+                <i class="fas fa-user-md"></i> Nhận xét của bác sĩ xét nghiệm:
+              </h6>
+              <div class="doctor-comments">
+                <p class="comments-text">{{ service.labComments }}</p>
+                <small class="text-muted" *ngIf="service.reviewedAt">
+                  <i class="fas fa-clock"></i>
+                  Thời gian đánh giá:
+                  {{ service.reviewedAt | date : "dd/MM/yyyy HH:mm" }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Thời gian thực hiện -->
+            <div class="timeline-info">
+              <div class="timeline-item">
+                <i class="fas fa-play-circle text-primary"></i>
+                <span
+                  >Yêu cầu:
+                  {{ service.requestedAt | date : "dd/MM/yyyy HH:mm" }}</span
+                >
+              </div>
+              <div class="timeline-item" *ngIf="service.completedAt">
+                <i class="fas fa-check-circle text-success"></i>
+                <span
+                  >Hoàn thành:
+                  {{ service.completedAt | date : "dd/MM/yyyy HH:mm" }}</span
+                >
+              </div>
+              <div class="timeline-item" *ngIf="service.reviewedAt">
+                <i class="fas fa-user-check text-info"></i>
+                <span
+                  >Đánh giá:
+                  {{ service.reviewedAt | date : "dd/MM/yyyy HH:mm" }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trường hợp không có dịch vụ -->
+        <div
+          class="no-services"
+          *ngIf="
+            !selectedBookingResults.serviceRequests ||
+            selectedBookingResults.serviceRequests.length === 0
+          "
+        >
+          <div class="empty-state">
+            <i class="fas fa-info-circle"></i>
+            <h6>Chưa có dịch vụ nào được yêu cầu</h6>
+            <p>Bệnh nhân này chưa được chỉ định xét nghiệm hoặc dịch vụ nào.</p>
+          </div>
+        </div>
+
+        <!-- Form kết luận của bác sĩ -->
+        <div class="doctor-conclusion-form">
+          <div class="conclusion-header">
+            <h6>
+              <i class="fas fa-clipboard-check"></i> Kết luận sau khi xem kết
+              quả
+            </h6>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorConclusion" class="form-label">
+              <strong
+                >Kết luận của bác sĩ <span class="required">*</span></strong
+              >
+            </label>
+            <textarea
+              id="doctorConclusion"
+              class="form-control"
+              rows="4"
+              [(ngModel)]="doctorConclusion"
+              placeholder="Nhập kết luận sau khi xem kết quả xét nghiệm và dịch vụ..."
+              [disabled]="submittingConclusion"
+            ></textarea>
+            <small class="form-text text-muted">
+              Vui lòng đưa ra kết luận dựa trên kết quả xét nghiệm và dịch vụ đã
+              thực hiện
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorNotes" class="form-label">
+              <strong>Chú ý và hướng dẫn</strong>
+            </label>
+            <textarea
+              id="doctorNotes"
+              class="form-control"
+              rows="3"
+              [(ngModel)]="doctorNotes"
+              placeholder="Ghi chú về hẹn khám lại, chế độ ăn uống, sinh hoạt hoặc các chú ý khác..."
+              [disabled]="submittingConclusion"
+            ></textarea>
+            <small class="form-text text-muted">
+              Ví dụ: Hẹn tái khám sau 1 tuần, kiểm soát chế độ ăn ít muối, nghỉ
+              ngơi đầy đủ...
+            </small>
+          </div>
+
+          <div
+            class="conclusion-warning"
+            *ngIf="!isFormValid() && doctorConclusion.length > 0"
+          >
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Kết luận không được để trống</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeResultsModal()"
+          [disabled]="submittingConclusion"
+        >
+          <i class="fas fa-times"></i>
+          Đóng
+        </button>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="refreshData()"
+          [disabled]="submittingConclusion"
+        >
+          <i class="fas fa-sync-alt"></i>
+          Làm mới
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="confirmResultsAndProceedToPrescription()"
+          [disabled]="!isFormValid() || submittingConclusion"
+        >
+          <i class="fas fa-spinner fa-spin" *ngIf="submittingConclusion"></i>
+          <i class="fas fa-pills" *ngIf="!submittingConclusion"></i>
+          {{ submittingConclusion ? "Đang xử lý..." : "Xác nhận và kê thuốc" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="showResultsModal"
+  *ngIf="showResultsModal"
+  (click)="closeResultsModal()"
+></div>

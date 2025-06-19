@@ -1,0 +1,98 @@
+/* Register Form Styles */
+.card {
+  box-shadow: 0 0 20px rgba(1, 41, 112, 0.1);
+  border: none;
+  border-radius: 10px;
+}
+
+.card-title {
+  color: #012970;
+  font-weight: 600;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #d1d3e2;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  border-color: #4154f1;
+  box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+}
+
+.btn-primary {
+  background-color: #4154f1;
+  border-color: #4154f1;
+  border-radius: 5px;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #3145e0;
+  border-color: #3145e0;
+}
+
+.btn-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  border-radius: 5px;
+}
+
+.btn-link {
+  color: #4154f1;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #3145e0;
+  text-decoration: underline;
+}
+
+.btn-link:disabled {
+  color: #6c757d;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.logo img {
+  max-height: 40px;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #012970;
+  margin-left: 0.5rem;
+}
+
+.text-center.small {
+  color: #6c757d;
+}
+
+.text-center.small a {
+  color: #4154f1;
+  text-decoration: none;
+}
+
+.text-center.small a:hover {
+  text-decoration: underline;
+}
+
+/* OTP Input Special Styling */
+input[formControlName="otp"] {
+  font-size: 1.25rem;
+  letter-spacing: 0.5rem;
+  font-weight: 600;
+} 

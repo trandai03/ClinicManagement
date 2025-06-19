@@ -9,3 +9,272 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* ================================================================================================ */
+/* CUSTOM TOASTR STYLES - Fixed Position & Beautiful Design */
+/* ================================================================================================ */
+
+/* Container for all toasts - Fixed position */
+#toast-container {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 999999 !important;
+  max-width: 400px !important;
+  width: auto !important;
+}
+
+/* Custom toast styling */
+.custom-toast {
+  position: relative !important;
+  margin-bottom: 10px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  min-height: 60px !important;
+  font-family: 'Roboto', sans-serif !important;
+  backdrop-filter: blur(10px) !important;
+  animation: slideInRight 0.3s ease-out !important;
+}
+
+/* Success Toast */
+.toast-success.custom-toast {
+  background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #2E7D32 !important;
+}
+
+/* Error Toast */
+.toast-error.custom-toast {
+  background: linear-gradient(135deg, #f44336, #d32f2f) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #c62828 !important;
+}
+
+/* Warning Toast */
+.toast-warning.custom-toast {
+  background: linear-gradient(135deg, #ff9800, #f57c00) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #ef6c00 !important;
+}
+
+/* Info Toast */
+.toast-info.custom-toast {
+  background: linear-gradient(135deg, #2196f3, #1976d2) !important;
+  color: #ffffff !important;
+  border-left: 4px solid #1565c0 !important;
+}
+
+/* Toast title styling */
+.toast-title {
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  margin-bottom: 4px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Toast message styling */
+.toast-message {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  opacity: 0.95 !important;
+}
+
+/* Progress bar styling */
+.toast-progress {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: 3px !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+/* Close button styling */
+.toast-close-button {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.toast-close-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Animation for toast entry */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation for toast exit */
+.ngx-toastr.toast-top-right.toast-success,
+.ngx-toastr.toast-top-right.toast-error,
+.ngx-toastr.toast-top-right.toast-warning,
+.ngx-toastr.toast-top-right.toast-info {
+  animation: slideOutRight 0.3s ease-in forwards;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  #toast-container {
+    top: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+    max-width: none !important;
+  }
+  
+  .custom-toast {
+    margin-bottom: 8px !important;
+    min-height: 55px !important;
+  }
+  
+  .toast-title {
+    font-size: 15px !important;
+  }
+  
+  .toast-message {
+    font-size: 13px !important;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .custom-toast {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+/* Additional position classes for toasts */
+.toast-top-left {
+  top: 20px !important;
+  left: 20px !important;
+  right: auto !important;
+}
+
+.toast-bottom-right {
+  bottom: 20px !important;
+  top: auto !important;
+  right: 20px !important;
+}
+
+.toast-bottom-left {
+  bottom: 20px !important;
+  top: auto !important;
+  left: 20px !important;
+  right: auto !important;
+}
+
+.toast-top-center {
+  top: 20px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.toast-bottom-center {
+  bottom: 20px !important;
+  top: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+/* ================================================================================================ */
+/* EXISTING STYLES */
+/* ================================================================================================ */
+
+/* Fix for autoprefixer warnings - use newer flexbox values */
+.justify-start {
+  justify-content: flex-start !important;
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+.align-end {
+  align-items: flex-end !important;
+}
+
+/* Bootstrap overrides */
+.d-flex.justify-content-start {
+  justify-content: flex-start !important;
+}
+
+.d-flex.justify-content-end {
+  justify-content: flex-end !important;
+}
+
+.d-flex.align-items-end {
+  align-items: flex-end !important;
+}
+
+/* Custom Bootstrap-like utilities */
+.justify-content-flex-start { justify-content: flex-start !important; }
+.justify-content-flex-end { justify-content: flex-end !important; }
+.align-items-flex-end { align-items: flex-end !important; }
+
+/* Global DataTable styles */
+.dataTables_wrapper {
+  font-family: inherit;
+}
+
+.dataTables_wrapper .dataTables_length select {
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+/* Global loading styles */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}

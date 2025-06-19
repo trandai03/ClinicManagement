@@ -3,7 +3,8 @@ export interface Notification{
     sender: string,
     receiver:string,
     date: string,
-    content:string
+    content:string,
+    isRead:boolean
 }
 
 export const notifications: Notification[] = [
@@ -12,35 +13,40 @@ export const notifications: Notification[] = [
       "sender": "John Doe",
       "receiver": "Jane Smith",
       "date": "2024-03-19T09:00:00Z",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "isRead": false
     },
     {
       "id": 2,
       "sender": "Alice Johnson",
       "receiver": "Bob Brown",
       "date": "2024-03-19T10:30:00Z",
-      "content": "Nulla facilisi. Sed eget metus id nisi sollicitudin tempor."
+      "content": "Nulla facilisi. Sed eget metus id nisi sollicitudin tempor.",
+      "isRead": false
     },
     {
       "id": 3,
       "sender": "Emma Lee",
       "receiver": "David Wang",
       "date": "2024-03-19T13:15:00Z",
-      "content": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae."
+      "content": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.",
+      "isRead": false
     },
     {
       "id": 4,
       "sender": "Michael Brown",
       "receiver": "Sarah Johnson",
       "date": "2024-03-19T15:45:00Z",
-      "content": "Suspendisse potenti. Fusce gravida, lorem non imperdiet eleifend, justo elit facilisis elit."
+      "content": "Suspendisse potenti. Fusce gravida, lorem non imperdiet eleifend, justo elit facilisis elit.",
+      "isRead": false
     },
     {
       "id": 5,
       "sender": "Sophia Clark",
       "receiver": "Daniel Martinez",
       "date": "2024-03-19T18:20:00Z",
-      "content": "Donec nec urna a felis dapibus rhoncus vel nec magna."
+      "content": "Donec nec urna a felis dapibus rhoncus vel nec magna.",
+      "isRead": false
     }
   ]
   

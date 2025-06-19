@@ -6,9 +6,7 @@ import { DoctorComponent } from "./doctor/doctor.component";
 import { ArticleComponent } from "./article/article.component";
 import { ContactComponent } from "./contact/contact.component";
 import { DoctorDetailComponent } from "./doctor-detail/doctor-detail.component";
-import { LoginComponent } from "./login/login.component";
 import { ProfileComponent } from "./profile/profile.component";
-import { RegisterComponent } from "./register/register.component";
 
 
 const router: Routes = [
@@ -38,11 +36,13 @@ const router: Routes = [
     },
     {
         path: 'dang-nhap',
-        component: LoginComponent
+        redirectTo: '/login',
+        pathMatch: 'full'
     },
     {
         path: 'dang-ky',
-        component: RegisterComponent
+        redirectTo: '/register',
+        pathMatch: 'full'
     },
     {
         path: 'profile',

@@ -1,0 +1,321 @@
+<div class="awaiting-results-container">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="fas fa-clock text-warning"></i>
+        Bệnh nhân chờ kết quả
+      </h5>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        (click)="refreshData()"
+        [disabled]="loading"
+      >
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+        Làm mới
+      </button>
+    </div>
+
+    <div class="card-body">
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Đang tải...</span>
+        </div>
+        <p class="mt-2 text-muted">Đang tải danh sách bệnh nhân...</p>
+      </div>
+
+      <!-- Bookings table -->
+      <div *ngIf="!loading" class="table-responsive">
+        <table
+          class="table table-striped table-hover"
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+        >
+          <thead class="table-dark">
+            <tr>
+              <th>STT</th>
+              <th>Tên bệnh nhân</th>
+              <th>Email</th>
+              <th>Điện thoại</th>
+              <th>Ngày khám</th>
+              <th>Giờ khám</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of bookings; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <strong>{{ booking.name }}</strong>
+                <br />
+                <small class="text-muted"
+                  >{{ booking.gender }} - {{ formatDate(booking.dob) }}</small
+                >
+              </td>
+              <td>{{ booking.email }}</td>
+              <td>{{ booking.phone }}</td>
+              <td>{{ formatDate(booking.date) }}</td>
+              <td>
+                <span class="badge badge-info">{{
+                  booking.hourName || "N/A"
+                }}</span>
+              </td>
+              <td>
+                <span class="badge badge-warning">
+                  <i class="fas fa-clock"></i> Chờ kết quả
+                </span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button
+                    class="btn btn-primary btn-sm"
+                    (click)="viewServiceRequests(booking)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#serviceRequestsModal"
+                    title="Cần hoàn thành tất cả dịch vụ trước khi hoàn tất cuộc hẹn"
+                  >
+                    <i class="fas fa-tasks"></i> Quản lý dịch vụ
+                  </button>
+                  <button
+                    class="btn btn-info btn-sm"
+                    (click)="viewHistory(booking)"
+                  >
+                    <i class="fas fa-history"></i> Lịch sử
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    (click)="downloadHistoryPDF(booking)"
+                  >
+                    <i class="fas fa-download"></i> PDF
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty state -->
+        <div *ngIf="bookings.length === 0" class="text-center py-5">
+          <i class="fas fa-clipboard-check fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">Không có bệnh nhân nào đang chờ kết quả</h5>
+          <p class="text-muted">
+            Tất cả bệnh nhân đã hoàn thành hoặc chưa có ai cần chờ kết quả dịch
+            vụ.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Requests Modal -->
+<div class="modal fade" id="serviceRequestsModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-cogs"></i>
+          Quản lý Dịch vụ Y tế
+          <span *ngIf="selectedBooking" class="text-muted"
+            >- {{ selectedBooking.name }}</span
+          >
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedBooking">
+        <!-- Patient info -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card bg-light">
+              <div class="card-body">
+                <h6 class="card-title">Thông tin bệnh nhân</h6>
+                <p class="mb-1">
+                  <strong>Họ tên:</strong> {{ selectedBooking.name }}
+                </p>
+                <p class="mb-1">
+                  <strong>Email:</strong> {{ selectedBooking.email }}
+                </p>
+                <p class="mb-1">
+                  <strong>Điện thoại:</strong> {{ selectedBooking.phone }}
+                </p>
+                <p class="mb-0">
+                  <strong>Ngày khám:</strong>
+                  {{ formatDate(selectedBooking.date) }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card bg-light">
+              <div class="card-body">
+                <h6 class="card-title">Thông tin khám</h6>
+                <p class="mb-1">
+                  <strong>Giờ khám:</strong> {{ selectedBooking.hourName }}
+                </p>
+                <p class="mb-1">
+                  <strong>Trạng thái:</strong>
+                  <span class="badge badge-warning">Chờ kết quả</span>
+                </p>
+                <p class="mb-0">
+                  <strong>Ghi chú:</strong>
+                  {{ selectedBooking.note || "Không có" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service requests table -->
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Tên dịch vụ</th>
+                <th>Loại</th>
+                <th>Chi phí</th>
+                <th>Trạng thái</th>
+                <th>Ghi chú yêu cầu</th>
+                <th>Kết quả</th>
+                <th>Ngày yêu cầu</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of serviceRequests">
+                <td>{{ request.serviceName }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="
+                      request.serviceType === 'LAB_TEST'
+                        ? 'badge-info'
+                        : 'badge-primary'
+                    "
+                  >
+                    {{
+                      request.serviceType === "LAB_TEST"
+                        ? "Xét nghiệm"
+                        : "Dịch vụ y tế"
+                    }}
+                  </span>
+                </td>
+                <td>{{ formatCurrency(request.cost) }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="getServiceStatusClass(request.status)"
+                  >
+                    {{ getServiceStatusText(request.status) }}
+                  </span>
+                </td>
+                <td>{{ request.requestNotes || "Không có" }}</td>
+                <td>
+                  <div *ngIf="request.status === 'COMPLETED'">
+                    {{ request.resultNotes || "Không có kết quả" }}
+                  </div>
+                  <div *ngIf="request.status !== 'COMPLETED'">
+                    <textarea
+                      class="form-control form-control-sm"
+                      [(ngModel)]="request.resultNotes"
+                      placeholder="Nhập kết quả dịch vụ..."
+                      rows="2"
+                    ></textarea>
+                  </div>
+                </td>
+                <td>{{ formatDateTime(request.requestedAt) }}</td>
+                <td>
+                  <button
+                    *ngIf="request.status !== 'COMPLETED'"
+                    class="btn btn-success btn-sm"
+                    (click)="completeServiceRequest(request)"
+                    [disabled]="
+                      !request.resultNotes || request.resultNotes.trim() === ''
+                    "
+                  >
+                    <i class="fas fa-check"></i> Hoàn thành
+                  </button>
+                  <span
+                    *ngIf="request.status === 'COMPLETED'"
+                    class="text-success"
+                  >
+                    <i class="fas fa-check-circle"></i> Đã hoàn thành
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="serviceRequests.length === 0">
+                <td colspan="8" class="text-center text-muted">
+                  Không có dịch vụ nào được yêu cầu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Summary -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="alert alert-info">
+              <strong>Tổng số dịch vụ:</strong> {{ serviceRequests.length }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="alert alert-success">
+              <strong>Đã hoàn thành:</strong>
+              {{ getCompletedCount() }}/{{ serviceRequests.length }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- Nút chuyển đến kê đơn thuốc khi có dịch vụ và tất cả đã hoàn thành -->
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="proceedToPrescription(selectedBooking!)"
+          *ngIf="
+            selectedBooking &&
+            serviceRequests.length > 0 &&
+            isAllServiceRequestsCompleted()
+          "
+        >
+          <i class="fas fa-prescription-bottle"></i> Kê đơn thuốc
+        </button>
+
+        <!-- Nút chuyển đến kê đơn thuốc khi không có dịch vụ nào -->
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="proceedToPrescription(selectedBooking!)"
+          *ngIf="selectedBooking && serviceRequests.length === 0"
+        >
+          <i class="fas fa-prescription-bottle"></i> Kê đơn thuốc
+        </button>
+
+        <!-- Thông báo khi còn dịch vụ chưa hoàn thành -->
+        <div
+          *ngIf="
+            selectedBooking &&
+            serviceRequests.length > 0 &&
+            !isAllServiceRequestsCompleted()
+          "
+          class="text-warning me-3"
+        >
+          <i class="fas fa-exclamation-triangle"></i>
+          Vui lòng hoàn thành tất cả dịch vụ trước khi kê đơn thuốc
+        </div>
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

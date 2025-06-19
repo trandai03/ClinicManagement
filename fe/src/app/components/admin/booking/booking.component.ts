@@ -26,7 +26,8 @@ export class BookingComponent {
     nameDoctor: '',
     major: '',
     email: '',
-    phone: ''
+    phone: '',
+    totalMoney: 0
   };
   constructor(
     private bookingSv: BookingService,

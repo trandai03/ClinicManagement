@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.n7.constant.Status;
 import com.n7.dto.BookingDTO;
 import com.n7.entity.Booking;
+import com.n7.entity.User;
 import com.n7.exception.ResourceAlreadyExitsException;
 import com.n7.exception.ResourceNotFoundException;
 import com.n7.model.BookingModel;
+import com.n7.model.CustomUserDetail;
 import com.n7.repository.HourRepo;
 import com.n7.response.ErrorResponse;
 import com.n7.response.SuccessResponse;
@@ -16,6 +18,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,9 +71,14 @@ public ResponseEntity<?> getBookingCounts(@RequestParam(value = "idDoctor", requ
     
 
     @PostMapping("/booking")
-    public ResponseEntity<?> createBooking(@Valid @RequestBody BookingDTO bookingDTO) {
+    public ResponseEntity<?> createBooking(final Authentication authentication, @Valid @RequestBody BookingDTO bookingDTO) {
         try {
             System.out.println(bookingDTO);
+            CustomUserDetail customUserDetail= (CustomUserDetail) authentication.getPrincipal() ;
+            if(customUserDetail != null){
+                bookingService.creatBookingWithUser(bookingDTO);
+                return ResponseEntity.ok().body(new SuccessResponse<>("ok"));
+            }
             String s = bookingService.creatBooking(bookingDTO);
             mailService.sendMail(bookingDTO.getEmail(), "Thư xác nhận lịch khám", s);
             return ResponseEntity.ok().body(new SuccessResponse<>("ok"));

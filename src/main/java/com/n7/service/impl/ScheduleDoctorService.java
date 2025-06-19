@@ -203,7 +203,7 @@ public class ScheduleDoctorService implements IDoctorScheduleService {
                                 dto.setHourName(slot.getHour().getName());
                                 dto.setDoctorId(doctor.getId());
                                 dto.setDoctorName(doctor.getFullname());
-
+                                dto.setSession(slot.getHour().getSession());
                                 // Add doctor rank information
                                 if (doctor.getDoctorRank() != null) {
                                         dto.setDoctorRankId(doctor.getDoctorRank().getId());

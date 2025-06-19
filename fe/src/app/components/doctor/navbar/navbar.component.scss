@@ -1,0 +1,102 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  padding: 48px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  background-color: #f8f9fa;
+  width: 250px;
+  transition: all 0.3s ease;
+
+  .sidebar-nav {
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+  .nav-item {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, .05);
+      color: #007bff;
+    }
+
+    &.active {
+      background-color: #e9ecef;
+      color: #007bff;
+      border-left-color: #007bff;
+    }
+
+    i {
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    span {
+      flex: 1;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25em 0.6em;
+      min-width: 1.5rem;
+      text-align: center;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+    padding-top: 0;
+  }
+}
+
+// Animation for badge updates
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.badge {
+  animation: pulse 0.3s ease-in-out;
+}
+
+// Section headers
+.sidebar-nav {
+  &::before {
+    content: attr(data-section);
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}

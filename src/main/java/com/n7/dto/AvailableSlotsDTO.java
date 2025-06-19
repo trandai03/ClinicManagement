@@ -18,6 +18,7 @@ public class AvailableSlotsDTO {
     private String doctorRankCode;
     private Long doctorRankBasePrice;
     private String doctorRankDescription;
+    private String session;
     // getters & setters
 }
 

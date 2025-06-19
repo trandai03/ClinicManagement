@@ -42,7 +42,7 @@ public interface DoctorScheduleHourRepository extends JpaRepository<DoctorSchedu
             "AND dsh.status = 'AVAILABLE'")
     List<DoctorScheduleHour> findByDoctorId(@Param("doctorId") Long doctorId);
 
-    @Query("SELECT dsh.specificDate FROM DoctorScheduleHour dsh WHERE dsh.doctor.major.id = :majorId " +
+    @Query("SELECT DISTINCT dsh.specificDate FROM DoctorScheduleHour dsh WHERE dsh.doctor.major.id = :majorId " +
             "AND dsh.status = 'AVAILABLE' and dsh.specificDate >= :date")
     List<LocalDate> findAvailableByMajor(@Param("majorId") Long majorId, @Param("date") LocalDate date);
 }

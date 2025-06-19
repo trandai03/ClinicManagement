@@ -15,7 +15,7 @@ public class DeleteSchedule {
     @Autowired
     private BookingRepo bookingRepo;
 
-    @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "0 */1 * * * ?")
     public void deleteSchedules() {
         List<Booking> bookings = bookingRepo.findAll();
 

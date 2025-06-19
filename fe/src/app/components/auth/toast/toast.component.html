@@ -1,1 +1,194 @@
-<p>toast works!</p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4">🍞 Demo Custom Toastr - Fixed Position</h2>
+
+      <!-- Basic Toasts -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Basic Toasts (Cũ)</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-2">
+              <button class="btn btn-success w-100" (click)="showSuccess()">
+                Success Cũ
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button class="btn btn-danger w-100" (click)="showError()">
+                Error Cũ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Toasts -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Custom Toasts (Mới - Fixed Position)</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3 mb-2">
+              <button
+                class="btn btn-success w-100"
+                (click)="demoCustomSuccess()"
+              >
+                ✅ Success
+              </button>
+            </div>
+            <div class="col-md-3 mb-2">
+              <button class="btn btn-danger w-100" (click)="demoCustomError()">
+                ❌ Error
+              </button>
+            </div>
+            <div class="col-md-3 mb-2">
+              <button
+                class="btn btn-warning w-100"
+                (click)="demoCustomWarning()"
+              >
+                ⚠️ Warning
+              </button>
+            </div>
+            <div class="col-md-3 mb-2">
+              <button class="btn btn-info w-100" (click)="demoCustomInfo()">
+                ℹ️ Info
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specialized Toasts -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Specialized Toasts</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-success w-100"
+                (click)="demoOperationSuccess()"
+              >
+                🎉 Operation Success
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-danger w-100"
+                (click)="demoServerError()"
+              >
+                🔥 Server Error
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-warning w-100"
+                (click)="demoValidationError()"
+              >
+                📝 Validation Error
+              </button>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-secondary w-100"
+                (click)="demoUnauthorized()"
+              >
+                🔒 Unauthorized
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-primary w-100"
+                (click)="demoHtmlMessage()"
+              >
+                📄 HTML Message
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-outline-info w-100"
+                (click)="demoActionToast()"
+              >
+                🔄 Action Toast
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Features -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Advanced Features</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-2">
+              <button class="btn btn-secondary w-100" (click)="demoLoading()">
+                ⏳ Loading Toast (3s)
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button
+                class="btn btn-primary w-100"
+                (click)="demoMultipleToasts()"
+              >
+                🔢 Multiple Toasts
+              </button>
+            </div>
+            <div class="col-md-4 mb-2">
+              <button class="btn btn-warning w-100" (click)="demoPositions()">
+                📍 Different Positions
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Controls</h5>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-dark" (click)="clearAllToasts()">
+            🗑️ Clear All Toasts
+          </button>
+        </div>
+      </div>
+
+      <!-- Usage Instructions -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">📋 Cách sử dụng trong code</h5>
+        </div>
+        <div class="card-body">
+          <pre class="bg-light p-3 rounded"><code>
+// Import ToastService
+import {{ '{' }} ToastService {{ '}' }} from 'src/app/services/toast.service';
+
+// Inject vào constructor
+constructor(private toastService: ToastService) {{ '{' }}{{ '}' }}
+
+// Sử dụng
+this.toastService.showSuccess('Thành công!');
+this.toastService.showError('Có lỗi xảy ra!');
+this.toastService.showWarning('Cảnh báo!');
+this.toastService.showInfo('Thông tin!');
+
+// Specialized methods
+this.toastService.showOperationSuccess('Lưu dữ liệu');
+this.toastService.showServerError(error);
+this.toastService.showValidationError('Email không hợp lệ');
+          </code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

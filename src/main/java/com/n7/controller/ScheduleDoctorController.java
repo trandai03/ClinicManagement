@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/schedule-doctor")
 @RequiredArgsConstructor
-public class ScheduleDoctorController {
+public class    ScheduleDoctorController {
 
     private final IDoctorScheduleService doctorScheduleService;
 

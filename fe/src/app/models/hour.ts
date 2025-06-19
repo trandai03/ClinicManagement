@@ -1,6 +1,9 @@
 export interface Hour {
     id: number;
-    name:string
+    name:string;
+    session:string;
+    startTime:string;
+    endTime:string;
 }
 
 

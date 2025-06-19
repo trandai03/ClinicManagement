@@ -18,15 +18,13 @@ import { ContactComponent } from './contact/contact.component';
 import { DoctorDetailComponent } from './doctor-detail/doctor-detail.component';
 import { NgxPaginationModule } from "ngx-pagination";
 import { ProfileComponent } from './profile/profile.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { DataTablesModule } from "angular-datatables";
 
 
 
 
 @NgModule({
-    declarations: [FooterComponent,HomeComponent,HeaderComponent,ClientComponent, MajorComponent, ScheduleComponent, DoctorComponent, ArticleComponent, ContactComponent, DoctorDetailComponent, ProfileComponent, LoginComponent, RegisterComponent],
+    declarations: [FooterComponent,HomeComponent,HeaderComponent,ClientComponent, MajorComponent, ScheduleComponent, DoctorComponent, ArticleComponent, ContactComponent, DoctorDetailComponent, ProfileComponent],
     imports: [
       CommonModule, // <-- Import thêm để dùng forms sau này
       FormsModule,

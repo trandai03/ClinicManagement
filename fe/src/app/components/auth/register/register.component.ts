@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { RegisterService } from 'src/app/services/register.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   registerForm!: FormGroup;
@@ -21,9 +21,9 @@ export class RegisterComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private registerService: RegisterService,
     private toastService: ToastrService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.initializeForms();
   }
@@ -91,11 +91,11 @@ export class RegisterComponent {
         password: formData.password
       };
 
-      this.registerService.registerUser(registerData).subscribe({
+      this.authService.registerUser(registerData).subscribe({
         next: (response) => {
           this.isLoading = false;
           if (response.status === 'success') {
-            this.toastService.success('Mã xác thực đã được gửi!', 'Success');
+            this.toastService.success('Mã xác thực đã được gửi!', 'Thành công');
             this.showVerification = true;
             this.startResendCountdown();
           }
@@ -103,12 +103,12 @@ export class RegisterComponent {
         error: (error) => {
           this.isLoading = false;
           const errorMessage = error.error?.message || 'Đã xảy ra lỗi khi đăng ký';
-          this.toastService.error(errorMessage, 'Error');
+          this.toastService.error(errorMessage, 'Lỗi');
         }
       });
     } else {
       this.markFormGroupTouched(this.registerForm);
-      this.toastService.error('Vui lòng điền đầy đủ thông tin hợp lệ', 'Error');
+      this.toastService.error('Vui lòng điền đầy đủ thông tin hợp lệ', 'Lỗi');
     }
   }
 
@@ -117,18 +117,18 @@ export class RegisterComponent {
       this.isVerifying = true;
       const otp = this.verificationForm.get('otp')?.value;
 
-      this.registerService.verifyOTP(this.contactMethod, otp).subscribe({
+      this.authService.verifyOTP(this.contactMethod, otp).subscribe({
         next: (response) => {
           this.isVerifying = false;
           if (response.status === 'success') {
-            this.toastService.success('Đăng ký thành công!', 'Success');
-            this.router.navigate(['/public/dang-nhap']);
+            this.toastService.success('Đăng ký thành công!', 'Thành công');
+            this.router.navigate(['/login']);
           }
         },
         error: (error) => {
           this.isVerifying = false;
           const errorMessage = error.error?.message || 'Mã xác thực không chính xác';
-          this.toastService.error(errorMessage, 'Error');
+          this.toastService.error(errorMessage, 'Lỗi');
         }
       });
     } else {
@@ -145,14 +145,14 @@ export class RegisterComponent {
       phone: !isEmail ? this.contactMethod : null
     };
 
-    this.registerService.resendOTP(resendData).subscribe({
+    this.authService.resendOTP(resendData).subscribe({
       next: (response) => {
-        this.toastService.success('Mã xác thực đã được gửi lại!', 'Success');
+        this.toastService.success('Mã xác thực đã được gửi lại!', 'Thành công');
         this.startResendCountdown();
       },
       error: (error) => {
         const errorMessage = error.error?.message || 'Không thể gửi lại mã xác thực';
-        this.toastService.error(errorMessage, 'Error');
+        this.toastService.error(errorMessage, 'Lỗi');
       }
     });
   }

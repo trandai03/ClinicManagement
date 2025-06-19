@@ -15,6 +15,13 @@ export interface BookingCounts {
   SUCCESS: number;
 }
 
+// Interface for booking status update
+export interface BookingStatusUpdate {
+  bookingId: number;
+  status: string;
+  notes?: string;
+}
+
 @Injectable({
     providedIn: 'root'
   })
@@ -37,6 +44,22 @@ export interface BookingCounts {
       return this.http.get<apiResponse<any>>(s).pipe(
         map(e =>e.data )
       )
+    }
+
+    /**
+     * Lấy booking theo ID
+     */
+    getBookingById(bookingId: number): Observable<Booking> {
+      return this.http.get<apiResponse<Booking>>(`${this.apiUrl}api/v1/booking/${bookingId}`).pipe(
+        map(response => response.data)
+      );
+    }
+
+    /**
+     * Lấy bookings theo trạng thái AWAITING_RESULTS
+     */
+    getAwaitingResultsBookings(doctorId: string): Observable<Booking[]> {
+      return this.getAllBooking('AWAITING_RESULTS', doctorId, null, null, null);
     }
 
     // Optimized method to get booking counts with caching
@@ -161,14 +184,171 @@ export interface BookingCounts {
       {name,dob,phone,email,gender,address,idMajor,idUser,date,idHour,note});
     }
 
+    /**
+     * Cập nhật trạng thái booking (method cũ - backward compatibility)
+     */
     updateBooking(id: number, status : string) {
-      return this.http.post<apiResponse<any>>(`${this.apiUrl}api/v1/booking/${id}`, {status});
+      const result = this.http.post<apiResponse<any>>(`${this.apiUrl}api/v1/booking/${id}`, {status});
       this.clearCountsCache(id.toString());
-      this.getBookingCounts(id.toString());
+      return result;
+    }
+
+    /**
+     * Cập nhật trạng thái booking với validation workflow
+     */
+    updateBookingStatus(bookingId: number, newStatus: string, notes?: string): Observable<Booking> {
+      const updateData: BookingStatusUpdate = {
+        bookingId,
+        status: newStatus,
+        notes
+      };
+      
+      const result = this.http.put<apiResponse<Booking>>(`${this.apiUrl}api/v1/booking/${bookingId}/status`, updateData).pipe(
+        map(response => response.data)
+      );
+      
+      // Clear cache after status update
+      this.clearCountsCache(bookingId.toString());
+      
+      return result;
+    }
+
+    /**
+     * Chuyển booking từ IN_PROGRESS sang AWAITING_RESULTS
+     */
+    moveToAwaitingResults(bookingId: number, notes?: string): Observable<Booking> {
+      return this.updateBookingStatus(bookingId, 'AWAITING_RESULTS', notes);
+    }
+
+    /**
+     * Chuyển booking từ AWAITING_RESULTS sang SUCCESS
+     */
+    completeBooking(bookingId: number, notes?: string): Observable<Booking> {
+      return this.updateBookingStatus(bookingId, 'SUCCESS', notes);
+    }
+
+    /**
+     * Chấp nhận booking (CONFIRMING -> ACCEPTING)
+     */
+    acceptBooking(bookingId: number, notes?: string): Observable<Booking> {
+      return this.updateBookingStatus(bookingId, 'ACCEPTING', notes);
+    }
+
+    /**
+     * Bắt đầu khám (ACCEPTING -> IN_PROGRESS)
+     */
+    startExamination(bookingId: number, notes?: string): Observable<Booking> {
+      return this.updateBookingStatus(bookingId, 'IN_PROGRESS', notes);
+    }
+
+    /**
+     * Từ chối booking
+     */
+    rejectBooking(bookingId: number, reason?: string): Observable<Booking> {
+      return this.updateBookingStatus(bookingId, 'CANCELLED', reason);
+    }
+
+    /**
+     * Kiểm tra xem có thể chuyển trạng thái không
+     */
+    canTransitionTo(currentStatus: string, newStatus: string): boolean {
+      const validTransitions: { [key: string]: string[] } = {
+        'PENDING': ['CONFIRMING', 'CANCELLED'],
+        'CONFIRMING': ['ACCEPTING', 'CANCELLED'],
+        'ACCEPTING': ['IN_PROGRESS', 'CANCELLED'],
+        'IN_PROGRESS': ['AWAITING_RESULTS', 'SUCCESS', 'CANCELLED'],
+        'AWAITING_RESULTS': ['SUCCESS', 'CANCELLED'],
+        'SUCCESS': [],
+        'CANCELLED': []
+      };
+      
+      return validTransitions[currentStatus]?.includes(newStatus) || false;
+    }
+
+    /**
+     * Lấy danh sách trạng thái có thể chuyển đến
+     */
+    getAvailableTransitions(currentStatus: string): string[] {
+      const validTransitions: { [key: string]: string[] } = {
+        'PENDING': ['CONFIRMING', 'CANCELLED'],
+        'CONFIRMING': ['ACCEPTING', 'CANCELLED'],
+        'ACCEPTING': ['IN_PROGRESS', 'CANCELLED'],
+        'IN_PROGRESS': ['AWAITING_RESULTS', 'SUCCESS', 'CANCELLED'],
+        'AWAITING_RESULTS': ['SUCCESS', 'CANCELLED'],
+        'SUCCESS': [],
+        'CANCELLED': []
+      };
+      
+      return validTransitions[currentStatus] || [];
+    }
+
+    /**
+     * Lấy text hiển thị cho trạng thái
+     */
+    getStatusDisplayText(status: string): string {
+      const statusMap: { [key: string]: string } = {
+        'PENDING': 'Chờ xác nhận',
+        'CONFIRMING': 'Đang xác nhận',
+        'ACCEPTING': 'Đã chấp nhận',
+        'IN_PROGRESS': 'Đang khám',
+        'AWAITING_RESULTS': 'Chờ kết quả',
+        'SUCCESS': 'Hoàn thành',
+        'CANCELLED': 'Đã hủy'
+      };
+      return statusMap[status] || status;
+    }
+
+    /**
+     * Lấy class CSS cho trạng thái
+     */
+    getStatusClass(status: string): string {
+      const statusClassMap: { [key: string]: string } = {
+        'PENDING': 'badge-warning',
+        'CONFIRMING': 'badge-info',
+        'ACCEPTING': 'badge-primary',
+        'IN_PROGRESS': 'badge-success',
+        'AWAITING_RESULTS': 'badge-secondary',
+        'SUCCESS': 'badge-success',
+        'CANCELLED': 'badge-danger'
+      };
+      return statusClassMap[status] || 'badge-secondary';
     }
 
     delete(id : number) {
       return this.http.delete<apiResponse<any>>(`${this.apiUrl}api/v1/booking/${id}`);
+    }
+
+    /**
+     * Validate booking data trước khi tạo
+     */
+    validateBookingData(bookingData: any): string[] {
+      const errors: string[] = [];
+      
+      if (!bookingData.name || bookingData.name.trim() === '') {
+        errors.push('Họ tên là bắt buộc');
+      }
+      
+      if (!bookingData.phone || bookingData.phone.trim() === '') {
+        errors.push('Số điện thoại là bắt buộc');
+      }
+      
+      if (!bookingData.email || bookingData.email.trim() === '') {
+        errors.push('Email là bắt buộc');
+      }
+      
+      if (!bookingData.date) {
+        errors.push('Ngày khám là bắt buộc');
+      }
+      
+      if (!bookingData.idHour) {
+        errors.push('Giờ khám là bắt buộc');
+      }
+      
+      if (!bookingData.idUser) {
+        errors.push('Bác sĩ là bắt buộc');
+      }
+      
+      return errors;
     }
   }
   

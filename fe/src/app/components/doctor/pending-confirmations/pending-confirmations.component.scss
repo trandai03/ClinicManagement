@@ -1,0 +1,316 @@
+// Layout styles
+.pagetitle {
+  margin-bottom: 30px;
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+  }
+}
+
+.breadcrumb {
+  font-size: 14px;
+  margin-bottom: 0;
+  
+  .breadcrumb-item {
+    a {
+      color: #4154f1;
+      text-decoration: none;
+      
+      &:hover {
+        color: #717ff5;
+      }
+    }
+    
+    &.active {
+      color: #899bbd;
+    }
+  }
+}
+
+// Badge styles
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  
+  &.bg-primary {
+    background-color: #0d6efd !important;
+    color: #fff;
+  }
+  
+  &.bg-pink {
+    background-color: #e83e8c !important;
+    color: #fff;
+  }
+  
+  &.bg-secondary {
+    background-color: #6c757d !important;
+    color: #fff;
+  }
+}
+
+// Card styles
+.card {
+  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+  margin-bottom: 1rem;
+  
+  &.info-card {
+    &.sales-card {
+      border-left: 4px solid #4154f1;
+    }
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background-color: rgba(0,0,0,.03);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+
+  .card-title {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+}
+
+// Table styles
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+
+  thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    
+    &.table-light {
+      background-color: #f8f9fa;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+  }
+  
+  &.table-bordered {
+    border: 1px solid #dee2e6;
+    
+    th, td {
+      border: 1px solid #dee2e6;
+    }
+  }
+  
+  &.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.05);
+  }
+  
+  &.table-hover tbody tr:hover {
+    color: #212529;
+    background-color: rgba(0,0,0,.075);
+  }
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Button styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+  &.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+  }
+
+  &.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+
+    &:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+  }
+
+  &.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+
+    &:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+  }
+
+  &.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+
+    &:hover {
+      background-color: #0069d9;
+      border-color: #0062cc;
+    }
+    
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Spinner
+.spinner-border {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: -0.125em;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+  
+  &.text-primary {
+    color: #0d6efd !important;
+  }
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Utility classes
+.fw-medium {
+  font-weight: 500 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-start {
+  text-align: left !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
+.d-lg-inline {
+  @media (min-width: 992px) {
+    display: inline !important;
+  }
+}
+
+.gap-1 {
+  gap: 0.25rem !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.me-1 {
+  margin-right: 0.25rem !important;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.ms-1 {
+  margin-left: 0.25rem !important;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+} 

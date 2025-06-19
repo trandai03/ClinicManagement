@@ -25,15 +25,23 @@ public class ServiceRequestModel {
     private String resultNotes;
     private Long cost;
     private String serviceName;
+    private String resultImages;
+    private String labResultsFile;
+    private String labComments;
+
 
     public static ServiceRequestModel fromEntityToModal(ServiceRequest serviceRequest){
         return new ServiceRequestModel().builder()
+                .id(serviceRequest.getId())
                 .bookingId(serviceRequest.getBooking().getId())
                 .medicalServiceId(serviceRequest.getMedicalService().getId())
                 .serviceName(serviceRequest.getMedicalService().getName())
                 .status(serviceRequest.getStatus())
                 .requestNotes(serviceRequest.getRequestNotes())
                 .resultNotes(serviceRequest.getResultNotes())
+                .labResultsFile(serviceRequest.getResultFile())
+                .resultImages(serviceRequest.getResultImages())
+                .labComments(serviceRequest.getLabComment())
                 .createdAt(serviceRequest.getRequestedAt())
                 .updatedAt(serviceRequest.getCompletedAt())
                 .cost(serviceRequest.getCost())

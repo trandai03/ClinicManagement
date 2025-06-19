@@ -1,433 +1,623 @@
 <main id="main" class="main">
   <div class="examination-container">
-    <div class="examination-header">
-      <h2>Khám bệnh - {{ currentBooking?.name || "Đang tải..." }}</h2>
-      <div class="patient-info" *ngIf="currentBooking">
-        <span><strong>Mã BN:</strong> {{ currentBooking.id }}</span>
-        <span
-          ><strong>Giờ hẹn:</strong>
-          {{ currentBooking.date | date : "dd/MM/yyyy" }} - Khung giờ
-          {{ currentBooking.idHour }}</span
+    <!-- Loading State -->
+    <div *ngIf="isLoadingBooking" class="loading-container text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Đang tải...</span>
+      </div>
+      <p class="mt-2 text-muted">Đang tải thông tin lịch khám...</p>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!isLoadingBooking && currentBooking">
+      <!-- Debug Info (temporary) -->
+      <div
+        style="
+          background: yellow;
+          padding: 10px;
+          margin: 10px 0;
+          border: 2px solid red;
+        "
+      >
+        <strong>DEBUG:</strong> currentStep = "{{ currentStep }}" | Booking
+        Status = "{{ currentBooking?.status }}" | Loading =
+        {{ isLoadingBooking }}
+      </div>
+
+      <div class="examination-header">
+        <h2>Khám bệnh - {{ currentBooking?.name || "Đang tải..." }}</h2>
+        <div class="patient-info" *ngIf="currentBooking">
+          <span><strong>Mã BN:</strong> {{ currentBooking.id }}</span>
+          <span
+            ><strong>Giờ hẹn:</strong>
+            {{ currentBooking.date | date : "dd/MM/yyyy" }} - Khung giờ
+            {{ currentBooking.idHour }}</span
+          >
+          <span
+            class="status-badge"
+            [ngClass]="'status-' + (currentBooking.status || '').toLowerCase()"
+          >
+            {{ getStatusText(currentBooking.status || "") }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div
+          class="step"
+          [ngClass]="{
+            active: currentStep === 'EXAMINATION',
+            completed: isStepCompleted('EXAMINATION')
+          }"
         >
-        <span
-          class="status-badge"
-          [ngClass]="'status-' + currentBooking.status.toLowerCase()"
+          <span class="step-number">1</span>
+          <span class="step-label">Khám bệnh</span>
+        </div>
+        <div
+          class="step"
+          [ngClass]="{
+            active: currentStep === 'SERVICES',
+            completed: isStepCompleted('SERVICES')
+          }"
         >
-          {{ getStatusText(currentBooking.status) }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Progress Steps -->
-    <div class="progress-steps">
-      <div
-        class="step"
-        [ngClass]="{
-          active: currentStep === 'EXAMINATION',
-          completed: isStepCompleted('EXAMINATION')
-        }"
-      >
-        <span class="step-number">1</span>
-        <span class="step-label">Khám bệnh</span>
-      </div>
-      <div
-        class="step"
-        [ngClass]="{
-          active: currentStep === 'SERVICES',
-          completed: isStepCompleted('SERVICES')
-        }"
-      >
-        <span class="step-number">2</span>
-        <span class="step-label">Dịch vụ/XN</span>
-      </div>
-      <div
-        class="step"
-        [ngClass]="{
-          active: currentStep === 'PRESCRIPTION',
-          completed: isStepCompleted('PRESCRIPTION')
-        }"
-      >
-        <span class="step-number">3</span>
-        <span class="step-label">Kê đơn thuốc</span>
-      </div>
-      <div
-        class="step"
-        [ngClass]="{
-          active: currentStep === 'PAYMENT',
-          completed: isStepCompleted('PAYMENT')
-        }"
-      >
-        <span class="step-number">4</span>
-        <span class="step-label">Thanh toán</span>
-      </div>
-    </div>
-
-    <!-- Step 1: Examination -->
-    <div class="step-content" *ngIf="currentStep === 'EXAMINATION'">
-      <h3>Bước 1: Thông tin khám bệnh</h3>
-      <form [formGroup]="examinationForm" class="examination-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="roomNumber">Phòng khám *</label>
-            <input
-              type="text"
-              id="roomNumber"
-              formControlName="roomNumber"
-              class="form-control"
-              placeholder="Ví dụ: P101"
-            />
-          </div>
-          <div class="form-group">
-            <label for="temperature">Nhiệt độ (°C)</label>
-            <input
-              type="number"
-              id="temperature"
-              class="form-control"
-              placeholder="36.5"
-              step="0.1"
-            />
-          </div>
+          <span class="step-number">2</span>
+          <span class="step-label">Dịch vụ/XN</span>
         </div>
-
-        <div class="form-group">
-          <label for="symptoms">Triệu chứng ban đầu *</label>
-          <textarea
-            id="symptoms"
-            formControlName="symptoms"
-            class="form-control"
-            rows="3"
-            placeholder="Mô tả triệu chứng bệnh nhân..."
-          ></textarea>
+        <div
+          class="step"
+          [ngClass]="{
+            active: currentStep === 'PRESCRIPTION',
+            completed: isStepCompleted('PRESCRIPTION')
+          }"
+        >
+          <span class="step-number">3</span>
+          <span class="step-label">Kê đơn thuốc</span>
         </div>
-
-        <div class="form-group">
-          <label for="doctorNotes">Ghi chú của bác sĩ</label>
-          <textarea
-            id="doctorNotes"
-            formControlName="doctorNotes"
-            class="form-control"
-            rows="4"
-            placeholder="Ghi chú kết quả khám lâm sàng..."
-          ></textarea>
+        <div
+          class="step"
+          [ngClass]="{
+            active: currentStep === 'PAYMENT',
+            completed: isStepCompleted('PAYMENT')
+          }"
+        >
+          <span class="step-number">4</span>
+          <span class="step-label">Thanh toán</span>
         </div>
-      </form>
-    </div>
+      </div>
 
-    <!-- Step 2: Services -->
-    <div class="step-content" *ngIf="currentStep === 'SERVICES'">
-      <h3>Bước 2: Chỉ định dịch vụ/xét nghiệm</h3>
-
-      <div class="service-selection">
-        <form [formGroup]="serviceRequestForm" class="add-service-form">
+      <!-- Step 1: Examination -->
+      <div class="step-content" *ngIf="currentStep === 'EXAMINATION'">
+        <h3>Bước 1: Thông tin khám bệnh</h3>
+        <form [formGroup]="examinationForm" class="examination-form">
           <div class="form-row">
             <div class="form-group">
-              <label for="selectedService">Chọn dịch vụ</label>
-              <select
-                id="selectedService"
-                formControlName="selectedService"
-                class="form-control"
-              >
-                <option value="">-- Chọn dịch vụ --</option>
-                <option
-                  *ngFor="let service of availableServices"
-                  [value]="service.id"
-                >
-                  {{ service.name }} -
-                  {{ service.money | currency : "VND" : "symbol" : "1.0-0" }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="serviceNotes">Ghi chú</label>
+              <label for="roomNumber">Phòng khám *</label>
               <input
                 type="text"
-                id="serviceNotes"
-                formControlName="notes"
+                id="roomNumber"
+                formControlName="roomNumber"
                 class="form-control"
-                placeholder="Ghi chú cho dịch vụ"
+                placeholder="Ví dụ: P101"
               />
             </div>
-            <div class="form-actions">
-              <button
-                type="button"
-                class="btn btn-primary"
-                (click)="addServiceRequest()"
-                [disabled]="!serviceRequestForm.get('selectedService')?.value"
-              >
-                <i class="fas fa-plus"></i> Thêm
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Selected Services -->
-      <div class="selected-services" *ngIf="selectedServices.length > 0">
-        <h4>Dịch vụ đã chọn:</h4>
-        <div class="service-list">
-          <div
-            class="service-item"
-            *ngFor="let service of selectedServices; let i = index"
-          >
-            <div class="service-info">
-              <strong>{{ service.serviceName }}</strong>
-              <span class="service-cost">{{
-                service.cost | currency : "VND" : "symbol" : "1.0-0"
-              }}</span>
-              <small *ngIf="service.requestNotes">{{
-                service.requestNotes
-              }}</small>
-            </div>
-            <button
-              type="button"
-              class="btn btn-danger btn-sm"
-              (click)="removeService(i)"
-            >
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step 3: Prescription -->
-    <div class="step-content" *ngIf="currentStep === 'PRESCRIPTION'">
-      <h3>Bước 3: Kê đơn thuốc</h3>
-
-      <div class="prescription-form">
-        <form [formGroup]="prescriptionForm" class="add-medicine-form">
-          <div class="form-row">
             <div class="form-group">
-              <label for="selectedMedicine">Chọn thuốc</label>
-              <select
-                id="selectedMedicine"
-                formControlName="selectedMedicine"
-                class="form-control"
-              >
-                <option value="">-- Chọn thuốc --</option>
-                <option
-                  *ngFor="let medicine of availableMedicines"
-                  [value]="medicine.id"
-                >
-                  {{ medicine.name }} -
-                  {{
-                    medicine.money | currency : "VND" : "symbol" : "1.0-0"
-                  }}/{{ medicine.unit }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="quantity">Số lượng</label>
+              <label for="temperature">Nhiệt độ (°C)</label>
               <input
                 type="number"
-                id="quantity"
-                formControlName="quantity"
+                id="temperature"
                 class="form-control"
-                min="1"
-                value="1"
+                placeholder="36.5"
+                step="0.1"
               />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="symptoms">Triệu chứng ban đầu *</label>
+            <textarea
+              id="symptoms"
+              formControlName="symptoms"
+              class="form-control"
+              rows="3"
+              placeholder="Mô tả triệu chứng bệnh nhân..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorNotes">Ghi chú của bác sĩ</label>
+            <textarea
+              id="doctorNotes"
+              formControlName="doctorNotes"
+              class="form-control"
+              rows="4"
+              placeholder="Ghi chú kết quả khám lâm sàng..."
+            ></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Services -->
+      <div class="step-content" *ngIf="currentStep === 'SERVICES'">
+        <h3>Bước 2: Chỉ định dịch vụ/xét nghiệm</h3>
+
+        <div class="service-selection">
+          <form [formGroup]="serviceRequestForm" class="add-service-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="selectedService">Chọn dịch vụ</label>
+                <select
+                  id="selectedService"
+                  formControlName="selectedService"
+                  class="form-control"
+                >
+                  <option value="">-- Chọn dịch vụ --</option>
+                  <option
+                    *ngFor="let service of availableServices"
+                    [value]="service.id"
+                  >
+                    {{ service.name }} -
+                    {{ service.money | currency : "VND" : "symbol" : "1.0-0" }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="serviceNotes">Ghi chú</label>
+                <input
+                  type="text"
+                  id="serviceNotes"
+                  formControlName="notes"
+                  class="form-control"
+                  placeholder="Ghi chú cho dịch vụ"
+                />
+              </div>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="addServiceRequest()"
+                  [disabled]="!serviceRequestForm.get('selectedService')?.value"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Selected Services -->
+        <div class="selected-services" *ngIf="selectedServices.length > 0">
+          <h4>Dịch vụ đã chọn:</h4>
+          <div class="service-list">
+            <div
+              class="service-item"
+              *ngFor="let service of selectedServices; let i = index"
+            >
+              <div class="service-info">
+                <strong>{{ service.serviceName }}</strong>
+                <span class="service-cost">{{
+                  service.cost | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+                <small *ngIf="service.requestNotes">{{
+                  service.requestNotes
+                }}</small>
+              </div>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeService(i)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Prescription -->
+      <div class="step-content" *ngIf="currentStep === 'PRESCRIPTION'">
+        <h3>Bước 3: Kê đơn thuốc</h3>
+
+        <div class="prescription-form">
+          <form [formGroup]="prescriptionForm" class="add-medicine-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="selectedMedicine">Chọn thuốc</label>
+                <select
+                  id="selectedMedicine"
+                  formControlName="selectedMedicine"
+                  class="form-control"
+                >
+                  <option value="">-- Chọn thuốc --</option>
+                  <option
+                    *ngFor="let medicine of availableMedicines"
+                    [value]="medicine.id"
+                  >
+                    {{ medicine.name }} -
+                    {{
+                      medicine.money | currency : "VND" : "symbol" : "1.0-0"
+                    }}/{{ medicine.unit }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="quantity">Số lượng</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  formControlName="quantity"
+                  class="form-control"
+                  min="1"
+                  value="1"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dosage">Liều dùng</label>
+                <input
+                  type="text"
+                  id="dosage"
+                  formControlName="dosage"
+                  class="form-control"
+                  placeholder="Ví dụ: 1 viên x 3 lần/ngày"
+                />
+              </div>
+              <div class="form-group">
+                <label for="instructions">Hướng dẫn sử dụng</label>
+                <input
+                  type="text"
+                  id="instructions"
+                  formControlName="instructions"
+                  class="form-control"
+                  placeholder="Uống sau ăn, cách xa sữa..."
+                />
+              </div>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="addMedicine()"
+                  [disabled]="!prescriptionForm.get('selectedMedicine')?.value"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Selected Medicines -->
+        <div class="selected-medicines" *ngIf="selectedMedicines.length > 0">
+          <h4>Đơn thuốc:</h4>
+          <div class="medicine-list">
+            <div
+              class="medicine-item"
+              *ngFor="let medicine of selectedMedicines; let i = index"
+            >
+              <div class="medicine-info">
+                <strong>{{ medicine.medicineName }}</strong>
+                <span class="medicine-details">
+                  SL: {{ medicine.quantity }} |
+                  {{ medicine.dosage || "Chưa có liều" }}
+                </span>
+                <span class="medicine-cost">{{
+                  medicine.totalPrice | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+                <small *ngIf="medicine.instructions">{{
+                  medicine.instructions
+                }}</small>
+              </div>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeMedicine(i)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Payment -->
+      <div class="step-content" *ngIf="currentStep === 'PAYMENT'">
+        <h3>Bước 4: Thanh toán</h3>
+
+        <!-- Cost Summary -->
+        <div class="cost-summary">
+          <h4>Chi phí khám bệnh</h4>
+          <div class="cost-breakdown">
+            <div class="cost-item">
+              <span>Tiền khám:</span>
+              <span>{{
+                consultationFee | currency : "VND" : "symbol" : "1.0-0"
+              }}</span>
+            </div>
+            <div
+              class="cost-item"
+              *ngIf="
+                getMedicineCost() > 0 && paymentForm.value.buyMedicineAtClinic
+              "
+            >
+              <span>Tiền thuốc (tại phòng khám):</span>
+              <span>{{
+                getMedicineCost() | currency : "VND" : "symbol" : "1.0-0"
+              }}</span>
+            </div>
+            <div
+              class="cost-item"
+              *ngIf="
+                getMedicineCost() > 0 && !paymentForm.value.buyMedicineAtClinic
+              "
+            >
+              <span>Tiền thuốc (mua ngoài):</span>
+              <span class="text-muted">
+                <del>{{
+                  getMedicineCost() | currency : "VND" : "symbol" : "1.0-0"
+                }}</del>
+                <small> (không tính)</small>
+              </span>
+            </div>
+            <div class="cost-item" *ngIf="getServiceCost() > 0">
+              <span>Tiền dịch vụ:</span>
+              <span>{{
+                getServiceCost() | currency : "VND" : "symbol" : "1.0-0"
+              }}</span>
+            </div>
+            <div class="cost-item total">
+              <span><strong>Tổng cộng:</strong></span>
+              <span
+                ><strong>{{
+                  getActualTotalCost() | currency : "VND" : "symbol" : "1.0-0"
+                }}</strong></span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Form -->
+        <form [formGroup]="paymentForm" class="payment-form">
+          <!-- Medicine Purchase Option -->
+          <div class="form-row" *ngIf="selectedMedicines.length > 0">
+            <div class="form-group col-12">
+              <label for="buyMedicineAtClinic"
+                >Mua thuốc tại phòng khám *</label
+              >
+              <select
+                id="buyMedicineAtClinic"
+                formControlName="buyMedicineAtClinic"
+                class="form-control"
+                (change)="onMedicinePurchaseOptionChange($event)"
+              >
+                <option value="true">Có - Mua thuốc tại phòng khám</option>
+                <option value="false">
+                  Không - Bệnh nhân tự mua thuốc ngoài
+                </option>
+              </select>
+              <small class="form-text text-muted">
+                <i class="fas fa-info-circle"></i>
+                Nếu chọn "Không", đơn thuốc sẽ được in để bệnh nhân mua ngoài
+              </small>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="dosage">Liều dùng</label>
-              <input
-                type="text"
-                id="dosage"
-                formControlName="dosage"
+              <label for="paymentMethod">Phương thức thanh toán *</label>
+              <select
+                id="paymentMethod"
+                formControlName="paymentMethod"
                 class="form-control"
-                placeholder="Ví dụ: 1 viên x 3 lần/ngày"
-              />
+                (change)="onPaymentMethodChange($event)"
+              >
+                <option value="CASH">Tiền mặt</option>
+                <option value="CARD">Thẻ</option>
+                <option value="TRANSFER">Chuyển khoản</option>
+                <option value="MOMO">Thanh toán MoMo</option>
+                <option value="INSURANCE">Bảo hiểm</option>
+              </select>
             </div>
             <div class="form-group">
-              <label for="instructions">Hướng dẫn sử dụng</label>
+              <label for="discountAmount">Giảm giá (VND)</label>
               <input
-                type="text"
-                id="instructions"
-                formControlName="instructions"
+                type="number"
+                id="discountAmount"
+                formControlName="discountAmount"
                 class="form-control"
-                placeholder="Uống sau ăn, cách xa sữa..."
+                min="0"
+                [max]="getActualTotalCost()"
               />
             </div>
-            <div class="form-actions">
+          </div>
+
+          <!-- MoMo Payment Info -->
+          <div
+            class="alert alert-info"
+            *ngIf="paymentForm.value.paymentMethod === 'MOMO'"
+          >
+            <i class="fas fa-info-circle"></i>
+            <strong>Thanh toán MoMo:</strong>
+            <ul class="mb-0 mt-2">
+              <li>Hệ thống sẽ tạo liên kết thanh toán MoMo</li>
+              <li>Bạn sẽ được chuyển hướng đến trang thanh toán của MoMo</li>
+              <li>Hoàn thành thanh toán trên MoMo để kết thúc khám bệnh</li>
+            </ul>
+
+            <!-- Test MoMo Button -->
+            <div class="mt-3">
               <button
                 type="button"
-                class="btn btn-primary"
-                (click)="addMedicine()"
-                [disabled]="!prescriptionForm.get('selectedMedicine')?.value"
+                class="btn btn-info btn-sm"
+                (click)="testMoMoPayment()"
+                [disabled]="isProcessingPayment"
               >
-                <i class="fas fa-plus"></i> Thêm
+                <i class="fas fa-credit-card"></i>
+                {{
+                  isProcessingPayment ? "Đang xử lý..." : "Test thanh toán MoMo"
+                }}
               </button>
             </div>
+          </div>
+
+          <!-- Processing Payment Alert -->
+          <div class="alert alert-warning" *ngIf="isProcessingPayment">
+            <i class="fas fa-spinner fa-spin"></i>
+            <strong>Đang xử lý thanh toán...</strong>
+            <p class="mb-0">Vui lòng chờ trong giây lát.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="paymentNotes">Ghi chú thanh toán</label>
+            <textarea
+              id="paymentNotes"
+              formControlName="notes"
+              class="form-control"
+              rows="2"
+              placeholder="Ghi chú về thanh toán..."
+            ></textarea>
           </div>
         </form>
       </div>
 
-      <!-- Selected Medicines -->
-      <div class="selected-medicines" *ngIf="selectedMedicines.length > 0">
-        <h4>Đơn thuốc:</h4>
-        <div class="medicine-list">
-          <div
-            class="medicine-item"
-            *ngFor="let medicine of selectedMedicines; let i = index"
-          >
-            <div class="medicine-info">
-              <strong>{{ medicine.medicineName }}</strong>
-              <span class="medicine-details">
-                SL: {{ medicine.quantity }} |
-                {{ medicine.dosage || "Chưa có liều" }}
-              </span>
-              <span class="medicine-cost">{{
-                medicine.totalPrice | currency : "VND" : "symbol" : "1.0-0"
-              }}</span>
-              <small *ngIf="medicine.instructions">{{
-                medicine.instructions
-              }}</small>
-            </div>
-            <button
-              type="button"
-              class="btn btn-danger btn-sm"
-              (click)="removeMedicine(i)"
-            >
-              <i class="fas fa-trash"></i>
-            </button>
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goBack()"
+          *ngIf="currentStep !== 'EXAMINATION'"
+        >
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </button>
+
+        <!-- Validation Helper for EXAMINATION step -->
+        <div
+          class="validation-helper"
+          *ngIf="currentStep === 'EXAMINATION' && !canProceed()"
+        >
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Vui lòng điền thông tin khám:</strong>
+            <ul class="validation-list">
+              <li *ngIf="examinationForm.get('symptoms')?.invalid">
+                Triệu chứng ban đầu là bắt buộc
+              </li>
+              <li *ngIf="examinationForm.get('doctorNotes')?.invalid">
+                Ghi chú của bác sĩ là bắt buộc
+              </li>
+            </ul>
           </div>
         </div>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="proceedToNextStep()"
+          [disabled]="!canProceed()"
+          [title]="getButtonTooltip()"
+        >
+          <span *ngIf="currentStep !== 'PAYMENT'">
+            <i class="fas fa-arrow-right"></i> Tiếp tục
+          </span>
+          <span *ngIf="currentStep === 'PAYMENT'">
+            <i class="fas fa-check"></i> Hoàn thành khám
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="cancelExamination()"
+        >
+          <i class="fas fa-times"></i> Hủy bỏ
+        </button>
       </div>
     </div>
 
-    <!-- Step 4: Payment -->
-    <div class="step-content" *ngIf="currentStep === 'PAYMENT'">
-      <h3>Bước 4: Thanh toán</h3>
-
-      <!-- Cost Summary -->
-      <div class="cost-summary">
-        <h4>Chi phí khám bệnh</h4>
-        <div class="cost-breakdown">
-          <div class="cost-item">
-            <span>Tiền khám:</span>
-            <span>{{
-              consultationFee | currency : "VND" : "symbol" : "1.0-0"
-            }}</span>
-          </div>
-          <div class="cost-item" *ngIf="getMedicineCost() > 0">
-            <span>Tiền thuốc:</span>
-            <span>{{
-              getMedicineCost() | currency : "VND" : "symbol" : "1.0-0"
-            }}</span>
-          </div>
-          <div class="cost-item" *ngIf="getServiceCost() > 0">
-            <span>Tiền dịch vụ:</span>
-            <span>{{
-              getServiceCost() | currency : "VND" : "symbol" : "1.0-0"
-            }}</span>
-          </div>
-          <div class="cost-item total">
-            <span><strong>Tổng cộng:</strong></span>
-            <span
-              ><strong>{{
-                totalCost | currency : "VND" : "symbol" : "1.0-0"
-              }}</strong></span
-            >
-          </div>
-        </div>
+    <!-- Error State -->
+    <div
+      *ngIf="!isLoadingBooking && !currentBooking"
+      class="error-container text-center py-5"
+    >
+      <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+        <h5>Không tìm thấy thông tin lịch khám</h5>
+        <p>Lịch khám có thể đã bị xóa hoặc không tồn tại.</p>
+        <button class="btn btn-primary" routerLink="/doctor/today-schedule">
+          <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </button>
       </div>
-
-      <!-- Payment Form -->
-      <form [formGroup]="paymentForm" class="payment-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="paymentMethod">Phương thức thanh toán *</label>
-            <select
-              id="paymentMethod"
-              formControlName="paymentMethod"
-              class="form-control"
-            >
-              <option value="CASH">Tiền mặt</option>
-              <option value="CARD">Thẻ</option>
-              <option value="TRANSFER">Chuyển khoản</option>
-              <option value="INSURANCE">Bảo hiểm</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="discountAmount">Giảm giá (VND)</label>
-            <input
-              type="number"
-              id="discountAmount"
-              formControlName="discountAmount"
-              class="form-control"
-              min="0"
-              [max]="totalCost"
-            />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="paymentNotes">Ghi chú thanh toán</label>
-          <textarea
-            id="paymentNotes"
-            formControlName="notes"
-            class="form-control"
-            rows="2"
-            placeholder="Ghi chú về thanh toán..."
-          ></textarea>
-        </div>
-      </form>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="goBack()"
-        *ngIf="currentStep !== 'EXAMINATION'"
-      >
-        <i class="fas fa-arrow-left"></i> Quay lại
-      </button>
-
-      <!-- Validation Helper for EXAMINATION step -->
-      <div
-        class="validation-helper"
-        *ngIf="currentStep === 'EXAMINATION' && !canProceed()"
-      >
-        <div class="alert alert-warning">
-          <i class="fas fa-exclamation-triangle"></i>
-          <strong>Vui lòng điền thông tin khám:</strong>
-          <ul class="validation-list">
-            <li *ngIf="examinationForm.get('symptoms')?.invalid">
-              Triệu chứng ban đầu là bắt buộc
-            </li>
-            <li *ngIf="examinationForm.get('doctorNotes')?.invalid">
-              Ghi chú của bác sĩ là bắt buộc
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="proceedToNextStep()"
-        [disabled]="!canProceed()"
-        [title]="getButtonTooltip()"
-      >
-        <span *ngIf="currentStep !== 'PAYMENT'">
-          <i class="fas fa-arrow-right"></i> Tiếp tục
-        </span>
-        <span *ngIf="currentStep === 'PAYMENT'">
-          <i class="fas fa-check"></i> Hoàn thành khám
-        </span>
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-danger"
-        (click)="cancelExamination()"
-      >
-        <i class="fas fa-times"></i> Hủy bỏ
-      </button>
     </div>
   </div>
 </main>
+
+<!-- Modal xuất báo cáo -->
+<div
+  class="modal fade"
+  [ngClass]="{ show: showExportModal }"
+  [style.display]="showExportModal ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exportReportModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportReportModalLabel">Xuất báo cáo</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="closeExportReportModal()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <div class="alert alert-success">
+            <i class="fas fa-check-circle fa-2x mb-2"></i>
+            <h5>Khám bệnh hoàn tất!</h5>
+            <p>Bạn có muốn xuất báo cáo không?</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-primary btn-block mb-2"
+              (click)="exportInvoice()"
+            >
+              <i class="fas fa-file-invoice"></i> Xuất hóa đơn
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-info btn-block mb-2"
+              (click)="exportPrescription()"
+            >
+              <i class="fas fa-prescription"></i> Xuất đơn thuốc
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="finishAndGoToSchedule()"
+        >
+          <i class="fas fa-calendar-check"></i> Hoàn tất và quay lại lịch khám
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showExportModal"></div>
