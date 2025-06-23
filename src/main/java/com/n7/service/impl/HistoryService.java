@@ -64,7 +64,7 @@ public class HistoryService {
                 .examinationDate(LocalDateTime.now())
                 .startTime(booking.getStartTime())
                 .endTime(booking.getEndTime())
-                .consultationFee(200000L) // Phí khám cơ bản
+                .consultationFee(booking.getUser().getDoctorRank().getBasePrice()) // Phí khám cơ bản
                 .totalAmount(historyDTO.getTotalMoney())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

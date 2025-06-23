@@ -26,8 +26,7 @@ export class LoginComponent {
   ngOnInit() {
     this.loginForm = this.formbuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      remember: [false]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -51,7 +50,16 @@ export class LoginComponent {
           
           if (response) {
             this.toastService.showSuccess('Đăng nhập thành công! Chào mừng bạn trở lại.', 'Thành công');
-            console.log(response);
+            console.log('Login response:', response);
+            
+            // Debug localStorage after login
+            console.log('=== LocalStorage After Login ===');
+            console.log('JWT:', localStorage.getItem('jwt'));
+            console.log('RoleId:', localStorage.getItem('roleId'));
+            console.log('UserId:', localStorage.getItem('userId'));
+            console.log('FullName:', localStorage.getItem('fullName'));
+            console.log('Profile:', localStorage.getItem('profile'));
+            console.log('=== End LocalStorage Debug ===');
           }
         },
         error: (error) => {
@@ -77,5 +85,36 @@ export class LoginComponent {
 
   login() {
     this.onsubmit();
+  }
+
+  // Debug methods
+  testLocalStorage() {
+    console.log('=== Testing localStorage ===');
+    
+    // Test basic localStorage
+    localStorage.setItem('test-item', 'test-value');
+    console.log('Set test-item, got:', localStorage.getItem('test-item'));
+    
+    // Test JSON storage like our app
+    const testData = { name: 'Test User', role: '1' };
+    localStorage.setItem('test-json', JSON.stringify(testData));
+    console.log('Set test-json, got:', localStorage.getItem('test-json'));
+    
+    // Check all items
+    console.log('All localStorage items:');
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        console.log(`  ${key}:`, localStorage.getItem(key));
+      }
+    }
+    
+    console.log('=== End localStorage Test ===');
+  }
+
+  clearTestStorage() {
+    localStorage.removeItem('test-item');
+    localStorage.removeItem('test-json');
+    console.log('Cleared test items');
   }
 }

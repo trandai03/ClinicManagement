@@ -52,9 +52,9 @@ public class ServiceRequestService {
         }
 
         // Cập nhật booking status thành AWAITING_RESULTS nếu có service requests
-        if (!serviceRequests.isEmpty() && booking.getStatus() == Status.IN_PROGRESS) {
-            bookingService.updateBooking(booking, Status.AWAITING_RESULTS);
-        }
+//        if (!serviceRequests.isEmpty() && booking.getStatus() == Status.IN_PROGRESS) {
+//            bookingService.updateBooking(booking, Status.AWAITING_RESULTS);
+//        }
         booking.setServiceRequests(serviceRequests);
         bookingRepo.save(booking);
         return ServiceRequestModel.fromEntityToModals(serviceRequests);

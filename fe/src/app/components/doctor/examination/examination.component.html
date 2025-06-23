@@ -11,7 +11,7 @@
     <!-- Main Content -->
     <div *ngIf="!isLoadingBooking && currentBooking">
       <!-- Debug Info (temporary) -->
-      <div
+      <!-- <div
         style="
           background: yellow;
           padding: 10px;
@@ -22,7 +22,7 @@
         <strong>DEBUG:</strong> currentStep = "{{ currentStep }}" | Booking
         Status = "{{ currentBooking?.status }}" | Loading =
         {{ isLoadingBooking }}
-      </div>
+      </div> -->
 
       <div class="examination-header">
         <h2>Khám bệnh - {{ currentBooking?.name || "Đang tải..." }}</h2>
@@ -33,12 +33,12 @@
             {{ currentBooking.date | date : "dd/MM/yyyy" }} - Khung giờ
             {{ currentBooking.idHour }}</span
           >
-          <span
+          <!-- <span
             class="status-badge"
             [ngClass]="'status-' + (currentBooking.status || '').toLowerCase()"
           >
             {{ getStatusText(currentBooking.status || "") }}
-          </span>
+          </span> -->
         </div>
       </div>
 
@@ -370,7 +370,7 @@
               <span><strong>Tổng cộng:</strong></span>
               <span
                 ><strong>{{
-                  getActualTotalCost() | currency : "VND" : "symbol" : "1.0-0"
+                  actualTotalCost | currency : "VND" : "symbol" : "1.0-0"
                 }}</strong></span
               >
             </div>
@@ -427,7 +427,7 @@
                 formControlName="discountAmount"
                 class="form-control"
                 min="0"
-                [max]="getActualTotalCost()"
+                [max]="actualTotalCost"
               />
             </div>
           </div>
@@ -454,9 +454,7 @@
                 [disabled]="isProcessingPayment"
               >
                 <i class="fas fa-credit-card"></i>
-                {{
-                  isProcessingPayment ? "Đang xử lý..." : "Test thanh toán MoMo"
-                }}
+                {{ isProcessingPayment ? "Đang xử lý..." : "Thanh toán MoMo" }}
               </button>
             </div>
           </div>

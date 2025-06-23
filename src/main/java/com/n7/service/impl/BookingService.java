@@ -8,6 +8,7 @@ import com.n7.exception.ResourceAlreadyExitsException;
 import com.n7.exception.ResourceNotFoundException;
 import com.n7.model.BookingModel;
 import com.n7.model.ScheduleModel;
+import com.n7.model.ServiceRequestModel;
 import com.n7.repository.*;
 import com.n7.service.IBookingService;
 import com.n7.utils.ConvertTimeUtils;
@@ -32,6 +33,8 @@ public class BookingService implements IBookingService {
     private final ScheduleService scheduleService;
     private final HourRepo hourRepo;
     private final MailService mailService;
+    private final ServiceRequestRepository serviceRequestRepository;
+    private final HistoryRepo historyRepo;
 
     public Optional<Booking> findById(Long id) {
         return bookingRepo.findById(id);
@@ -45,7 +48,9 @@ public class BookingService implements IBookingService {
             LocalDateTime newDate = LocalDateTime.now().minusDays(1);
             st = Date.from(newDate.atZone(ZoneId.systemDefault()).toInstant());
         }
+//        List<Booking> bookingList = bookingRepo.findByCustom(id,status,email,st,en);
         return bookingRepo.findByCustom(id,status,email,st,en).stream().map(this::convertEntityToModel).collect(Collectors.toList());
+//        return BookingModel.fromEntityList(bookingList);
     }
 
     public Integer countBookingByStatus(Status status,Long doctorId) {
@@ -133,6 +138,7 @@ public class BookingService implements IBookingService {
         // Save Booking
         Booking booking = convertDtoToEntity(bookingDTO,Status.CONFIRMING);
         booking.setUser(user.get());
+
         bookingRepo.save(booking);
         // Save Schedule of Doctor
         Optional<Hour> hour = hourRepo.findById(booking.getIdHour());
@@ -211,7 +217,7 @@ public class BookingService implements IBookingService {
             booking.getDate()
         );
         
-        if(!existingBookings.isEmpty()) {
+        if(existingBookings.size()>6) {
             throw new ResourceAlreadyExitsException(
                 String.format("Bác sĩ %s đã có lịch khám vào ngày %s giờ %s", 
                     booking.getUser().getFullname(),
@@ -298,6 +304,7 @@ public class BookingService implements IBookingService {
 
 
     public BookingModel convertEntityToModel(Booking booking) {
+
         BookingModel bookingModel = new BookingModel();
         bookingModel.setId(booking.getId());
         bookingModel.setName(booking.getFullName());
@@ -311,6 +318,11 @@ public class BookingService implements IBookingService {
         bookingModel.setNote(booking.getNote());
         bookingModel.setNameDoctor(booking.getUser().getFullname());
         bookingModel.setMajor(booking.getUser().getMajor().getName());
+        bookingModel.setServiceRequests(ServiceRequestModel.fromEntityToModals(serviceRequestRepository.findByBooking_Id(booking.getId())));
+        Optional<History> history= historyRepo.findByBookingId(booking.getId());
+        if(history.isPresent()){
+            bookingModel.setHistoryId(history.get().getId());
+        }
         return bookingModel;
     }
 }

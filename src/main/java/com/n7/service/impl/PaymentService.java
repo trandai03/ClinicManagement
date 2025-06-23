@@ -11,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -37,12 +39,14 @@ public class PaymentService {
     @Value("${redirectUrl}")
     private String redirectUrl;
 
-    public String payWithMoMo(String orderId, BigDecimal amount,Long bookingId) {
+    public String payWithMoMo(String orderId, BigDecimal amount,Long bookingId)  {
         final String ipnUrlFinal = String.format("%s/%d", ipnUrl,bookingId);
+//        String redirectUrlFinal = String.format("%s/%d", redirectUrl,bookingId);
         String orderInfo = "Payment";
         String extraData = "";
         String requestId = String.valueOf(System.currentTimeMillis() + new Random().nextInt(999 - 111 + 1) + 111);
         String requestType = "captureWallet";
+//        amount = new BigDecimal(20000);
         String rawHash = "accessKey=" + accessKey +
                 "&amount=" + amount.longValue() +
                 "&extraData=" + extraData +

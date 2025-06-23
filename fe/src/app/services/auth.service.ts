@@ -36,7 +36,9 @@ export class AuthService {
     return this.http.post<apiResponse<any>>(environment.apiBaseUrl + 'auth/login', { username, password }).pipe(
       switchMap((res) => {
         if (res.status === 'success') {
-          storageUtils.clear()
+          // Không clear localStorage nữa - chỉ set từng key
+          // storageUtils.clear() // ← Commented out vì có thể gây race condition
+          
           storageUtils.set('jwt', res.data.accessToken);
           storageUtils.set('roleId', res.data.roleId);
           storageUtils.set('userId', res.data.userId);
@@ -51,8 +53,10 @@ export class AuthService {
             profile: res.data.profile
           });
           
-          // Điều hướng theo role
-          this.navigateByRole(res.data.roleId);
+          // Điều hướng theo role sau một delay nhỏ để localStorage được lưu
+          setTimeout(() => {
+            this.navigateByRole(res.data.roleId);
+          }, 100);
         }
         return of(null);
       }),
@@ -152,16 +156,48 @@ export class AuthService {
     this.route.navigate(['public/trang-chu']);
   }
 
+  // Public method để clear session từ bên ngoài
+  clearUserSession() {
+    this.clearSession();
+  }
+
   // ========== UTILITY METHODS ==========
   isLogin(): boolean {
-    if (!storageUtils.get('jwt')) {
+    const token = storageUtils.get('jwt');
+    if (!token) {
       return false;
     }
+    
+    // Kiểm tra token có hết hạn không
+    if (this.isTokenExpired()) {
+      // Không clear session ở đây, để cho interceptor xử lý
+      return false;
+    }
+    
     return true;
+  }
+
+  // Khôi phục session từ localStorage
+  restoreUserSession(): void {
+    const currentUser = {
+      roleId: storageUtils.get('roleId'),
+      userId: storageUtils.get('userId'),
+      fullName: storageUtils.get('fullName'),
+      profile: storageUtils.get('profile')
+    };
+    
+    if (currentUser.roleId) {
+      this.userLoginSubject.next(currentUser);
+      console.log('User session restored:', currentUser);
+    }
   }
 
   getCurrentRole(): string | null {
     return storageUtils.get('roleId');
+  }
+
+  getCurrentToken(): string | null {
+    return storageUtils.get('jwt');
   }
 
   getCurrentUserId(): string | null {

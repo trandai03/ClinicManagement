@@ -15,7 +15,7 @@ public interface DoctorScheduleHourRepository extends JpaRepository<DoctorSchedu
 
     // Tìm lịch theo doctor và khoảng thời gian
     @Query("SELECT dsh FROM DoctorScheduleHour dsh WHERE dsh.doctor.id = :doctorId " +
-            "AND dsh.specificDate BETWEEN :fromDate AND :toDate")
+            "AND dsh.specificDate BETWEEN :fromDate AND :toDate order by dsh.dayOfWeek ")
     List<DoctorScheduleHour> findByDoctorIdAndDateRange(@Param("doctorId") Long doctorId,
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate);

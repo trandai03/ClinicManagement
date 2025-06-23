@@ -77,10 +77,10 @@ public class ExaminationService {
                 .doctorNotes(startData.getDoctorNotes())
                 .examinationDate(LocalDateTime.now())
                 .startTime(LocalDateTime.now())
-                .consultationFee(200000L) // Phí khám mặc định
+                .consultationFee(booking.getUser().getDoctorRank().getBasePrice()) // Phí khám mặc định
                 .medicineFee(0L)
                 .serviceFee(0L)
-                .totalAmount(200000L) // Chỉ phí khám ban đầu
+                .totalAmount(booking.getUser().getDoctorRank().getBasePrice()) // Chỉ phí khám ban đầu
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -126,6 +126,7 @@ public class ExaminationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
         booking.setResultsConclusion(updateConclusionBookingDTO.getResultConclusion());
         booking.setResultsNotes(updateConclusionBookingDTO.getResultNotes());
+        bookingRepo.save(booking);
     }
 
     /**

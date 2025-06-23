@@ -10,6 +10,7 @@ import { Booking } from 'src/app/models/booking';
 interface ExaminationBooking extends Booking {
   serviceRequests?: ServiceRequestModel[];
   waitingTime?: number; // minutes since service was requested
+  historyId?: number;
 }
 
 @Component({
@@ -160,36 +161,12 @@ export class InProgressComponent implements OnInit, OnDestroy {
 
     this.submittingConclusion = true;
 
-    // Test navigation trực tiếp không qua API (có thể API đang fail)
-    console.log('Attempting direct navigation...');
-    this.router.navigate(['/doctor/examination', this.selectedBookingResults.id], { 
-      queryParams: { 
-        step: 'PRESCRIPTION',
-        conclusion: this.doctorConclusion,
-        notes: this.doctorNotes
-      } 
-    }).then(success => {
-      console.log('Direct navigation result:', success);
-      this.submittingConclusion = false;
-      if (success) {
-        this.closeResultsModal();
-      } else {
-        alert('Navigation failed!');
-      }
-    }).catch(error => {
-      console.error('Direct navigation error:', error);
-      this.submittingConclusion = false;
-      alert('Navigation error: ' + error.message);
-    });
-
-    // Comment out API call for now to test navigation
-    /*
     // Gọi API để lưu kết luận và chú ý vào database
     this.examinationService.updateConclusion(
       this.selectedBookingResults.id, 
       this.doctorConclusion, 
       this.doctorNotes
-    ).pipe(takeUntil(this.destroy$))
+    )
     .subscribe({
       next: (response) => {
         console.log('Conclusion saved successfully:', response);
@@ -202,7 +179,8 @@ export class InProgressComponent implements OnInit, OnDestroy {
             queryParams: { 
               step: 'PRESCRIPTION',
               conclusion: this.doctorConclusion,
-              notes: this.doctorNotes
+              notes: this.doctorNotes,
+              historyId: this.selectedBookingResults!.historyId
             } 
           }).then(success => {
             console.log('Navigation result:', success);
@@ -220,7 +198,7 @@ export class InProgressComponent implements OnInit, OnDestroy {
         alert('Có lỗi xảy ra khi lưu kết luận. Vui lòng thử lại!');
       }
     });
-    */
+    
   }
 
   // Validate form

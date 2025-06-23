@@ -48,11 +48,11 @@
           </h5>
         </div>
         <div class="card-body">
-          <div *ngIf="!bookingId || !historyId" class="alert alert-warning">
+          <div *ngIf=" !historyId" class="alert alert-warning">
             <i class="fas fa-exclamation-triangle me-2"></i>
             Không tìm thấy thông tin khám bệnh để xuất báo cáo.
           </div>
-          <div *ngIf="bookingId && historyId" class="row g-3">
+          <div *ngIf="bookingId " class="row g-3">
             <div class="col-md-6">
               <button
                 type="button"

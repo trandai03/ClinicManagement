@@ -14,6 +14,7 @@ interface DoctorSchedule {
   idUser: number;
   idHour: number;
   date: string;
+  status: string;
   note?: string;
 }
 
@@ -68,6 +69,7 @@ export class WorkScheduleComponent implements OnInit {
   // Data
   allHours: Hour[] = [];
   mySchedules: DoctorSchedule[] = [];
+  allSchedules: DoctorSchedule[] = [];
   workingSchedules: WorkingSchedule[] = [];
   
   // Loading states
@@ -155,19 +157,37 @@ export class WorkScheduleComponent implements OnInit {
     const currentDate = new Date();
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const startOfWeek = this.getStartOfWeek(currentDate);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
     
-    const fromDate = formatDate(startOfMonth, 'dd/MM/yyyy', 'en-US');
-    const toDate = formatDate(endOfMonth, 'dd/MM/yyyy', 'en-US');
+    const fromDate = formatDate(startOfWeek, 'dd/MM/yyyy', 'en-US');
+    const toDate = formatDate(endOfWeek, 'dd/MM/yyyy', 'en-US');
     
     return this.scheduleService.getDoctorSchedulesByDateRange(this.doctorId, fromDate, toDate).pipe(
       map((schedules: any[]) => {
-        return schedules.map(s => ({
-          id: s.id,
-          idUser: s.idUser || s.idDoctor,
-          idHour: s.idHour,
-          date: s.date,
-          note: s.note || ''
-        }));
+        console.log('🔍 Raw schedules from API:', schedules);
+        
+        // Lưu tất cả schedules (bao gồm UNAVAILABLE) vào allSchedules
+        this.allSchedules = schedules;
+        console.log('📋 All schedules (including unavailable):', this.allSchedules);
+        
+        // Chỉ lấy schedules có status AVAILABLE cho mySchedules
+        const availableSchedules = schedules
+          .filter((s: any) => s.status === 'AVAILABLE')
+          .map((s: any) => ({
+            id: s.id,
+            idUser: s.idUser || s.idDoctor,
+            idHour: s.idHour,
+            date: s.date,
+            status: s.status,
+            note: s.note || ''
+          }));
+          
+        console.log('✅ Filtered available schedules:', availableSchedules);
+        console.log('❌ Unavailable schedules:', schedules.filter((s: any) => s.status === 'UNAVAILABLE'));
+        
+        return availableSchedules;
       }),
       catchError(error => {
         console.error('Error loading doctor schedules:', error);
@@ -194,13 +214,18 @@ export class WorkScheduleComponent implements OnInit {
       // Get schedules for this date
       const daySchedules = this.getSchedulesForDate(dateString);
       
+      // Check if day is unavailable
+      const isUnavailable = this.hasUnavailableSchedules(dateString);
+      const unavailableNote = isUnavailable ? this.getUnavailableNote(dateString) : undefined;
+      
       days.push({
         date,
         dateString,
         isToday,
         isWeekend,
         schedules: daySchedules,
-        isUnavailable: false
+        isUnavailable,
+        unavailableNote
       });
     }
 
@@ -215,19 +240,37 @@ export class WorkScheduleComponent implements OnInit {
     const schedules: ScheduleHour[] = [];
     
     this.allHours.forEach(hour => {
-      const hasSchedule = this.mySchedules.some(
-        schedule => schedule.date === dateString && schedule.idHour === hour.id
+      // Chỉ check schedules có status AVAILABLE
+      const hasAvailableSchedule = this.mySchedules.some(
+        schedule => schedule.date === dateString && 
+                   schedule.idHour === hour.id && 
+                   schedule.status === 'AVAILABLE'
       );
       
       schedules.push({
         hourId: hour.id,
         hourName: hour.name,
-        isAvailable: hasSchedule,
+        isAvailable: hasAvailableSchedule,
         isBooked: false // TODO: Check bookings
       });
     });
     
     return schedules;
+  }
+
+  // Method để check ngày có unavailable schedules
+  hasUnavailableSchedules(dateString: string): boolean {
+    return this.allSchedules?.some(
+      (schedule: DoctorSchedule) => schedule.date === dateString && schedule.status === 'UNAVAILABLE'
+    ) || false;
+  }
+
+  // Method để lấy ghi chú unavailable
+  getUnavailableNote(dateString: string): string {
+    const unavailableSchedule = this.allSchedules?.find(
+      (schedule: DoctorSchedule) => schedule.date === dateString && schedule.status === 'UNAVAILABLE'
+    );
+    return unavailableSchedule?.note || '';
   }
 
   generateWorkingSchedules() {

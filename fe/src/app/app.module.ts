@@ -66,6 +66,7 @@ import { ToastrModule } from 'ngx-toastr';
     }),
   ],
   providers: [
+    // Tạm thời comment AuthInterceptor để test localStorage
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorInterceptor,

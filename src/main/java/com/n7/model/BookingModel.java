@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class BookingModel {
+
     private Long id;
     private String name;
     private Gender gender;
@@ -29,6 +29,7 @@ public class BookingModel {
     private String note;
     private String nameDoctor;
     private String major;
+    private Long historyId;
     private List<ServiceRequestModel> serviceRequests;
 
     public static BookingModel fromEntity(Booking booking) {

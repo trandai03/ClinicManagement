@@ -33,13 +33,22 @@ export class ExaminationReportComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Lấy bookingId từ route params (nếu có)
-    const routeBookingId = this.route.snapshot.paramMap.get('id');
+    // Lấy bookingId và historyId từ route params (nếu có)
+    const routeBookingId = this.route.snapshot.queryParamMap.get('bookingId');
+    const routeHistoryId = this.route.snapshot.queryParamMap.get('historyId');
     console.log('routeBookingId', routeBookingId);
-    if (routeBookingId) {
-      this.bookingId = +routeBookingId;
-    }
+    console.log('routeHistoryId', routeHistoryId);
     
+    if (routeBookingId) {
+      this.bookingId = parseInt(routeBookingId);
+      console.log('BookingId set from query params:', this.bookingId);
+    }
+    if (routeHistoryId) {
+      this.historyId = parseInt(routeHistoryId);
+      console.log('HistoryId set from query params:', this.historyId);
+    }
+    console.log('this.bookingId', this.bookingId);
+    console.log('this.historyId', this.historyId);
     // Kiểm tra query params cho payment status
     this.route.queryParams.subscribe(params => {
       this.paymentStatus = params['resultCode'] || params['status'] || '';
@@ -53,14 +62,26 @@ export class ExaminationReportComponent implements OnInit {
         amount: params['amount']
       });
       
-      // Nếu không có bookingId từ route nhưng có thông tin thanh toán MoMo
-      if (!this.bookingId && params['orderId']) {
-        // Lấy bookingId từ localStorage
+      // Nếu chưa có bookingId/historyId từ route, thử lấy từ localStorage (MoMo flow)
+      if (!this.bookingId || !this.historyId) {
         const savedBookingId = localStorage.getItem('momo_booking_id');
-        if (savedBookingId) {
+        const savedHistoryId = localStorage.getItem('momo_history_id');
+        
+        if (!this.bookingId && savedBookingId) {
           this.bookingId = +savedBookingId;
-          localStorage.removeItem('momo_booking_id'); // Clean up
-          console.log('BookingId retrieved from localStorage:', this.bookingId);
+          console.log('BookingId retrieved from localStorage (MoMo):', this.bookingId);
+        }
+        
+        if (!this.historyId && savedHistoryId) {
+          this.historyId = +savedHistoryId;
+          console.log('HistoryId retrieved from localStorage (MoMo):', this.historyId);
+        }
+        
+        // Clean up localStorage sau khi đã sử dụng
+        if (savedBookingId || savedHistoryId) {
+          localStorage.removeItem('momo_booking_id');
+          localStorage.removeItem('momo_history_id');
+          console.log('Cleaned up MoMo localStorage data');
         }
       }
       
@@ -112,6 +133,10 @@ export class ExaminationReportComponent implements OnInit {
   // Export invoice
   exportInvoice() {
     if (!this.historyId) {
+      const routeHistoryId = this.route.snapshot.queryParamMap.get('historyId');
+      this.historyId = parseInt(routeHistoryId || '0');
+    }
+    if (!this.historyId) {
       this.toastService.showError('Không tìm thấy thông tin lịch sử khám', 'Lỗi');
       return;
     }
@@ -119,6 +144,9 @@ export class ExaminationReportComponent implements OnInit {
     this.exportingInvoice = true;
     this.reportService.exportInvoice(this.historyId).subscribe({
       next: (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
         this.toastService.showSuccess('Xuất hóa đơn thành công!', 'Thành công');
         this.exportingInvoice = false;
       },
@@ -133,6 +161,11 @@ export class ExaminationReportComponent implements OnInit {
   // Export prescription
   exportPrescription() {
     if (!this.historyId) {
+      const routeHistoryId = this.route.snapshot.queryParamMap.get('historyId');
+      this.historyId = parseInt(routeHistoryId || '0');
+    }
+    console.log('exportPrescription called, historyId:', this.historyId);
+    if (!this.historyId) {
       this.toastService.showError('Không tìm thấy thông tin lịch sử khám', 'Lỗi');
       return;
     }
@@ -140,6 +173,9 @@ export class ExaminationReportComponent implements OnInit {
     this.exportingPrescription = true;
     this.reportService.exportPrescription(this.historyId).subscribe({
       next: (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
         this.toastService.showSuccess('Xuất đơn thuốc thành công!', 'Thành công');
         this.exportingPrescription = false;
       },

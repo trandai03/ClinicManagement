@@ -100,13 +100,20 @@
                   <div class="day-date">{{ day.date.getDate() }}</div>
                   <div class="day-status">
                     <span
-                      *ngIf="hasAvailableHours(day)"
+                      *ngIf="hasAvailableHours(day) && !day.isUnavailable"
                       class="badge bg-success"
                     >
                       {{ getAvailableHoursCount(day) }} slot
                     </span>
                     <span
-                      *ngIf="!hasAvailableHours(day)"
+                      *ngIf="day.isUnavailable"
+                      class="badge bg-warning"
+                      [title]="day.unavailableNote"
+                    >
+                      Báo bận
+                    </span>
+                    <span
+                      *ngIf="!hasAvailableHours(day) && !day.isUnavailable"
                       class="badge bg-secondary"
                     >
                       Nghỉ
@@ -121,8 +128,9 @@
                   *ngFor="let day of currentWeek.days"
                   [class.today]="day.isToday"
                   [class.weekend]="day.isWeekend"
+                  [class.unavailable]="day.isUnavailable"
                 >
-                  <div class="day-schedules">
+                  <div class="day-schedules" *ngIf="!day.isUnavailable">
                     <div
                       class="schedule-slot"
                       *ngFor="let schedule of day.schedules"
@@ -136,7 +144,18 @@
                     </div>
                   </div>
 
-                  <div class="day-actions">
+                  <div class="unavailable-notice" *ngIf="day.isUnavailable">
+                    <i class="fa-solid fa-ban text-warning"></i>
+                    <span class="text-muted">Báo bận</span>
+                    <small
+                      *ngIf="day.unavailableNote"
+                      class="d-block text-muted"
+                    >
+                      {{ day.unavailableNote }}
+                    </small>
+                  </div>
+
+                  <div class="day-actions" *ngIf="!day.isUnavailable">
                     <button
                       type="button"
                       class="btn btn-sm btn-outline-primary"

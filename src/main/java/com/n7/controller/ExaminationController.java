@@ -49,6 +49,7 @@ public class ExaminationController {
     public ResponseEntity<?> updateConclusionResult(@RequestBody UpdateConclusionBookingDTO updateConclusionBookingDTO) {
         try {
             examinationService.updateConclusionResult(updateConclusionBookingDTO);
+            System.out.println("updateConclusionBookingDTO" +updateConclusionBookingDTO);
             return ResponseEntity.ok(new SuccessResponse<>("Cập nhật kết luận bác sĩ thành công"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

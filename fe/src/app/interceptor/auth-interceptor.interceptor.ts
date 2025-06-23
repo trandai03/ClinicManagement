@@ -19,17 +19,31 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
   constructor(private router: Router, private toastr: ToastrService, private toastService: ToastService) {}
   
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    request = request.clone({
-      setHeaders: {
-        Authorization : `Bearer ${(storageUtils.get('jwt'))}`
-      }
-    })
+    const token = storageUtils.get('jwt');
+    
+    // Chỉ thêm Authorization header nếu có token
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
     
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         // Xử lý lỗi 401 - Token hết hạn hoặc không hợp lệ
-        if (error.status === 401) {
-          this.handleUnauthorized();
+        if (error.status === 401 && token) {
+          // Kiểm tra xem có đang ở trang login hoặc public không
+          const currentUrl = this.router.url;
+          const isPublicRoute = currentUrl.includes('/public') || currentUrl.includes('/login') || currentUrl.includes('/register');
+          
+          // Chỉ clear session nếu không phải public route
+          if (!isPublicRoute) {
+            this.handleUnauthorized();
+          } else {
+            console.log('🟡 401 on public route - not clearing session');
+          }
         }
         // Ném lại lỗi để component xử lý
         throw error;
@@ -38,6 +52,8 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
   }
 
   private handleUnauthorized(): void {
+    console.log('🔴 401 Unauthorized - Token expired, clearing session');
+    
     // Clear storage
     storageUtils.clear();
     

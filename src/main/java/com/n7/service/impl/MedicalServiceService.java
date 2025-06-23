@@ -5,6 +5,7 @@ import com.n7.entity.MedicalService;
 import com.n7.model.MedicalServiceModel;
 import com.n7.repository.MedicalServiceRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public class MedicalServiceService {
     private final MedicalServiceRepo medicalServiceRepo;
 
+    @Cacheable("medicalService")
     public List<MedicalService> findAll() {
         return medicalServiceRepo.findAll();
     }

@@ -56,7 +56,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class PrescriptionService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/prescription`;
+  private readonly baseUrl = `${environment.apiBaseUrl}api/v1/prescription`;
 
   constructor(private http: HttpClient) {}
 

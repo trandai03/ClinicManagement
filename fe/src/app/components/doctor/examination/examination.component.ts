@@ -53,6 +53,7 @@ export class ExaminationComponent implements OnInit {
   currentStep: 'EXAMINATION' | 'SERVICES' | 'PRESCRIPTION' | 'PAYMENT' = 'EXAMINATION';
   totalCost = 0;
   consultationFee = 200000; // Base consultation fee
+  private _cachedTotalCost: number = 0; // Cache để tránh infinite loop
 
   // Payment processing state
   isProcessingPayment = false;
@@ -90,15 +91,32 @@ export class ExaminationComponent implements OnInit {
     // Subscribe to query params first
     this.route.queryParams.subscribe(queryParams => {
       console.log('Query params in examination:', queryParams);
+      
+      // Nhận step từ query params
       if (queryParams['step']) {
         this.currentStep = queryParams['step'] as any;
         console.log('Step set from query params:', this.currentStep);
-        
-        // Force change detection
-        setTimeout(() => {
-          console.log('After timeout - currentStep:', this.currentStep);
-        }, 100);
       }
+      
+      // Nhận historyId từ query params (từ in-progress component)
+      if (queryParams['historyId']) {
+        this.historyId = +queryParams['historyId'];
+        console.log('HistoryId set from query params:', this.historyId);
+      }
+      
+      // Nhận conclusion và notes từ query params
+      if (queryParams['conclusion']) {
+        console.log('Doctor conclusion from query params:', queryParams['conclusion']);
+        // Có thể pre-fill vào form nếu cần
+        this.examinationForm.patchValue({
+          doctorNotes: queryParams['notes'] || queryParams['conclusion']
+        });
+      }
+      
+      // Force change detection
+      setTimeout(() => {
+        console.log('After timeout - currentStep:', this.currentStep, 'historyId:', this.historyId);
+      }, 100);
     });
     
     this.loadBookingData();
@@ -151,9 +169,15 @@ export class ExaminationComponent implements OnInit {
 
     this.paymentForm = this.fb.group({
       paymentMethod: ['CASH', Validators.required],
-      buyMedicineAtClinic: [true, Validators.required], // Default: mua thuốc tại phòng khám
+      buyMedicineAtClinic: ['true', Validators.required], // Default: mua thuốc tại phòng khám (string)
       discountAmount: [0],
       notes: ['']
+    });
+
+    // Subscribe to buyMedicineAtClinic changes để cập nhật cache
+    this.paymentForm.get('buyMedicineAtClinic')?.valueChanges.subscribe(value => {
+      console.log('💊 buyMedicineAtClinic value changed to:', value);
+      this.updateTotalCost();
     });
   }
 
@@ -242,6 +266,9 @@ export class ExaminationComponent implements OnInit {
       this.availableMedicines = medicines;
       this.availableServices = services;
       this.calculateTotalCost();
+      
+      // Khởi tạo cache total cost lần đầu
+      this.updateTotalCost();
     });
   }
 
@@ -275,13 +302,19 @@ export class ExaminationComponent implements OnInit {
         this.currentStep = 'SERVICES';
         console.log('Successfully updated to IN_PROGRESS, moved to SERVICES step');
         
-        // Lấy historyId từ response
+        // Lấy historyId từ response (chỉ khi chưa có từ query params)
         if (response && response.data && response.data.historyId) {
-          this.historyId = response.data.historyId;
-          console.log('Saved historyId:', this.historyId);
+          if (!this.historyId) { // Chỉ set nếu chưa có từ query params
+            this.historyId = response.data.historyId;
+            console.log('Saved historyId from API response:', this.historyId);
+          } else {
+            console.log('HistoryId already set from query params, keeping:', this.historyId);
+          }
         } else {
-          console.warn('No historyId in response, using bookingId as fallback');
-          this.historyId = this.bookingId;
+          if (!this.historyId) { // Chỉ fallback nếu chưa có từ query params
+            console.warn('No historyId in response, using bookingId as fallback');
+            this.historyId = this.bookingId;
+          }
         }
       },
       error: (err: any) => {
@@ -310,6 +343,7 @@ export class ExaminationComponent implements OnInit {
         
         this.prescriptionForm.reset({ quantity: 1 });
         this.calculateTotalCost();
+        this.updateTotalCost(); // Cập nhật cache
       }
     }
   }
@@ -335,6 +369,7 @@ export class ExaminationComponent implements OnInit {
         this.selectedServices.push(serviceRequest);
         this.serviceRequestForm.reset();
         this.calculateTotalCost();
+        this.updateTotalCost(); // Cập nhật cache
       }
     }
   }
@@ -362,9 +397,24 @@ export class ExaminationComponent implements OnInit {
           console.log('No services selected, moving to prescription...');
           this.currentStep = 'PRESCRIPTION';
         }
+        
         break;
       case 'PRESCRIPTION':
         console.log('Processing prescriptions, selectedMedicines.length:', this.selectedMedicines.length);
+        
+        // Load existing services only if coming from AWAITING_RESULTS và chưa có services
+        if (this.selectedServices.length === 0 && this.currentBooking?.status === 'AWAITING_RESULTS') {
+          this.serviceRequestService.getAllServiceRequestsByBookingId(this.bookingId).subscribe({
+            next: (services) => {
+              this.selectedServices = services;
+              console.log('Loaded existing services from AWAITING_RESULTS:', this.selectedServices);
+              this.updateTotalCost();
+            },
+            error: (err) => {
+              console.error('Error loading services:', err);
+            }
+          });
+        }
         
         // Lưu đơn thuốc vào backend trước khi chuyển sang payment
         if (this.selectedMedicines.length > 0) {
@@ -373,8 +423,10 @@ export class ExaminationComponent implements OnInit {
           console.log('No medicines prescribed, moving to payment...');
           this.currentStep = 'PAYMENT';
         }
+        
         break;
       case 'PAYMENT':
+        
         console.log('Processing payment...');
         this.handlePayment();
         break;
@@ -449,8 +501,23 @@ export class ExaminationComponent implements OnInit {
     forkJoin(saveRequests).subscribe({
       next: (responses) => {
         console.log('Service requests saved successfully:', responses);
-        this.moveToAwaitingResults();
-        // this.currentStep = 'PRESCRIPTION';
+        this.toastService.showSuccess('Đã lưu yêu cầu dịch vụ thành công', 'Thành công');
+        
+        // Kiểm tra nếu có service cần chờ kết quả (xét nghiệm, chẩn đoán hình ảnh)
+        const needsResults = this.selectedServices.some(service => 
+          service.serviceName.toLowerCase().includes('xét nghiệm') ||
+          service.serviceName.toLowerCase().includes('chẩn đoán') ||
+          service.serviceName.toLowerCase().includes('siêu âm') ||
+          service.serviceName.toLowerCase().includes('x-quang')
+        );
+        
+        if (needsResults) {
+          console.log('Services need results, moving to AWAITING_RESULTS');
+          this.moveToAwaitingResults();
+        } else {
+          console.log('Services don\'t need results, proceeding to PRESCRIPTION');
+          this.currentStep = 'PRESCRIPTION';
+        }
       },
       error: (err: any) => {
         console.error('Error saving service requests:', err);
@@ -527,7 +594,7 @@ export class ExaminationComponent implements OnInit {
         bookingId: this.bookingId,
         medicines: medicineData,
         services: serviceData,
-        totalAmount: this.getActualTotalCost(), // Use actual total cost
+        totalAmount: this.actualTotalCost, // Use actual total cost
         paymentMethod: this.paymentForm.value.paymentMethod || 'CASH',
         notes: notes
       };
@@ -538,7 +605,7 @@ export class ExaminationComponent implements OnInit {
           buyAtClinic: buyMedicineAtClinic,
           medicineCount: this.selectedMedicines.length,
           medicineCost: this.getMedicineCost(),
-          actualTotal: this.getActualTotalCost()
+          actualTotal: this.actualTotalCost
         }
       });
 
@@ -552,7 +619,13 @@ export class ExaminationComponent implements OnInit {
           }
           
           // Hiển thị modal xuất báo cáo
-          this.showExportReportModal();
+          // this.showExportReportModal();
+          this.router.navigate(['/doctor/examination-report'], {
+            queryParams: {
+              bookingId: this.bookingId,
+              historyId: this.historyId
+            }
+          });
         },
         error: (err: any) => {
           console.error('Error completing examination:', err);
@@ -567,13 +640,16 @@ export class ExaminationComponent implements OnInit {
     const serviceCost = this.selectedServices.reduce((sum, item) => sum + item.cost, 0);
     this.totalCost = this.consultationFee + medicineCost + serviceCost;
     
+    // Cập nhật cache total cost
+    this.updateTotalCost();
+    
     // Log for debugging
-    console.log('Total cost calculated:', {
+    console.log('💰 Total cost calculated:', {
       consultationFee: this.consultationFee,
       medicineCost: medicineCost,
       serviceCost: serviceCost,
       totalCost: this.totalCost,
-      actualTotalCost: this.getActualTotalCost()
+      actualTotalCost: this.actualTotalCost
     });
   }
 
@@ -581,11 +657,13 @@ export class ExaminationComponent implements OnInit {
   removeMedicine(index: number) {
     this.selectedMedicines.splice(index, 1);
     this.calculateTotalCost();
+    this.updateTotalCost(); // Cập nhật cache
   }
 
   removeService(index: number) {
     this.selectedServices.splice(index, 1);
     this.calculateTotalCost();
+    this.updateTotalCost(); // Cập nhật cache
   }
 
   // Cost getters
@@ -594,7 +672,7 @@ export class ExaminationComponent implements OnInit {
   }
 
   getServiceCost(): number {
-    console.log('Selected services:', this.selectedServices);
+    // console.log('Selected services:', this.selectedServices);
     return this.selectedServices.reduce((sum, item) => sum + item.cost, 0);
   }
 
@@ -605,6 +683,7 @@ export class ExaminationComponent implements OnInit {
       'CONFIRMING': 'Chờ xác nhận',
       'ACCEPTING': 'Đã xác nhận',
       'IN_PROGRESS': 'Đang khám',
+      'AWAITING_RESULTS': 'Chờ kết quả',
       'SUCCESS': 'Hoàn thành'
     };
     return statusMap[status] || status;
@@ -623,20 +702,20 @@ export class ExaminationComponent implements OnInit {
     switch (this.currentStep) {
       case 'EXAMINATION':
         canProceed = this.examinationForm.valid;
-        console.log('Can proceed EXAMINATION:', canProceed, 'Form valid:', this.examinationForm.valid);
+        // console.log('Can proceed EXAMINATION:', canProceed, 'Form valid:', this.examinationForm.valid);
         break;
       case 'SERVICES':
       case 'PRESCRIPTION':
         canProceed = true; // Optional steps
-        console.log('Can proceed (optional step):', canProceed);
+        // console.log('Can proceed (optional step):', canProceed);
         break;
       case 'PAYMENT':
         canProceed = this.paymentForm.valid;
-        console.log('Can proceed PAYMENT:', canProceed, 'Form valid:', this.paymentForm.valid);
+        // console.log('Can proceed PAYMENT:', canProceed, 'Form valid:', this.paymentForm.valid);
         break;
       default:
         canProceed = false;
-        console.log('Can proceed (default):', canProceed);
+        // console.log('Can proceed (default):', canProceed);
     }
     
     return canProceed;
@@ -718,19 +797,22 @@ export class ExaminationComponent implements OnInit {
   processMoMoPayment() {
     this.isProcessingPayment = true;
     
-    this.paymentService.createMoMoPayment(this.bookingId, this.getActualTotalCost()).subscribe({
+    this.paymentService.createMoMoPayment(this.bookingId, this.actualTotalCost).subscribe({
       next: (response: PaymentResponse) => {
         console.log('MoMo payment URL received:', response);
-        
+        console.log('Total cost:', this.actualTotalCost);
         if (response.data) {
           // Hiển thị thông báo cho người dùng
           this.toastService.showInfo('Đang chuyển hướng đến trang thanh toán MoMo...', 'Thông báo');
           
           // Lưu bookingId vào localStorage để sử dụng sau khi redirect
           localStorage.setItem('momo_booking_id', this.bookingId.toString());
+          localStorage.setItem('momo_history_id', this.historyId.toString());
+          console.log('MoMo bookingId saved:', this.bookingId);
           
           // Mở trang thanh toán MoMo trong tab hiện tại (sẽ redirect về examination-report)
           window.location.href = response.data;
+          
         } else {
           this.toastService.showError('Không thể tạo liên kết thanh toán MoMo', 'Lỗi');
         }
@@ -804,10 +886,50 @@ export class ExaminationComponent implements OnInit {
   }
 
   /**
-   * Lấy tổng chi phí thực tế (bao gồm phí khám + thuốc + dịch vụ)
+   * Getter cho tổng chi phí thực tế (thay thế method để tránh infinite loop)
+   */
+  get actualTotalCost(): number {
+    return this._cachedTotalCost;
+  }
+
+  /**
+   * Cập nhật cache tổng chi phí khi có thay đổi
+   */
+  private updateTotalCost(): void {
+    // Chuyển string thành boolean để so sánh chính xác
+    const buyAtClinic = this.paymentForm.value.buyMedicineAtClinic === 'true' || this.paymentForm.value.buyMedicineAtClinic === true;
+    
+    if (buyAtClinic) {
+      console.log('💊 Buy medicine at clinic: true');
+      this._cachedTotalCost = this.consultationFee + this.getServiceCost() + this.getMedicineCost();
+    } else {
+      console.log('🏪 Buy medicine outside: false');
+      this._cachedTotalCost = this.consultationFee + this.getServiceCost();
+    }
+    
+    console.log('💰 Total cost updated:', {
+      consultationFee: this.consultationFee,
+      serviceCost: this.getServiceCost(),
+      medicineCost: this.getMedicineCost(),
+      buyAtClinic: buyAtClinic,
+      finalTotal: this._cachedTotalCost
+    });
+  }
+
+  /**
+   * Lấy tổng chi phí thực tế (giữ lại để tương thích với code cũ)
    */
   getActualTotalCost(): number {
-    return this.consultationFee + this.getMedicineCost() + this.getServiceCost();
+    // Chuyển string thành boolean để so sánh chính xác
+    const buyAtClinic = this.paymentForm.value.buyMedicineAtClinic === 'true' || this.paymentForm.value.buyMedicineAtClinic === true;
+    
+    if (buyAtClinic) {
+      console.log('💊 Buy medicine at clinic: true');
+      return this.consultationFee + this.getServiceCost() + this.getMedicineCost();
+    } else {
+      console.log('🏪 Buy medicine outside: false');
+      return this.consultationFee + this.getServiceCost();
+    }
   }
 
   /**
@@ -822,8 +944,12 @@ export class ExaminationComponent implements OnInit {
    */
   onMedicinePurchaseOptionChange(event: any) {
     const selectedOption = event.target.value;
-    console.log('Medicine purchase option changed to:', selectedOption);
-    // Có thể thêm logic xử lý tùy chọn mua thuốc ở đây
+    console.log('💊 Medicine purchase option changed to:', selectedOption);
+    
+    // Cập nhật total cost khi thay đổi tùy chọn mua thuốc
+    setTimeout(() => {
+      this.updateTotalCost();
+    }, 0); // Delay để đảm bảo form value đã được cập nhật
   }
 
   /**
