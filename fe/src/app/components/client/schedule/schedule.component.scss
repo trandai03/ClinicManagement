@@ -45,8 +45,13 @@
 //     border: 1px solid #102E9E;
 // }
 
+.outer_booking_form {
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
 .booking_form {
-    width: 80%;
+    width: 96%;
     height: auto;
 }
 
@@ -58,7 +63,7 @@
 
 .form_header {
     background-color: #102E9E;
-    padding: 15px 20px;
+    padding: 12px 15px;
     color: white;
     text-align: center;
     border-start-start-radius: 7px;
@@ -67,49 +72,55 @@
 
 .form_body {
     background-color: #1691E2;
-    padding: 10px 20px;
+    padding: 8px 15px;
 }
 
 .form_element {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     width: 100%;
     height: auto;
 }
 
 .form_lable {
     color: white;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    font-size: 14px;
 }
 
 .form_input_text_1 {
-    padding: 10px;
+    padding: 8px;
     border-radius: 7px;
     border: none;
-    width: 99.5%;
+    width: 99%;
+    font-size: 14px;
 }
 
 .form_input_text_2 {
-    padding: 10px;
+    padding: 8px;
     border-radius: 7px;
     border: none;
-    width: 100%;
+    width: 99%;
+    font-size: 14px;
 }
 
 .dropdown {
-    padding: 10px;
-    width: 100%;
+    padding: 8px;
+    width: 99%;
     border-radius: 7px;
     overflow-y: auto;
+    font-size: 14px;
 }
 
 .dropdown_custom {
-    width: 99.5%;
+    width: 99%;
 }
 
 .form_textarea textarea {
     border-radius: 7px;
-    width: 100%;
-    padding: 10px;
+    width: 99%;
+    padding: 8px;
+    min-height: 80px;
+    font-size: 14px;
 }
 
 .outer_form_button {
@@ -117,16 +128,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 10px;
 }
 
 .form_button {
-    width: 150px;
-    padding: 10px;
+    width: 140px;
+    padding: 8px 15px;
     border-radius: 7px;
     color: white;
     border: 1px solid #1691E2;
     background-color: #3b5fe2;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .form_button:hover {
@@ -147,21 +160,21 @@ button.example-custom-date-class {
     padding-bottom: 18px;
 }
 
-/* Booking Mode Selection Styles - Enhanced */
+/* Booking Mode Selection Styles - Enhanced & Compact */
 .booking_mode_selection {
     display: flex;
-    gap: 15px;
-    margin: 10px 0;
+    gap: 12px;
+    margin: 8px 0;
     
     @media (max-width: 768px) {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 }
 
 .booking_mode_option {
     flex: 1;
-    padding: 15px;
+    padding: 12px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.1);
@@ -201,12 +214,12 @@ button.example-custom-date-class {
         box-shadow: 
             0 8px 25px rgba(255, 255, 255, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        transform: translateY(-5px) scale(1.02);
+        transform: translateY(-3px) scale(1.01);
         animation: pulseGlow 2s infinite;
         
         .mode_icon i {
             color: #fff;
-            transform: scale(1.3);
+            transform: scale(1.2);
             text-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
             animation: iconBounce 0.6s ease;
         }
@@ -253,28 +266,29 @@ button.example-custom-date-class {
 }
 
 .mode_icon {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     
     i {
-        font-size: 24px;
+        font-size: 20px;
         color: rgba(255, 255, 255, 0.8);
         transition: all 0.3s ease;
     }
 }
 
 .mode_text {
-    display: block;
-    color: #fff;
+    font-size: 14px;
     font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 5px;
+    color: #fff;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
 }
 
 .mode_description {
+    font-size: 11px;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 12px;
-    margin: 0;
     line-height: 1.3;
+    margin: 0;
+    transition: all 0.3s ease;
 }
 
 /* Available Slots Styles */
@@ -1281,4 +1295,302 @@ button.example-custom-date-class {
   &::before {
       display: none !important;
   }
+}
+
+// Responsive Design cho Schedule Component  
+// Đặc biệt cho màn hình 1280px và lớn hơn
+@media (min-width: 1280px) {
+    .outer_booking_form {
+        margin-left: 10px;
+        margin-top: 25px;
+    }
+    
+    .booking_form {
+        width: 99.5%;
+    }
+    
+    .form_body {
+        padding: 12px 20px;
+    }
+    
+    .form_element {
+        margin-bottom: 14px;
+    }
+    
+    .form_input_text_1,
+    .form_input_text_2,
+    .dropdown {
+        padding: 12px;
+        font-size: 16px;
+        width: 99.8%;
+    }
+    
+    .form_textarea textarea {
+        min-height: 95px;
+        font-size: 16px;
+        width: 99.8%;
+    }
+    
+    .form_lable {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+    
+    .form_button {
+        width: 160px;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    
+    .booking_mode_option {
+        padding: 18px;
+    }
+    
+    .mode_icon i {
+        font-size: 24px;
+    }
+    
+    .mode_text {
+        font-size: 16px;
+    }
+    
+    .mode_description {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1279px) {
+    .outer_booking_form {
+        margin-left: 10px;
+        margin-top: 15px;
+    }
+    
+    .booking_form {
+        width: 99%;
+    }
+    
+    .form_body {
+        padding: 10px 18px;
+    }
+    
+    .form_element {
+        margin-bottom: 12px;
+    }
+    
+    .form_input_text_1,
+    .form_input_text_2,
+    .dropdown {
+        padding: 10px;
+        font-size: 15px;
+        width: 99.5%;
+    }
+    
+    .form_textarea textarea {
+        min-height: 90px;
+        font-size: 15px;
+        width: 99.5%;
+    }
+    
+    .form_lable {
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .form_button {
+        width: 150px;
+        padding: 10px 18px;
+        font-size: 15px;
+    }
+    
+    .booking_mode_option {
+        padding: 15px;
+    }
+    
+    .mode_icon i {
+        font-size: 22px;
+    }
+    
+    .mode_text {
+        font-size: 15px;
+    }
+    
+    .mode_description {
+        font-size: 12px;
+    }
+}
+
+// Thêm breakpoint cho màn hình trung bình 1025px - 1200px
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .outer_booking_form {
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+    
+    .booking_form {
+        width: 97%;
+    }
+    
+    .form_body {
+        padding: 9px 16px;
+    }
+    
+    .form_element {
+        margin-bottom: 11px;
+    }
+    
+    .form_input_text_1,
+    .form_input_text_2,
+    .dropdown {
+        padding: 9px;
+        font-size: 14px;
+        width: 99%;
+    }
+    
+    .form_textarea textarea {
+        min-height: 85px;
+        font-size: 14px;
+        width: 99%;
+    }
+    
+    .form_lable {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .form_button {
+        width: 145px;
+        padding: 9px 16px;
+        font-size: 14px;
+    }
+    
+    .booking_mode_option {
+        padding: 13px;
+    }
+    
+    .mode_icon i {
+        font-size: 20px;
+    }
+    
+    .mode_text {
+        font-size: 14px;
+    }
+    
+    .mode_description {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .outer_booking_form {
+        margin-left: 20px;
+        margin-top: 15px;
+    }
+    
+    .booking_form {
+        width: 95%;
+    }
+    
+    .form_body {
+        padding: 6px 12px;
+    }
+    
+    .form_element {
+        margin-bottom: 8px;
+    }
+    
+    .form_input_text_1,
+    .form_input_text_2,
+    .dropdown {
+        padding: 6px;
+        font-size: 13px;
+    }
+    
+    .form_textarea textarea {
+        min-height: 70px;
+        font-size: 13px;
+    }
+    
+    .booking_mode_option {
+        padding: 10px;
+    }
+    
+    .mode_text {
+        font-size: 13px;
+    }
+    
+    .mode_description {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .outer_booking_form {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+    
+    .booking_form {
+        width: 98%;
+    }
+    
+    .form_header {
+        padding: 10px 12px;
+    }
+    
+    .form_body {
+        padding: 5px 10px;
+    }
+    
+    .form_element {
+        margin-bottom: 6px;
+    }
+    
+    .form_lable {
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+    
+    .form_input_text_1,
+    .form_input_text_2,
+    .dropdown {
+        padding: 5px;
+        font-size: 12px;
+    }
+    
+    .form_textarea textarea {
+        min-height: 60px;
+        font-size: 12px;
+    }
+    
+    .form_button {
+        width: 120px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .booking_mode_selection {
+        gap: 6px;
+        margin: 6px 0;
+    }
+    
+    .booking_mode_option {
+        padding: 8px;
+    }
+    
+    .mode_icon {
+        margin-bottom: 4px;
+        
+        i {
+            font-size: 18px;
+        }
+    }
+    
+    .mode_text {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+    
+    .mode_description {
+        font-size: 9px;
+    }
 } 

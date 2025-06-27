@@ -19,12 +19,14 @@ import { DoctorDetailComponent } from './doctor-detail/doctor-detail.component';
 import { NgxPaginationModule } from "ngx-pagination";
 import { ProfileComponent } from './profile/profile.component';
 import { DataTablesModule } from "angular-datatables";
+import { ToastrModule } from 'ngx-toastr';
+import { MajorDetailComponent } from './major-detail/major-detail.component';
 
 
 
 
 @NgModule({
-    declarations: [FooterComponent,HomeComponent,HeaderComponent,ClientComponent, MajorComponent, ScheduleComponent, DoctorComponent, ArticleComponent, ContactComponent, DoctorDetailComponent, ProfileComponent],
+    declarations: [FooterComponent,HomeComponent,HeaderComponent,ClientComponent, MajorComponent, ScheduleComponent, DoctorComponent, ArticleComponent, ContactComponent, DoctorDetailComponent, ProfileComponent, MajorDetailComponent],
     imports: [
       CommonModule, // <-- Import thêm để dùng forms sau này
       FormsModule,
@@ -36,7 +38,8 @@ import { DataTablesModule } from "angular-datatables";
       ReactiveFormsModule,
       FormsModule,
       NgxPaginationModule,
-      DataTablesModule
+      DataTablesModule,
+      ToastrModule
     ],
   })
   export class ClientModule {}

@@ -30,6 +30,7 @@ public class BookingModel {
     private String nameDoctor;
     private String major;
     private Long historyId;
+    private String initialSymptoms;
     private List<ServiceRequestModel> serviceRequests;
 
     public static BookingModel fromEntity(Booking booking) {
@@ -44,6 +45,7 @@ public class BookingModel {
                 .idHour(booking.getIdHour())
                 .status(booking.getStatus().name())
                 .note(booking.getNote())
+                .initialSymptoms(booking.getInitialSymptoms())
                 .name(booking.getFullName())
                 .nameDoctor(booking.getUser().getFullname())
                 .major(booking.getUser().getMajor().getName())

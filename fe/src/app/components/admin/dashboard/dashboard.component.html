@@ -1,140 +1,408 @@
 <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Trang chủ</h1>
-      <!-- <nav>
+  <div class="pagetitle d-flex justify-content-between align-items-center">
+    <h1>Trang chủ</h1>
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="refreshDashboard()"
+    >
+      <i class="bi bi-arrow-clockwise"></i> Tải lại dữ liệu
+    </button>
+    <!-- <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
           <li class="breadcrumb-item">Pages</li>
           <li class="breadcrumb-item active">Blank</li>
         </ol>
       </nav> -->
-    </div><!-- End Page Title -->
-    <br>
-    <br>
-    <section class="section">
-      <div class="row">
-        
+  </div>
+  <!-- End Page Title -->
+  <br />
+  <br />
+  <section class="section">
+    <div class="row">
+      <!-- Sales Card -->
+      <div class="col-xxl-3 col-md-3">
+        <div class="card info-card sales-card">
+          <div class="card-body">
+            <h2 class="card-title">Bác sĩ đang làm</h2>
 
-        <!-- Sales Card -->
-        <div class="col-xxl-4 col-md-4">
-          <div class="card info-card sales-card">
-            <div class="card-body">
-              <h2 class="card-title">Bác sĩ đang làm</h2>
-
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <h1><i class="bi bi-person-hearts" style="font-size: 35px;"></i>&nbsp;&nbsp;{{bs}}</h1>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div><!-- End Sales Card -->
-
-        <!-- Revenue Card -->
-        <div class="col-xxl-4 col-md-4">
-          <div class="card info-card revenue-card">
-
-            <!-- <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div> -->
-
-            <div class="card-body">
-              <h2 class="card-title">Bài đăng</h2>
-
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">                  
-                  <h1><i class="bi bi-award-fill" style="font-size: 35px;"></i>&nbsp;&nbsp;{{baid}}</h1>
-                </div>
-              
-              </div>
-            </div>
-
-          </div>
-        </div><!-- End Revenue Card -->
-
-        <!-- Customers Card -->
-        <div class="col-xxl-4 col-xl-4">
-
-          <div class="card info-card customers-card">
-
-            <!-- <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div> -->
-
-            <div class="card-body">
-              <h2 class="card-title">Chuyên khoa</h2>
-
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <h1><i class="bi bi-file-earmark-text" style="font-size: 35px;"></i>&nbsp;&nbsp;{{dv}}</h1>
-                </div>
-                
-              </div>
-
+            <div class="d-flex align-items-center">
+              <h1>
+                <i class="bi bi-person-hearts" style="font-size: 35px"></i
+                >&nbsp;&nbsp;{{ bs }}
+              </h1>
             </div>
           </div>
-
-        </div><!-- End Customers Card -->   
-        <br>
-        
-        <div class="col-xxl-6 col-xl-6">
-
-          <div class="card info-card customers-card">
-
-            <div class="card">
-              <h2 style="margin-top: 15px;">Thông kê số bệnh nhân đến khám trong năm 2025</h2>
-              <div>
-                <canvas id="myChart"></canvas>
-              </div>
-          </div>
-          </div>
         </div>
-        <div class="col-xxl-6 col-xl-6">
-
-          <div class="card info-card customers-card">
-
-            <div class="card">
-              <h2 style="margin-top: 15px;">Thông kê số bác sĩ theo chuyên khoa</h2>
-              <div>
-                <canvas style="max-height: 280px;" id="myChart2"></canvas>
-              </div>
-          </div>
-          </div>
-        </div>
-        <div class="col-xxl-12 col-xl-12">
-
-          <div class="card info-card customers-card">
-
-            <div class="card">
-              <h2 style="margin-top: 15px;">Thông kê số bệnh nhân đến khám theo chuyên khoa trong năm 2025</h2>
-              <div>
-                <canvas style="max-height: 300px;" id="myChart3"></canvas>
-              </div>
-          </div>
-          </div>
-        </div>
-
       </div>
-    </section>
+      <!-- End Sales Card -->
 
-  </main><!-- End #main -->
+      <!-- Revenue Card -->
+      <div class="col-xxl-3 col-md-3">
+        <div class="card info-card revenue-card">
+          <!-- <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div> -->
+
+          <div class="card-body">
+            <h2 class="card-title">Bài đăng</h2>
+
+            <div class="d-flex align-items-center">
+              <h1>
+                <i class="bi bi-award-fill" style="font-size: 35px"></i
+                >&nbsp;&nbsp;{{ baid }}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Revenue Card -->
+
+      <!-- Customers Card -->
+      <div class="col-xxl-3 col-xl-3">
+        <div class="card info-card customers-card">
+          <!-- <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div> -->
+
+          <div class="card-body">
+            <h2 class="card-title">Chuyên khoa</h2>
+
+            <div class="d-flex align-items-center">
+              <h1>
+                <i class="bi bi-file-earmark-text" style="font-size: 35px"></i
+                >&nbsp;&nbsp;{{ dv }}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Customers Card -->
+
+      <!-- Peak Hours Card -->
+      <div class="col-xxl-3 col-xl-3">
+        <div class="card info-card peak-hours-card">
+          <div class="card-body">
+            <h2 class="card-title">Khung giờ cao điểm</h2>
+
+            <div class="d-flex align-items-center">
+              <div
+                class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+              >
+                <i
+                  class="bi bi-clock-fill text-warning"
+                  style="font-size: 35px"
+                ></i>
+              </div>
+              <div class="ps-3">
+                <h6 class="text-muted mb-1">{{ getPeakHour() }}</h6>
+                <span class="text-success small pt-1 fw-bold"
+                  >{{ getPeakHourCount() }} lượt đặt</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Peak Hours Card -->
+
+      <br />
+
+      <div class="col-xxl-6 col-xl-6 patient-stats-chart">
+        <div class="card info-card customers-card">
+          <div class="card">
+            <h2 style="margin-top: 15px">
+              Thống kê số bệnh nhân đến khám trong năm 2025
+            </h2>
+            <div class="chart-container">
+              <canvas id="patientChart" style="max-height: 300px"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xxl-6 col-xl-6 doctor-specialty-chart">
+        <div class="card info-card customers-card">
+          <div class="card">
+            <h2 style="margin-top: 15px">
+              Thống kê số bác sĩ theo chuyên khoa
+            </h2>
+            <div class="chart-container">
+              <canvas style="max-height: 280px" id="myChart2"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ khung giờ cao điểm -->
+      <div class="col-xxl-6 col-xl-6">
+        <div class="card dashboard-fixed-height">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center">
+              <i class="bi bi-clock-history text-primary me-2"></i>
+              Khung giờ cao điểm đặt lịch
+            </h5>
+
+            <div style="height: 350px">
+              <canvas id="myChart4"></canvas>
+            </div>
+
+            <!-- Thống kê tóm tắt -->
+            <div class="row mt-3">
+              <div class="col-6">
+                <div class="text-center">
+                  <span class="badge bg-primary fs-6">{{
+                    totalBookingsToday
+                  }}</span>
+                  <p class="text-muted mb-0 small">Tổng lượt đặt</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-center">
+                  <span class="badge bg-warning fs-6">{{ getPeakHour() }}</span>
+                  <p class="text-muted mb-0 small">Khung giờ bận nhất</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 10 bác sĩ khám nhiều nhất trong tháng -->
+      <div class="col-xxl-6 col-xl-6">
+        <div class="card top-doctors-section dashboard-fixed-height">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center">
+              <i class="bi bi-trophy-fill text-warning me-2"></i>
+              Top 10 bác sĩ khám nhiều nhất trong tháng
+            </h5>
+
+            <!-- Loading state -->
+            <div
+              *ngIf="isLoadingTopDoctors"
+              class="text-center py-4 flex-grow-1 d-flex flex-column justify-content-center"
+            >
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+              </div>
+              <p class="text-muted mt-2">Đang tải dữ liệu thống kê...</p>
+            </div>
+
+            <!-- Error state -->
+            <div
+              *ngIf="topDoctorsError"
+              class="alert alert-danger"
+              role="alert"
+            >
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              {{ topDoctorsError }}
+            </div>
+
+            <!-- Top doctors table -->
+            <div
+              *ngIf="
+                !isLoadingTopDoctors &&
+                !topDoctorsError &&
+                topDoctors.length > 0
+              "
+              class="table-responsive flex-grow-1"
+              style="max-height: 350px; overflow-y: auto"
+            >
+              <table class="table table-sm table-hover">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col">Bác sĩ</th>
+                    <th scope="col">Khoa</th>
+                    <th scope="col" class="text-center">SL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of topDoctors; let i = index">
+                    <td class="text-center">
+                      <span
+                        class="badge fs-6"
+                        [ngClass]="{
+                          'bg-warning': item.rank === 1,
+                          'bg-secondary': item.rank === 2,
+                          'bg-warning text-dark': item.rank === 3,
+                          'bg-primary': item.rank > 3
+                        }"
+                      >
+                        {{ item.rank }}
+                      </span>
+                      <span *ngIf="item.rank === 1" class="ms-1">🏆</span>
+                      <span *ngIf="item.rank === 2" class="ms-1">🥈</span>
+                      <span *ngIf="item.rank === 3" class="ms-1">🥉</span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img
+                          [src]="
+                            item.doctor.avatar ||
+                            'assets/img/default-avatar.png'
+                          "
+                          alt="Avatar"
+                          class="rounded-circle me-2"
+                          style="width: 32px; height: 32px; object-fit: cover"
+                        />
+                        <div>
+                          <div class="fw-bold" style="font-size: 0.85rem">
+                            {{ item.doctor.fullName }}
+                          </div>
+                          <small
+                            class="text-muted"
+                            style="font-size: 0.75rem"
+                            >{{ item.doctor.doctorRank.name }}</small
+                          >
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        class="badge specialty-badge"
+                        style="font-size: 0.7rem"
+                        >{{ item.doctor.major.name }}</span
+                      >
+                    </td>
+                    <td class="text-center">
+                      <span
+                        class="fw-bold text-primary"
+                        style="font-size: 1.1rem"
+                        >{{ item.bookingCount }}</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty state -->
+            <div
+              *ngIf="
+                !isLoadingTopDoctors &&
+                !topDoctorsError &&
+                topDoctors.length === 0
+              "
+              class="text-center py-4 flex-grow-1 d-flex flex-column justify-content-center"
+            >
+              <i class="bi bi-inbox text-muted" style="font-size: 2rem"></i>
+              <p class="text-muted mt-2" style="font-size: 0.9rem">
+                Chưa có dữ liệu thống kê cho tháng này
+              </p>
+            </div>
+
+            <!-- Refresh button -->
+            <div class="text-center mt-auto pt-3">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="loadTopDoctors()"
+                [disabled]="isLoadingTopDoctors"
+                style="font-size: 0.8rem"
+              >
+                <i class="bi bi-arrow-clockwise"></i>
+                Làm mới
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chi tiết số bác sĩ theo khoa -->
+      <!-- <div class="col-xxl-6 col-xl-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Chi tiết số bác sĩ theo chuyên khoa</h5>
+
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên chuyên khoa</th>
+                    <th scope="col">Số bác sĩ</th>
+                    <th scope="col">Tỷ lệ (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let khoa of labelkhoa; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                      <i class="bi bi-hospital text-primary me-2"></i>
+                      {{ khoa }}
+                    </td>
+                    <td>
+                      <span class="badge bg-success">{{
+                        getDoctorCountByMajor(khoa)
+                      }}</span>
+                    </td>
+                    <td>
+                      <div class="progress" style="height: 20px">
+                        <div
+                          class="progress-bar bg-info"
+                          role="progressbar"
+                          [style.width.%]="
+                            (getDoctorCountByMajor(khoa) / bs) * 100
+                          "
+                          [attr.aria-valuenow]="getDoctorCountByMajor(khoa)"
+                          aria-valuemin="0"
+                          [attr.aria-valuemax]="bs"
+                        >
+                          {{
+                            ((getDoctorCountByMajor(khoa) / bs) * 100).toFixed(1)
+                          }}%
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="table-light">
+                  <tr>
+                    <th colspan="2">Tổng cộng</th>
+                    <th>
+                      <span class="badge bg-primary">{{ bs }}</span>
+                    </th>
+                    <th>100%</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="col-xxl-12 col-xl-12">
+        <div class="card info-card customers-card">
+          <div class="card">
+            <h2 style="margin-top: 15px; text-align: center">
+              Thông kê số bệnh nhân đến khám theo chuyên khoa trong năm 2025
+            </h2>
+            <div>
+              <canvas style="max-height: 300px" id="myChart3"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->

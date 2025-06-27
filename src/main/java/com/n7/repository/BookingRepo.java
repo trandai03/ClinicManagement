@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +55,11 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
             "AND (:start IS NULL OR b.date >= :start) " +
             "GROUP BY b.status")
     List<Object[]> countBookingsGroupedByStatus(@Param("doctorId") Long doctorId, @Param("start") Date start,@Param("status") Status status);
+    @Query("SELECT b.user.id, COUNT(b) FROM Booking b " +
+            "WHERE (:status IS NULL OR b.status = :status) " +
+            "AND (:start IS NULL OR b.date >= :start) " +
+            "AND (:end IS NULL OR b.date <= :end) " +
+            "GROUP BY b.user.id")
+    List<Object[]> countBookingsGroupedByDoctor(@Param("start") Date start, @Param("status") Status status, @Param("end") Date end);
 
 }

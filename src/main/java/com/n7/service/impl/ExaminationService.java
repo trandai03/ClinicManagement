@@ -27,6 +27,7 @@ public class ExaminationService {
     private final MedicineRepo medicineRepo;
     private final MedicalServiceRepo medicalServiceRepo;
     private final HistoryService historyService;
+    private final UserRepo userRepo;
 
     /**
      * Cập nhật trạng thái booking với thông tin thời gian phù hợp
@@ -65,8 +66,8 @@ public class ExaminationService {
         booking.setRoomNumber(startData.getRoomNumber());
         
         // Kết hợp triệu chứng ban đầu và ghi chú bác sĩ
-        String combinedNotes = buildCombinedNotes(startData.getInitialSymptoms(), startData.getDoctorNotes());
-        booking.setNote(combinedNotes);
+        booking.setNote(startData.getDoctorNotes());
+        booking.setInitialSymptoms(startData.getInitialSymptoms());
 
         bookingRepo.save(booking);
 
@@ -303,6 +304,7 @@ public class ExaminationService {
      * Tạo map thông tin booking chi tiết
      */
     private Map<String, Object> createBookingDetailsMap(Booking booking) {
+        User doctor = booking.getUser();
         Map<String, Object> details = new HashMap<>();
         details.put("id", booking.getId());
         details.put("name", booking.getFullName());
@@ -314,7 +316,7 @@ public class ExaminationService {
         details.put("hourId", booking.getIdHour());
         details.put("status", booking.getStatus());
         details.put("roomNumber", booking.getRoomNumber());
-        details.put("initialSymptoms", booking.getNote());
+        details.put("initialSymptoms", booking.getInitialSymptoms());
         details.put("doctorNotes", booking.getNote());
         details.put("startTime", booking.getStartTime());
         details.put("endTime", booking.getEndTime());
@@ -322,6 +324,11 @@ public class ExaminationService {
         details.put("paymentMethod", booking.getPaymentMethod());
         details.put("paymentStatus", booking.getPaymentStatus());
         details.put("paidAt", booking.getPaidAt());
+        details.put("doctorName",doctor.getFullname());
+        details.put("major",doctor.getMajor().getName());
+        details.put("resultsNotes", booking.getResultsNotes());
+        details.put("resultsConclusion", booking.getResultsConclusion());
+
         return details;
     }
 
@@ -376,6 +383,8 @@ public class ExaminationService {
         details.put("resultNotes", serviceRequest.getResultNotes());
         details.put("requestedAt", serviceRequest.getRequestedAt());
         details.put("completedAt", serviceRequest.getCompletedAt());
+        details.put("description", serviceRequest.getMedicalService().getDescription());
+
         return details;
     }
 

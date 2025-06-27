@@ -175,6 +175,25 @@ export interface BookingStatusUpdate {
       storageUtils.remove(`${this.COUNTS_CACHE_KEY}_${doctorId}`);
     }
 
+    /**
+     * Lấy số lượng booking của các bác sĩ trong tháng (cho thống kê top performers)
+     */
+    getDoctorBookingCounts(): Observable<Map<number, number>> {
+      return this.http.get<apiResponse<any>>(`${this.apiUrl}api/v1/bookings/doctor/counts`).pipe(
+        map(response => {
+          const data = response.data;
+          const result = new Map<number, number>();
+          
+          // Convert object to Map
+          for (const [doctorId, count] of Object.entries(data)) {
+            result.set(parseInt(doctorId), count as number);
+          }
+          
+          return result;
+        })
+      );
+    }
+
     createBooking(name:string,dob:Date,phone:string,email:string,gender:string,address:string,idMajor:string,
       idUser:string,date:string,idHour:string,note:string) {
         const s = {name,dob,phone,email,gender,address,idMajor,idUser,date,idHour,note};

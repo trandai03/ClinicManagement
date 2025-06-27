@@ -39,4 +39,10 @@ export class MajorService {
   delete(id : number ) : Observable<apiResponse<any>> {
     return this.http.delete<apiResponse<any>>(`${this.apiUrl}api/v1/major/${id}`);
   }
+
+  getMajorDetail(id: number): Observable<Major> {
+    return this.http.get<apiResponse<Major>>(`${this.apiUrl}api/v1/major/${id}`).pipe(
+      map(e => e.data)
+    );
+  }
 }

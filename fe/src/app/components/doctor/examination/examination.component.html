@@ -274,14 +274,17 @@
                   placeholder="Uống sau ăn, cách xa sữa..."
                 />
               </div>
-              <div class="form-actions">
+            </div>
+
+            <div class="form-row">
+              <div class="form-actions col-12">
                 <button
                   type="button"
                   class="btn btn-primary"
                   (click)="addMedicine()"
                   [disabled]="!prescriptionForm.get('selectedMedicine')?.value"
                 >
-                  <i class="fas fa-plus"></i> Thêm
+                  <i class="fas fa-plus"></i> Thêm thuốc
                 </button>
               </div>
             </div>

@@ -12,4 +12,9 @@ public class MajorModel {
     private String name;
     private String description;
     private String image;
+    private String workingHours;
+    private String achievements;
+    private String facilities;
+    private String introduction;
+
 }

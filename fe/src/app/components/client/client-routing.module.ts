@@ -7,6 +7,7 @@ import { ArticleComponent } from "./article/article.component";
 import { ContactComponent } from "./contact/contact.component";
 import { DoctorDetailComponent } from "./doctor-detail/doctor-detail.component";
 import { ProfileComponent } from "./profile/profile.component";
+import { MajorDetailComponent } from './major-detail/major-detail.component';
 
 
 const router: Routes = [
@@ -17,6 +18,10 @@ const router: Routes = [
     {
         path: 'chuyen-khoa',
         component: MajorComponent
+    },
+    {
+        path: 'chuyen-khoa-chi-tiet/:id',
+        component: MajorDetailComponent
     },
     {
         path: 'danh-muc-bac-si',

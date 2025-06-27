@@ -1,8 +1,13 @@
 export interface Major {
   id: number;
   name: string;
-  description: string;
+  description?: string;
+  introduction?: string;
+  facilities?: string;
+  working_hours?: string;
+  achievements?: string;
   image: string;
+  banner_image?: string;
 }
 
 export type MajorDTO = {

@@ -232,7 +232,9 @@ export class CompletedExaminationsComponent implements OnInit, OnDestroy {
         totalAmount: this.selectedBooking.totalMoney || 0,
         roomNumber: 'P001', // Default room
         initialSymptoms: 'Không có thông tin',
-        doctorNotes: 'Không có thông tin'
+        doctorNotes: 'Không có thông tin',
+        major: 'Không có thông tin',
+        doctorName: 'Không có thông tin'
       },
       serviceRequests: [],
       prescriptions: [],

@@ -24,9 +24,11 @@ export interface Doctor {
     }
 }
 
-
-
-
+export interface TopDoctor {
+    doctor: Doctor;
+    bookingCount: number;
+    rank: number;
+}
 
 // export const doctors:Doctor[] = [
 //     {

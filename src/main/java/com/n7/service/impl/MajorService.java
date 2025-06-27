@@ -80,6 +80,18 @@ public class MajorService implements IMajorService {
         model.setName(major.getName());
         model.setDescription(major.getDescription());
         model.setImage(major.getAvatar());
+
         return model;
+    }
+
+    public MajorModel getDetailMajor(Long id){
+        Major major = majorRepo.findById(id).get();
+        MajorModel model = convertEntityToModel(major);
+        model.setAchievements(major.getAchievements());
+        model.setWorkingHours(major.getWorkingHours());
+        model.setFacilities(major.getFacilities());
+        model.setIntroduction(major.getIntroduction());
+        return model;
+
     }
 }

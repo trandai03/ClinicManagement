@@ -42,24 +42,46 @@
 //     background-color: #102E9E;
 // }
 
-.booking_area {
-    margin-top: 15px;
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(234, 231, 231);
-    padding: 50px 0;
+.booking_and_intro {
+    background-color: #f8f9fa;
+    padding: 40px 0;
+    min-height: 600px;
 }
 
-.inner_booking_area {
-    width: 80%;
-    height: auto;
+.schedule_wrapper {
+    padding: 0 20px 0 0;
+    height: 100%;
+    width: 100%;
+}
+
+.intro_wrapper {
+    padding: 20px 0 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .booking_intro {
-    margin-top: 140px;
+    margin-top: 0;
+    width: 100%;
+    max-width: none;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(16, 46, 158, 0.1);
+    border: 1px solid rgba(16, 46, 158, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.booking_intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #102E9E 0%, #1691E2 50%, #102E9E 100%);
 }
 
 .inner_booking_intro {
@@ -67,50 +89,128 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    padding: 25px 20px;
 }
 
 .booking_intro_text_1 {
     color: #102E9E;
     font-size: 28px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(16, 46, 158, 0.1);
+    letter-spacing: 0.5px;
 }
 
 .booking_intro_text_2 {
-    color: #102E9E;
-    font-size: 20px;
-    margin-bottom: 40px;
+    color: #1691E2;
+    font-size: 19px;
+    margin-bottom: 35px;
+    font-style: italic;
+    text-align: center;
+    font-weight: 500;
+    opacity: 0.9;
 }
 
 .booking_intro_item {
-    border: 1px solid #102E9E;
+    border: 2px solid rgba(16, 46, 158, 0.2);
     width: 95%;
-    height: 180px;
-    margin-bottom: 20px;
-    border-radius: 7px;
+    height: 120px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.booking_intro_item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.booking_intro_item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(16, 46, 158, 0.25);
+    border-color: rgba(16, 46, 158, 0.4);
+}
+
+.booking_intro_item:hover::before {
+    left: 100%;
 }
 
 .booking_intro_link {
-    display: block;
+    display: flex;
     width: 100%;
     height: 100%;
     color: white;
-    background-color: var(--blue3);
-    border-radius: 7px;
-    display: flex;
+    background: linear-gradient(135deg, #102E9E 0%, #1691E2 100%);
+    border-radius: 12px;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.booking_intro_link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #1691E2 0%, #102E9E 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
 }
 
 .booking_intro_link:hover {
-    background-color: white;
-    color: var(--blue3);
-    transition: all 0.5 ease;
+    color: #102E9E;
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.02);
+}
+
+.booking_intro_link:hover::before {
+    opacity: 0;
 }
 
 .booking_intro_icon {
-    font-size: 50px;
+    font-size: 34px;
     margin-bottom: 10px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.booking_intro_link:hover .booking_intro_icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 8px rgba(16, 46, 158, 0.3));
+}
+
+.booking_intro_text_3 {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.booking_intro_link:hover .booking_intro_text_3 {
+    transform: translateY(-1px);
 }
 
 .section {
@@ -121,8 +221,9 @@
 }
 
 .inner_body_section {
-    width: 80%;
+    width: 90%;
     height: auto;
+    max-width: 1400px;
 }
 
 .section_title {
@@ -277,64 +378,142 @@
     }
 }
 
-
-.booking_intro {
-    margin-top: 140px;
+// Responsive Design  
+@media screen and (min-width: 1280px) {
+    .schedule_wrapper {
+        padding: 0 10px 0 0;
+    }
+    
+    .intro_wrapper {
+        padding: 20px 0 0 10px;
+    }
 }
 
-.inner_booking_intro {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+@media screen and (max-width: 1279px) {
+    .inner_body_section {
+        width: 95%;
+    }
+    
+    .schedule_wrapper {
+        padding: 0 15px 0 0;
+    }
+    
+    .intro_wrapper {
+        padding: 20px 0 0 15px;
+    }
+    
+    .booking_intro {
+        border-radius: 12px;
+    }
+    
+    .inner_booking_intro {
+        padding: 20px 15px;
+    }
+    
+    .booking_intro_text_1 {
+        font-size: 24px;
+    }
+    
+    .booking_intro_text_2 {
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
+    
+    .booking_intro_item {
+        height: 110px;
+        border-radius: 10px;
+    }
+    
+    .booking_intro_link {
+        border-radius: 10px;
+    }
+    
+    .booking_intro_icon {
+        font-size: 30px;
+    }
 }
 
-.booking_intro_text_1 {
-    color: #102E9E;
-    font-size: 28px;
-    margin-bottom: 12px;
+@media screen and (max-width: 1024px) {
+    .booking_and_intro {
+        padding: 30px 0;
+        min-height: auto;
+    }
+    
+    .schedule_wrapper {
+        padding: 0;
+        margin-bottom: 30px;
+    }
+    
+    .intro_wrapper {
+        padding: 0;
+    }
+    
+    .booking_intro {
+        max-width: none;
+    }
+    
+    .booking_intro_item {
+        height: 100px;
+        margin-bottom: 12px;
+    }
+    
+    .booking_intro_icon {
+        font-size: 26px;
+    }
+    
+    .booking_intro_text_3 {
+        font-size: 12px;
+    }
 }
 
-.booking_intro_text_2 {
-    color: #102E9E;
-    font-size: 20px;
-    margin-bottom: 40px;
+@media screen and (max-width: 768px) {
+    .booking_intro_text_1 {
+        font-size: 22px;
+    }
+    
+    .booking_intro_text_2 {
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .booking_intro_item {
+        height: 90px;
+        margin-bottom: 10px;
+    }
+    
+    .booking_intro_icon {
+        font-size: 24px;
+        margin-bottom: 6px;
+    }
+    
+    .booking_intro_text_3 {
+        font-size: 11px;
+    }
+    
+    .inner_body_section {
+        width: 95%;
+    }
 }
 
-.booking_intro_item {
-    border: 1px solid #102E9E;
-    width: 95%;
-    height: 180px;
-    margin-bottom: 20px;
-    border-radius: 7px;
-}
-
-.booking_intro_link {
-    display: block;
-    width: 100%;
-    height: 100%;
-    color: white;
-    background-color: #166be2;
-    border-radius: 7px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.booking_intro_link:hover {
-    background-color: white;
-    color: #166be2;
-    transition: all 0.5 ease;
-}
-
-.booking_intro_icon {
-    font-size: 50px;
-    margin-bottom: 10px;
-}
-.outer_booking_form {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+@media screen and (max-width: 480px) {
+    .booking_intro_text_1 {
+        font-size: 20px;
+    }
+    
+    .booking_intro_text_2 {
+        font-size: 14px;
+    }
+    
+    .booking_intro_item {
+        height: 80px;
+        margin-bottom: 8px;
+    }
+    
+    .booking_intro_icon {
+        font-size: 22px;
+    }
+    
+    .booking_intro_text_3 {
+        font-size: 10px;
+    }
 }

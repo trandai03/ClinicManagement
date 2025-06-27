@@ -211,7 +211,7 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="35">
+		<band height="55">
 			<staticText>
 				<reportElement x="0" y="5" width="555" height="20" forecolor="#1976D2" uuid="12345678-1234-1234-1234-00000000001a"/>
 				<textElement verticalAlignment="Middle">
@@ -220,12 +220,42 @@
 				<text><![CDATA[CHI TIẾT DỊCH VỤ]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="0" y="25" width="555" height="5" backcolor="#E3F2FD" uuid="12345678-1234-1234-1234-00000000001b"/>
+				<reportElement x="0" y="30" width="555" height="20" backcolor="#E3F2FD" uuid="da3e9b94-5c35-4929-8825-06bd51bff23c"/>
+				<graphicElement>
+					<pen lineColor="#1976D2"/>
+				</graphicElement>
 			</rectangle>
+			<staticText>
+				<reportElement x="15" y="33" width="200" height="14" uuid="802026b5-1d50-434e-9fe8-1c1daba6bda3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tên dịch vụ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="33" width="100" height="14" uuid="cc3ac3fa-212a-4fec-98a5-f1a05d506c8f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loại dịch vụ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="33" width="100" height="14" uuid="f0024040-7357-4901-958c-2b87ca714670"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Đơn giá (VNĐ)]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="25">
+		<rectangle>
+				<reportElement x="0" y="0" width="555" height="23" uuid="d0024040-7357-4901-958c-2b87ca714670"/>
+				<graphicElement>
+					<pen lineColor="#E0E0E0"/>
+				</graphicElement>
+			</rectangle>
 			<textField textAdjust="StretchHeight">
 				<reportElement x="10" y="5" width="200" height="15" uuid="12345678-1234-1234-1234-00000000001c"/>
 				<textElement verticalAlignment="Middle">

@@ -30,6 +30,20 @@ public class Major {
     @Column(length = 255)
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String introduction;
+
+    @Column(columnDefinition = "TEXT")
+    private String facilities;
+
+    @Column(columnDefinition = "TEXT")
+    private String achievements;
+
+    @Column(name="working_hours",length = 255)
+    private String workingHours;
+
+
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "major")
     private List<User> users = new ArrayList<>();
 }

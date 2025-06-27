@@ -65,4 +65,17 @@ export class DoctorComponent {
     this.route.navigate([`public/bac-si-chi-tiet/${id}`])
   }
 
+  // Navigate to booking page with pre-selected doctor
+  datLichHen(doctorId: number) {
+    // Navigate to home page where the schedule component is located
+    // Pass doctor ID as query parameter
+    this.route.navigate(['/public/trang-chu'], { 
+      queryParams: { 
+        doctorId: doctorId,
+        mode: 'BY_DOCTOR' // Set booking mode to BY_DOCTOR
+      },
+      fragment: 'booking-section' // Scroll to booking section
+    });
+  }
+
 }

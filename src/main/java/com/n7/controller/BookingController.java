@@ -137,4 +137,17 @@ public ResponseEntity<?> getBookingCounts(@RequestParam(value = "idDoctor", requ
         }
     }
 
+
+    @GetMapping("/bookings/doctor/counts")
+    public ResponseEntity<?> getBookingCountsByDoctor() {
+        try {
+            Map<Integer, Integer> statusCounts = bookingService.getBookingCountsByDoctor();
+
+
+            return ResponseEntity.ok(new SuccessResponse<>("Get booking counts successfully", statusCounts));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse<>("Error getting booking counts: " + ex.getMessage()));
+        }
+    }
 }

@@ -43,4 +43,20 @@ export class HistoryComponent {
   xem(item : Booking) {
     this.itemout = item;
   }
+  formatDate(date: string): string {
+    if (!date) return '';
+    try {
+      let dateObj: Date;
+      if (date.includes('/')) {
+        const [day, month, year] = date.split('/');
+        dateObj = new Date(Number(year), Number(month) - 1, Number(day));
+      } else {
+        dateObj = new Date(date);
+      }
+      return dateObj.toLocaleDateString('vi-VN');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return date;
+    }
+  }
 }

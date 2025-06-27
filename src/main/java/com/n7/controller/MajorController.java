@@ -113,4 +113,14 @@ public class MajorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse<>(e.getMessage()));
         }
     }
+
+    @GetMapping(value = "major/{id}")
+    public ResponseEntity<?> getMajorDetail(@PathVariable Long id) {
+        try{
+            MajorModel major = majorService.getDetailMajor(id);
+            return ResponseEntity.ok(new SuccessResponse<>("Get success",major));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse<>(e.getMessage()));
+        }
+    }
 }

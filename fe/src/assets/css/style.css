@@ -630,8 +630,11 @@ h6 {
 }
 
 @media (min-width: 1200px) {
-
-  
+  /* Mặc định có margin (sidebar hiển thị) */
+  #main,
+  #footer {
+    margin-left: 150px;
+  }
 }
 
 @media (max-width: 1199px) {

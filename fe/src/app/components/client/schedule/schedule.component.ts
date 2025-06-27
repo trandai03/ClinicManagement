@@ -1,7 +1,7 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { ActivatedRoute } from '@angular/router';
 import {
   MatDatepickerInputEvent,
 } from '@angular/material/datepicker';
@@ -66,7 +66,8 @@ export class ScheduleComponent {
 
   constructor(private formbuilder : FormBuilder,private majorsv: MajorService,
     private doctorsv : DoctorService, private schesv : ScheduleService,private bookingsv : BookingService,
-        private hoursv : HourService, private toastr: ToastrService, private toastService: ToastService){};
+        private hoursv : HourService, private toastr: ToastrService, private toastService: ToastService,
+        private activatedRoute: ActivatedRoute, private cdr: ChangeDetectorRef){};
 
   ngOnInit() {
     this.addForm = this.formbuilder.group({
@@ -92,6 +93,39 @@ export class ScheduleComponent {
           console.log('Đã lỗi khi gọi data')
       },
     })
+
+    // Auto-fill personal information for any logged-in user
+    if (this.profileInfor) {
+      this.autoFillClientInfo();
+      console.log('Auto-filled user information:', this.profileInfor.fullName);
+    }
+
+    // Check for query parameters to pre-select doctor
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['doctorId'] && params['mode']) {
+        console.log('Query params detected:', params);
+        
+        // Set booking mode
+        this.setBookingMode(params['mode']);
+        
+        // Pre-select doctor if mode is BY_DOCTOR
+        if (params['mode'] === 'BY_DOCTOR') {
+          const doctorId = +params['doctorId'];
+          
+          // Wait a bit for component to initialize completely
+          setTimeout(() => {
+            this.preSelectDoctor(doctorId);
+            
+            // Re-fill user info after pre-selection (in case it gets overwritten)
+            if (this.profileInfor) {
+              setTimeout(() => {
+                this.autoFillClientInfo();
+              }, 300);
+            }
+          }, 100);
+        }
+      }
+    });
   }
 
   get f() {
@@ -424,12 +458,12 @@ export class ScheduleComponent {
         console.log('Doctor available dates loaded:', this.doctorAvailableDates.length);
         
         // Load chi tiết lịch làm việc của bác sĩ
-        this.loadDoctorDetailedSchedules(id.toString());
+        // this.loadDoctorDetailedSchedules(id.toString());
       },
       error: (err) => {
         console.error('Error loading doctor available dates:', err);
         // Fallback: load detailed schedules anyway
-        this.loadDoctorDetailedSchedules(id.toString());
+        // this.loadDoctorDetailedSchedules(id.toString());
       }
     });
   }
@@ -455,6 +489,65 @@ export class ScheduleComponent {
 
   uncheckRadio() {
     this.selectedTime = null;
+  }
+
+  // Pre-select doctor when coming from doctor listing page
+  preSelectDoctor(doctorId: number) {
+    console.log('Trying to pre-select doctor with ID:', doctorId);
+    
+    // First get the doctor info to find their major
+    this.doctorsv.getDoctorById(doctorId.toString()).subscribe({
+      next: (doctor: any) => {
+        console.log('Doctor data received:', doctor);
+        
+        if (doctor && doctor.major && doctor.major.id) {
+          const majorId = doctor.major.id;
+          
+          // Set the major first
+          this.addForm.patchValue({
+            idMajor: majorId
+          });
+          
+          console.log('Major ID set to:', majorId);
+          
+          // Load doctors for this major manually
+          this.listDoctor = this.doctorsv.getAllDoctorByMajor(null,'true', majorId,'');
+          this.listDoctor.subscribe({
+            next: (doctors) => {
+              console.log('Doctors loaded:', doctors.length);
+              console.log('Current form values before setting doctor:', this.addForm.value);
+              
+              // Now select the specific doctor
+              this.addForm.patchValue({
+                idUser: doctorId
+              });
+              
+              console.log('Doctor ID set to:', doctorId);
+              console.log('Current form values after setting doctor:', this.addForm.value);
+              
+              // Trigger change detection to update UI
+              this.cdr.detectChanges();
+              
+              // Load schedule for this doctor
+              setTimeout(() => {
+                this.onselectDoctor();
+              }, 200);
+            },
+            error: (err) => {
+              console.error('Error loading doctors for major:', err);
+            }
+          });
+          
+        } else {
+          console.error('Doctor data structure invalid:', doctor);
+          this.toastService.showError('Thông tin bác sĩ không hợp lệ');
+        }
+      },
+      error: (err) => {
+        console.error('Error loading doctor info for pre-selection:', err);
+        this.toastService.showError('Không thể tải thông tin bác sĩ');
+      }
+    });
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -832,7 +925,7 @@ export class ScheduleComponent {
 
   // Reset form và state sau khi submit thành công
   resetFormAfterSubmit() {
-    // Reset form fields (giữ lại thông tin cá nhân, chỉ reset booking info)
+    // Reset booking fields only
     this.addForm.patchValue({
       idMajor: '',
       idUser: '',
@@ -840,6 +933,24 @@ export class ScheduleComponent {
       idHour: '',
       note: ''
     });
+    
+    // If user is logged-in, keep personal information filled
+    if (this.profileInfor) {
+      // Don't reset personal fields, just re-fill them to ensure they stay
+      setTimeout(() => {
+        this.autoFillClientInfo();
+      }, 100);
+    } else {
+      // Reset personal information for non-logged-in users
+      this.addForm.patchValue({
+        name: '',
+        dob: '',
+        phone: '',
+        email: '',
+        address: '',
+        gender: 'MALE'
+      });
+    }
     
     // Reset tất cả state
     this.listDoctor = of([]);
@@ -864,19 +975,40 @@ export class ScheduleComponent {
     this.addForm.get('idHour')?.updateValueAndValidity();
   }
 
-  autoFill() {
-    const dob = new Date(this.profileInfor.dob);
-    const formattedDob = dob.toISOString().split('T')[0]; // "2003-06-28"
-  
-    this.addForm.patchValue({
-      name: this.profileInfor.fullName,
-      dob: formattedDob,
-      phone: this.profileInfor.phone,
-      email: this.profileInfor.gmail,
-      address: this.profileInfor.address,
-      gender: this.profileInfor.gender
-    });
+
+
+  // Auto-fill user information for any logged-in user
+  autoFillClientInfo() {
+    if (!this.profileInfor) {
+      console.log('No profile information available');
+      return;
+    }
+    
+    try {
+      const dob = new Date(this.profileInfor.dob);
+      const formattedDob = dob.toISOString().split('T')[0]; // "2003-06-28"
+    
+      this.addForm.patchValue({
+        name: this.profileInfor.fullName || '',
+        dob: formattedDob,
+        phone: this.profileInfor.phone || '',
+        email: this.profileInfor.gmail || '',
+        address: this.profileInfor.address || '',
+        gender: this.profileInfor.gender || 'MALE'
+      });
+      
+      console.log('Auto-filled user information:', {
+        name: this.profileInfor.fullName,
+        email: this.profileInfor.gmail,
+        phone: this.profileInfor.phone,
+        roleId: this.profileInfor.roleId
+      });
+    } catch (error) {
+      console.error('Error auto-filling user information:', error);
+    }
   }
+
+
   
 
   // Format currency for Vietnamese display

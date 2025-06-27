@@ -7,74 +7,174 @@
       </div>
     </div>
     <ul class="profile-nav">
-      <li class="profile-nav-item" (click)="clickTab(1)" [ngClass]="{'active': checkClick == 1}" data-tab="profile">
+      <li
+        class="profile-nav-item"
+        (click)="clickTab(1)"
+        [ngClass]="{ active: checkClick == 1 }"
+        data-tab="profile"
+      >
         <i class="fas fa-user"></i> Hồ sơ cá nhân
       </li>
-      <li class="profile-nav-item" (click)="clickTab(2)" [ngClass]="{'active': checkClick == 2}" data-tab="settings">
+      <li
+        class="profile-nav-item"
+        (click)="clickTab(2)"
+        [ngClass]="{ active: checkClick == 2 }"
+        data-tab="settings"
+      >
         <i class="fas fa-calendar-check"></i> Lịch hẹn sắp tới
       </li>
-      <li class="profile-nav-item" (click)="clickTab(3)" [ngClass]="{'active': checkClick == 3}" data-tab="activity">
+      <li
+        class="profile-nav-item"
+        (click)="clickTab(3)"
+        [ngClass]="{ active: checkClick == 3 }"
+        data-tab="activity"
+      >
         <i class="fas fa-history"></i> Lịch sử khám bệnh
       </li>
     </ul>
   </div>
-  
+
   <div class="profile-content">
     <!-- Hồ sơ cá nhân -->
     <div *ngIf="checkClick == 1" id="profile" class="tab-content fade-in">
       <div class="content-header">
         <h2>Thông tin bệnh nhân</h2>
+
+        <!-- Nút chỉnh sửa / hủy -->
+        <div class="edit-controls" *ngIf="!isEditMode">
+          <button type="button" class="btn-edit" (click)="enableEditMode()">
+            <i class="fas fa-edit"></i> Chỉnh sửa
+          </button>
+        </div>
       </div>
-      
-      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="onSubmit()"
+        class="profile-form"
+      >
         <div class="form-row">
           <div class="form-group">
-            <label for="fullName">Họ và tên</label>
-            <input type="text" formControlName="fullName" class="form-control" id="fullName" placeholder="Họ và tên">
+            <label for="fullName"
+              >Họ và tên <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="fullName"
+              class="form-control"
+              [class.is-invalid]="getFieldError('fullName')"
+              id="fullName"
+              placeholder="Họ và tên"
+            />
+            <div class="invalid-feedback" *ngIf="getFieldError('fullName')">
+              {{ getFieldError("fullName") }}
+            </div>
           </div>
-          
+
           <div class="form-group">
-            <label for="dob">Ngày sinh</label>
-            <input formControlName="dob" type="date" class="form-control" id="dob">
+            <label for="dob">Ngày sinh <span class="required">*</span></label>
+            <input
+              formControlName="dob"
+              type="date"
+              class="form-control"
+              [class.is-invalid]="getFieldError('dob')"
+              id="dob"
+            />
+            <div class="invalid-feedback" *ngIf="getFieldError('dob')">
+              {{ getFieldError("dob") }}
+            </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group">
-            <label>Giới tính</label>
+            <label>Giới tính <span class="required">*</span></label>
             <div class="gender-options">
               <div class="form-check">
-                <input formControlName="gender" class="form-check-input" type="radio" name="gender" id="gender1" value="MALE" checked>
+                <input
+                  formControlName="gender"
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  id="gender1"
+                  value="MALE"
+                />
                 <label class="form-check-label" for="gender1">Nam</label>
               </div>
               <div class="form-check">
-                <input formControlName="gender" class="form-check-input" type="radio" name="gender" id="gender2" value="FEMALE">
+                <input
+                  formControlName="gender"
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  id="gender2"
+                  value="FEMALE"
+                />
                 <label class="form-check-label" for="gender2">Nữ</label>
               </div>
             </div>
           </div>
-          
+
           <div class="form-group">
-            <label for="phone">Số điện thoại</label>
-            <input formControlName="phone" type="text" class="form-control" id="phone" placeholder="Số điện thoại">
+            <label for="phone"
+              >Số điện thoại <span class="required">*</span></label
+            >
+            <input
+              formControlName="phone"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="getFieldError('phone')"
+              id="phone"
+              placeholder="Số điện thoại"
+            />
+            <div class="invalid-feedback" *ngIf="getFieldError('phone')">
+              {{ getFieldError("phone") }}
+            </div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="bhyt">Mã BHYT</label>
-            <input formControlName="bhyt" type="text" class="form-control" id="bhyt" placeholder="Mã BHYT">
+            <input
+              formControlName="bhyt"
+              type="text"
+              class="form-control"
+              id="bhyt"
+              placeholder="Mã BHYT"
+            />
           </div>
-          
+
           <div class="form-group">
-            <label for="address">Địa chỉ</label>
-            <input formControlName="address" type="text" class="form-control" id="address" placeholder="Địa chỉ">
+            <label for="address">Địa chỉ <span class="required">*</span></label>
+            <input
+              formControlName="address"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="getFieldError('address')"
+              id="address"
+              placeholder="Địa chỉ"
+            />
+            <div class="invalid-feedback" *ngIf="getFieldError('address')">
+              {{ getFieldError("address") }}
+            </div>
           </div>
         </div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn-save">
-            <i class="fas fa-save"></i> Lưu thông tin
+        <!-- Nút lưu/hủy khi đang edit -->
+        <div class="form-actions" *ngIf="isEditMode">
+          <button type="submit" class="btn-save" [disabled]="isSubmitting">
+            <i class="fas fa-save" *ngIf="!isSubmitting"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+            {{ isSubmitting ? "Đang lưu..." : "Lưu thông tin" }}
+          </button>
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="cancelEdit()"
+            [disabled]="isSubmitting"
+          >
+            <i class="fas fa-times"></i> Hủy
           </button>
         </div>
       </form>
@@ -85,12 +185,17 @@
       <div class="content-header">
         <h2>Lịch khám sắp tới</h2>
       </div>
-      
-      <div class="table-responsive">
-        <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+
+      <div class="table-responsive" [class.table-loading]="isLoadingUpcoming">
+        <table
+          datatable
+          [dtOptions]="dtOption"
+          [dtTrigger]="dtTrigger"
+          class="table table-hover"
+        >
           <thead>
             <tr>
-              <th>Id</th>
+              <th>STT</th>
               <th>Tên bệnh nhân</th>
               <th>Ngày sinh</th>
               <th>Giới tính</th>
@@ -102,17 +207,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of lsaptoi">
-              <td>{{item.id}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.dob}}</td>
-              <td>{{item.gender}}</td>
-              <td>{{item.date}}</td>
-              <td>{{item.nameDoctor}}</td>
-              <td>{{item.major}}</td>
+            <tr *ngFor="let item of lsaptoi; trackBy: trackByFn">
+              <td>{{ item.stt }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ formatDate(item.dob) }}</td>
+              <td>{{ item.gender }}</td>
+              <td>{{ formatDate(item.date) }}</td>
+              <td>{{ item.nameDoctor }}</td>
+              <td>{{ item.major }}</td>
               <td><span class="status-pending">Đang chờ khám</span></td>
               <td>
-                <button type="button" class="btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#basicModalxoa">
+                <button
+                  type="button"
+                  class="btn-action btn-delete"
+                  data-bs-toggle="modal"
+                  data-bs-target="#basicModalxoa"
+                >
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
@@ -127,12 +237,17 @@
       <div class="content-header">
         <h2>Lịch khám đã khám</h2>
       </div>
-      
-      <div class="table-responsive">
-        <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table table-hover">
+
+      <div class="table-responsive" [class.table-loading]="isLoadingCompleted">
+        <table
+          datatable
+          [dtOptions]="dtOption"
+          [dtTrigger]="dtTrigger"
+          class="table table-hover"
+        >
           <thead>
             <tr>
-              <th>Id</th>
+              <th>STT</th>
               <th>Tên bệnh nhân</th>
               <th>Ngày sinh</th>
               <th>Giới tính</th>
@@ -140,21 +255,347 @@
               <th>Tên bác sĩ</th>
               <th>Chuyên ngành</th>
               <th>Trạng thái</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of ldakham">
-              <td>{{item.id}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.dob}}</td>
-              <td>{{item.gender}}</td>
-              <td>{{item.date}}</td>
-              <td>{{item.nameDoctor}}</td>
-              <td>{{item.major}}</td>
+            <tr *ngFor="let item of ldakham; trackBy: trackByFn">
+              <td>{{ item.stt }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ formatDate(item.dob) }}</td>
+              <td>{{ item.gender }}</td>
+              <td>{{ formatDate(item.date) }}</td>
+              <td>{{ item.nameDoctor }}</td>
+              <td>{{ item.major }}</td>
               <td><span class="status-success">Khám thành công</span></td>
+              <td>
+                <button
+                  type="button"
+                  class="btn-action btn-detail"
+                  (click)="viewHistoryDetail(item.id)"
+                  title="Xem chi tiết"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xem chi tiết lịch sử khám bệnh -->
+<div
+  class="modal fade"
+  id="historyDetailModal"
+  tabindex="-1"
+  aria-labelledby="historyDetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="historyDetailModalLabel">
+          <i class="fas fa-file-medical"></i>
+          Chi tiết lịch sử khám bệnh
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedHistory">
+        <div class="history-detail-container">
+          <!-- Thông tin bệnh nhân -->
+          <div class="detail-section">
+            <h6 class="section-title">
+              <i class="fas fa-user"></i>
+              Thông tin bệnh nhân
+            </h6>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Họ và tên:</label>
+                <span>{{ selectedHistory.name }}</span>
+              </div>
+              <div class="info-item">
+                <label>Ngày sinh:</label>
+                <span>{{ formatDate(selectedHistory.dob) }}</span>
+              </div>
+              <div class="info-item">
+                <label>Giới tính:</label>
+                <span>{{
+                  selectedHistory.gender === "MALE" ? "Nam" : "Nữ"
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>Số điện thoại:</label>
+                <span>{{ selectedHistory.phone || "Chưa cập nhật" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thông tin khám bệnh -->
+          <div class="detail-section">
+            <h6 class="section-title">
+              <i class="fas fa-stethoscope"></i>
+              Thông tin khám bệnh
+            </h6>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Ngày khám:</label>
+                <span>{{ formatDate(selectedHistory.date) }}</span>
+              </div>
+              <div class="info-item">
+                <label>Giờ khám:</label>
+                <span>{{
+                  getHourText(selectedHistory.hourId) || "Chưa cập nhật"
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>Bác sĩ khám:</label>
+                <span>{{ selectedHistory.nameDoctor }}</span>
+              </div>
+              <div class="info-item">
+                <label>Chuyên khoa:</label>
+                <span>{{ selectedHistory.major }}</span>
+              </div>
+              <div class="info-item">
+                <label>Phòng khám:</label>
+                <span>{{ selectedHistory.roomNumber || "Chưa cập nhật" }}</span>
+              </div>
+              <div class="info-item">
+                <label>Triệu chứng ban đầu:</label>
+                <span>{{
+                  selectedHistory.initialSymptoms || "Chưa có thông tin"
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chẩn đoán -->
+          <div class="detail-section" *ngIf="selectedHistory.diagnosis">
+            <h6 class="section-title">
+              <i class="fas fa-diagnoses"></i>
+              Chẩn đoán
+            </h6>
+            <div class="diagnosis-content">
+              {{ selectedHistory.diagnosis }}
+            </div>
+          </div>
+
+          <!-- Đơn thuốc -->
+          <div
+            class="detail-section"
+            *ngIf="
+              selectedHistory.prescription &&
+              selectedHistory.prescription.length > 0
+            "
+          >
+            <h6 class="section-title">
+              <i class="fas fa-pills"></i>
+              Đơn thuốc
+            </h6>
+            <div class="prescription-table">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Tên thuốc</th>
+                    <th>Số lượng</th>
+                    <th>Cách dùng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th>Ghi chú</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let medicine of selectedHistory.prescription">
+                    <td>{{ medicine.name }}</td>
+                    <td>{{ medicine.quantity }}</td>
+                    <td>{{ medicine.dosage }}</td>
+                    <td>
+                      {{
+                        medicine.unitPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        medicine.totalPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </td>
+                    <td>{{ medicine.note || "-" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Dịch vụ y tế -->
+          <div
+            class="detail-section"
+            *ngIf="
+              selectedHistory.services && selectedHistory.services.length > 0
+            "
+          >
+            <h6 class="section-title">
+              <i class="fas fa-hospital"></i>
+              Dịch vụ y tế
+            </h6>
+            <div class="services-table">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Tên dịch vụ</th>
+                    <th>Loại dịch vụ</th>
+                    <th>Trạng thái</th>
+                    <th>Mô tả</th>
+                    <th>Giá tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let service of selectedHistory.services">
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.type == "MEDICAL_SERVICE" ? "Dịch vụ y tế" : "Dịch vụ khác" }}</td>
+                    <td>
+                      <span
+                        class="service-status"
+                        [ngClass]="
+                          'status-' +
+                          (service.status || 'unknown').toLowerCase()
+                        "
+                      >
+                        {{ getServiceStatusText(service.status) }}
+                      </span>
+                    </td>
+                    <td>{{ service.description || "-" }}</td>
+                    <td>
+                      {{
+                        service.price | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tổng chi phí -->
+          <div class="detail-section" *ngIf="selectedHistory.totalCost">
+            <h6 class="section-title">
+              <i class="fas fa-calculator"></i>
+              Chi tiết thanh toán
+            </h6>
+
+            <!-- Chi tiết từng loại phí -->
+            <div
+              class="payment-breakdown"
+              *ngIf="
+                selectedHistory.consultationFee ||
+                selectedHistory.servicesFee ||
+                selectedHistory.medicinesFee
+              "
+            >
+              <div class="breakdown-item">
+                <label>Phí khám:</label>
+                <span>{{
+                  selectedHistory.consultationFee
+                    | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+              </div>
+              <div class="breakdown-item">
+                <label>Phí dịch vụ:</label>
+                <span>{{
+                  selectedHistory.servicesFee
+                    | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+              </div>
+              <div class="breakdown-item">
+                <label>Phí thuốc:</label>
+                <span>{{
+                  selectedHistory.medicinesFee
+                    | currency : "VND" : "symbol" : "1.0-0"
+                }}</span>
+              </div>
+              <hr class="breakdown-divider" />
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class="total-cost">
+              <span class="cost-amount">{{
+                selectedHistory.totalCost
+                  | currency : "VND" : "symbol" : "1.0-0"
+              }}</span>
+            </div>
+
+            <!-- Thông tin thanh toán -->
+            <div class="payment-info" *ngIf="selectedHistory.paymentMethod">
+              <div class="payment-item">
+                <label>Phương thức thanh toán:</label>
+                <span>{{ selectedHistory.paymentMethod }}</span>
+              </div>
+              <div class="payment-item">
+                <label>Trạng thái thanh toán:</label>
+                <span
+                  class="payment-status"
+                  [ngClass]="
+                    'status-' +
+                    (selectedHistory.paymentStatus || 'unknown').toLowerCase()
+                  "
+                >
+                  {{ getPaymentStatusText(selectedHistory.paymentStatus) }}
+                </span>
+              </div>
+              <div class="payment-item" *ngIf="selectedHistory.paidAt">
+                <label>Thời gian thanh toán:</label>
+                <span>{{ formatDate(selectedHistory.paidAt) }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- Kết luận -->
+          <div class="detail-section" *ngIf="selectedHistory.resultConclusion">
+            <h6 class="section-title">
+              <i class="fas fa-sticky-note"></i>
+              Kết luận
+            </h6>
+            <div class="note-content">
+              {{ selectedHistory.resultConclusion }}
+            </div>
+          </div>
+          <!-- Ghi chú -->
+          <div class="detail-section" *ngIf="selectedHistory.resultNotes">
+            <h6 class="section-title">
+              <i class="fas fa-sticky-note"></i>
+              Ghi chú
+            </h6>
+            <div class="note-content">
+              {{ selectedHistory.resultNotes }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i>
+          Đóng
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="exportHistoryReport()"
+          *ngIf="selectedHistory"
+        >
+          <i class="fas fa-download"></i>
+          Xuất báo cáo
+        </button>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Route, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Route, RouterLinkActive, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Doctor } from 'src/app/models/doctor';
 import { DoctorService } from 'src/app/services/doctor.service';
@@ -10,7 +10,6 @@ import { DoctorService } from 'src/app/services/doctor.service';
   styleUrls: ['./doctor-detail.component.scss']
 })
 export class DoctorDetailComponent {
-  an : boolean = true;
   doctor$ !: Observable<Doctor>;
   doctor: Doctor= {
     id: 0,
@@ -38,7 +37,7 @@ export class DoctorDetailComponent {
     trangthai: ''
   }
 
-  constructor(private doctorsv : DoctorService, private route : ActivatedRoute){};
+  constructor(private doctorsv : DoctorService, private route : ActivatedRoute, private router: Router){};
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -55,5 +54,22 @@ export class DoctorDetailComponent {
         },
       })
     });
+  }
+
+  // Navigate to booking form with pre-selected doctor
+  datLichKham() {
+    if (this.doctor && this.doctor.id) {
+      // Navigate to home page where the schedule component is located
+      // Pass doctor ID as query parameter
+      this.router.navigate(['/public/trang-chu'], { 
+        queryParams: { 
+          doctorId: this.doctor.id,
+          mode: 'BY_DOCTOR' // Set booking mode to BY_DOCTOR
+        },
+        fragment: 'booking-section' // Scroll to booking section
+      });
+    } else {
+      console.error('Doctor information not available');
+    }
   }
 }

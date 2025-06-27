@@ -1,9 +1,9 @@
 <div
   [hidden]="ktra"
-  class="pure-u-xl-1-2 pure-u-lg-1-1 pure-u-md-1-1 pure-u-sm-1-1 pure-u-1-1"
+  class="pure-u-xl-1-1 pure-u-lg-1-1 pure-u-md-1-1 pure-u-sm-1-1 pure-u-1-1"
   [class.show]="ok"
 >
-  <div class="outer_booking_form" style="margin-top: 30px; margin-left: 80px">
+  <div class="outer_booking_form">
     <div class="booking_form">
       <div class="inner_booking_form">
         <form
@@ -213,8 +213,6 @@
                 </div>
               </div>
             </div>
-
-            
 
             <!-- Chế độ đặt lịch -->
             <div class="form_element">
@@ -619,15 +617,6 @@
             <!-- Hàng 10(nút) -->
             <div class="form_element">
               <div class="outer_form_button">
-                <button
-                  *ngIf="profileInfor"
-                  (click)="autoFill()"
-                  style="margin-right: 10px"
-                  type="button"
-                  class="form_button"
-                >
-                  Điền tự động
-                </button>
                 <button type="submit" class="form_button">Đặt lịch hẹn</button>
               </div>
             </div>

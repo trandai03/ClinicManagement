@@ -270,8 +270,9 @@ public class HistoryService {
             for (ServiceRequest serviceRequest : serviceRequests) {
                 Map<String, Object> serviceData = new HashMap<>();
                 serviceData.put("serviceName", serviceRequest.getMedicalService().getName());
-                serviceData.put("serviceType", serviceRequest.getMedicalService().getDescription() != null ? 
-                    serviceRequest.getMedicalService().getDescription() : "Dịch vụ y tế");
+//                serviceData.put("serviceType", serviceRequest.getMedicalService().getDescription() != null ?
+//                    serviceRequest.getMedicalService().getDescription() : "Dịch vụ y tế");
+                serviceData.put("serviceType", "Dịch vụ y tế");
                 serviceData.put("serviceCost", serviceRequest.getCost());
                 serviceData.put("serviceStatus", serviceRequest.getStatus());
                 serviceDataList.add(serviceData);

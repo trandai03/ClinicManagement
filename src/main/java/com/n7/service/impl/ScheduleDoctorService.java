@@ -288,8 +288,9 @@ public class ScheduleDoctorService implements IDoctorScheduleService {
 
         @Override
         public List<String> getAvailableDatesByDoctor(Long doctorId) {
+                LocalDate now =  LocalDate.now();
                 List<DoctorScheduleHour> schedules = doctorScheduleHourRepository
-                                .findByDoctorId(doctorId);
+                                .findByDoctorId(doctorId,now);
                 return schedules.stream()
                                 .map(s -> ConvertTimeUtils.localDateToString(s.getSpecificDate()))
                                 .collect(Collectors.toList());

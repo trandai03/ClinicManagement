@@ -38,9 +38,9 @@ public interface DoctorScheduleHourRepository extends JpaRepository<DoctorSchedu
             @Param("date") LocalDate date);
 
     // Tìm lịch có sẵn của bác sĩ theo ngày
-    @Query("SELECT dsh FROM DoctorScheduleHour dsh WHERE dsh.doctor.id = :doctorId " +
-            "AND dsh.status = 'AVAILABLE'")
-    List<DoctorScheduleHour> findByDoctorId(@Param("doctorId") Long doctorId);
+    @Query("SELECT DISTINCT dsh FROM DoctorScheduleHour dsh WHERE dsh.doctor.id = :doctorId " +
+            "AND dsh.status = 'AVAILABLE' AND dsh.specificDate > :date")
+    List<DoctorScheduleHour> findByDoctorId(@Param("doctorId") Long doctorId, @Param("date") LocalDate date);
 
     @Query("SELECT DISTINCT dsh.specificDate FROM DoctorScheduleHour dsh WHERE dsh.doctor.major.id = :majorId " +
             "AND dsh.status = 'AVAILABLE' and dsh.specificDate >= :date")

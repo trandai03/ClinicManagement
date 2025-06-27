@@ -53,6 +53,9 @@ public class Booking {
     @Column(length = 255)
     private String note;
 
+    @Column(name ="initial_symptoms" ,length = 255)
+    private String initialSymptoms;
+
     @Column
     private String token;
 

@@ -350,8 +350,8 @@
                         <th>Loại</th>
                         <th>Trạng thái</th>
                         <th>Chi phí</th>
-                        <th>Ghi chú yêu cầu</th>
-                        <th>Kết quả</th>
+                        <!-- <th>Ghi chú yêu cầu</th>
+                        <th>Kết quả</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -367,7 +367,7 @@
                         </td>
                         <td>
                           <span class="badge bg-secondary">{{
-                            service.serviceType
+                            service.serviceType == "MEDICAL_SERVICE" ? "Dịch vụ y tế" : "Dịch vụ khác"
                           }}</span>
                         </td>
                         <td>
@@ -378,8 +378,8 @@
                           >
                         </td>
                         <td>{{ formatCurrency(service.cost) }}</td>
-                        <td>{{ service.requestNotes || "Không có" }}</td>
-                        <td>{{ service.resultNotes || "Chưa có kết quả" }}</td>
+                        <!-- <td>{{ service.requestNotes || "Không có" }}</td>
+                        <td>{{ service.resultNotes || "Chưa có kết quả" }}</td> -->
                       </tr>
                     </tbody>
                   </table>
@@ -487,7 +487,7 @@
                           <strong class="text-primary">Tổng cộng:</strong>
                         </td>
                         <td class="text-end">
-                          <strong class="text-primary fs-5">{{
+                          <strong class="text-primary fs-5" style="padding-top:0px !important">{{
                             formatCurrency(
                               examinationDetails.paymentInfo.totalAmount
                             )

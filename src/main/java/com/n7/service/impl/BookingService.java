@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -82,6 +84,25 @@ public class BookingService implements IBookingService {
             counts.put(status, ((Long) row[1]).intValue());
         }
     log.info("counts "+counts.toString());
+        return counts;
+    }
+
+    public Map<Integer, Integer> getBookingCountsByDoctor() {
+        Calendar cal = Calendar.getInstance(); // lấy thời gian hiện tại
+        cal.set(Calendar.DAY_OF_MONTH, 1); // set về ngày đầu tiên
+        Date firstDay = cal.getTime();
+
+        // Lấy ngày cuối cùng của tháng
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date lastDay = cal.getTime();
+        List<Object[]> bookingCounts = bookingRepo.countBookingsGroupedByDoctor(firstDay,Status.SUCCESS,lastDay);
+        Map<Integer, Integer> counts = new HashMap<>();
+        for(Object[] row : bookingCounts){
+            Integer doctorId = ((Number) row[0]).intValue();
+            Integer count = ((Number) row[1]).intValue();
+            counts.put(doctorId, count);
+        }
+        log.info("counts "+counts.toString());
         return counts;
     }
     
@@ -231,32 +252,32 @@ public class BookingService implements IBookingService {
         bookingRepo.save(booking);
         
         // Handle conflicting bookings
-        List<Booking> conflictingBookings = bookingRepo.checkLich(
-            booking.getIdHour(),
-            booking.getUser().getId(),
-            Status.CONFIRMING,
-            booking.getDate()
-        );
-
-        if(!conflictingBookings.isEmpty()) {
-            for(Booking conflictingBooking : conflictingBookings) {
-                if(!conflictingBooking.getId().equals(booking.getId())) {
-                    conflictingBooking.setStatus(Status.FAILURE);
-                    bookingRepo.save(conflictingBooking);
-                    deleteScheduleOfDoctor(conflictingBooking);
-                    try {
-                        mailService.sendMail(
-                            conflictingBooking.getEmail(),
-                            "Thư hủy lịch khám",
-                            "<h2>Bác sĩ bạn đặt đã có việc bận đột xuất. " +
-                            "Rất xin lỗi và mong được gặp lại bạn vào thời gian khác.</h2>"
-                        );
-                    } catch (MessagingException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
-        }
+//        List<Booking> conflictingBookings = bookingRepo.checkLich(
+//            booking.getIdHour(),
+//            booking.getUser().getId(),
+//            Status.CONFIRMING,
+//            booking.getDate()
+//        );
+//
+//        if(!conflictingBookings.isEmpty()) {
+//            for(Booking conflictingBooking : conflictingBookings) {
+//                if(!conflictingBooking.getId().equals(booking.getId())) {
+//                    conflictingBooking.setStatus(Status.FAILURE);
+//                    bookingRepo.save(conflictingBooking);
+//                    deleteScheduleOfDoctor(conflictingBooking);
+//                    try {
+//                        mailService.sendMail(
+//                            conflictingBooking.getEmail(),
+//                            "Thư hủy lịch khám",
+//                            "<h2>Bác sĩ bạn đặt đã có việc bận đột xuất. " +
+//                            "Rất xin lỗi và mong được gặp lại bạn vào thời gian khác.</h2>"
+//                        );
+//                    } catch (MessagingException ex) {
+//                        throw new RuntimeException(ex);
+//                    }
+//                }
+//            }
+//        }
     }
 
     private void handleInProgressStatus(Booking booking) {
@@ -316,6 +337,7 @@ public class BookingService implements IBookingService {
         bookingModel.setIdHour(booking.getIdHour());
         bookingModel.setStatus(booking.getStatus().toString());
         bookingModel.setNote(booking.getNote());
+        bookingModel.setInitialSymptoms(booking.getInitialSymptoms());
         bookingModel.setNameDoctor(booking.getUser().getFullname());
         bookingModel.setMajor(booking.getUser().getMajor().getName());
         bookingModel.setServiceRequests(ServiceRequestModel.fromEntityToModals(serviceRequestRepository.findByBooking_Id(booking.getId())));

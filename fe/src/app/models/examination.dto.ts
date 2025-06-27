@@ -61,6 +61,11 @@ export interface BookingDetailsResponse {
   paymentMethod?: string;
   paymentStatus?: string;
   paidAt?: string;
+  major?: string;
+  doctorName?: string;
+  resultsConclusion?: string;
+  resultsNotes?: string;
+
 }
 
 export interface ServiceRequestDetailsResponse {

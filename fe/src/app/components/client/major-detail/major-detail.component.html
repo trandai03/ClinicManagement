@@ -1,0 +1,226 @@
+<main *ngIf="!loading">
+  <!-- Banner Section -->
+  <div class="banner_area">
+    <div class="banner_area_img">
+      <img
+        [src]="
+          majorDetail?.banner_image ||
+          majorDetail?.image ||
+          './assets/img/default-banner.jpg'
+        "
+        [alt]="majorDetail?.name"
+      />
+      <div class="banner_overlay">
+        <div class="banner_content">
+          <button class="back_button" (click)="goBack()">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại
+          </button>
+          <h1 class="banner_title">{{ majorDetail?.name }}</h1>
+          <p class="banner_subtitle">
+            Chuyên khoa hàng đầu tại Bệnh viện Đa khoa Tâm Anh
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="detail_nav">
+    <div class="inner_nav">
+      <nav class="tab_navigation">
+        <button
+          class="tab_button"
+          [class.active]="activeTab === 'intro'"
+          (click)="setActiveTab('intro')"
+        >
+          <i class="fa-solid fa-info-circle"></i>
+          Giới thiệu
+        </button>
+        <button
+          class="tab_button"
+          [class.active]="activeTab === 'services'"
+          (click)="setActiveTab('services')"
+        >
+          <i class="fa-solid fa-stethoscope"></i>
+          Dịch vụ
+        </button>
+        <button
+          class="tab_button"
+          [class.active]="activeTab === 'doctors'"
+          (click)="setActiveTab('doctors')"
+        >
+          <i class="fa-solid fa-user-doctor"></i>
+          Chuyên gia
+        </button>
+        <button
+          class="tab_button"
+          [class.active]="activeTab === 'achievements'"
+          (click)="setActiveTab('achievements')"
+        >
+          <i class="fa-solid fa-trophy"></i>
+          Thành tựu
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="detail_content">
+    <div class="inner_content">
+      <!-- Introduction -->
+      <section *ngIf="activeTab === 'intro'" class="content_section fade-in">
+        <div class="section_header">
+          <h2 class="section_title">THÔNG TIN GIỚI THIỆU</h2>
+          <div class="title_underline"></div>
+        </div>
+
+        <div class="intro_content">
+          <div
+            class="content_text"
+            [innerHTML]="
+              majorDetail?.introduction ||
+              majorDetail?.description ||
+              'Thông tin chi tiết đang được cập nhật.'
+            "
+          ></div>
+
+          <div class="working_info_card">
+            <div class="info_icon">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="info_content">
+              <h3>Thời gian hoạt động</h3>
+              <p>
+                {{
+                  majorDetail?.working_hours || "Thứ 2 - Chủ nhật: 7:00 - 17:00"
+                }}
+              </p>
+            </div>
+          </div>
+
+          <div class="facilities_info" *ngIf="majorDetail?.facilities">
+            <h3>Cơ sở vật chất</h3>
+            <div [innerHTML]="majorDetail.facilities"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services -->
+      <section *ngIf="activeTab === 'services'" class="content_section fade-in">
+        <div class="section_header">
+          <h2 class="section_title">DỊCH VỤ</h2>
+          <div class="title_underline"></div>
+        </div>
+        <div class="services_content">
+          <div
+            [innerHTML]="
+              majorDetail?.description ||
+              'Danh sách dịch vụ đang được cập nhật.'
+            "
+          ></div>
+        </div>
+      </section>
+
+      <!-- Doctors -->
+      <section *ngIf="activeTab === 'doctors'" class="content_section fade-in">
+        <div class="section_header">
+          <h2 class="section_title">CHUYÊN GIA</h2>
+          <div class="title_underline"></div>
+        </div>
+
+        <div
+          class="doctors_grid"
+          *ngIf="majorDoctors.length > 0; else noDoctors"
+        >
+          <div *ngFor="let doctor of majorDoctors" class="doctor_card">
+            <div class="doctor_image">
+              <img
+                [src]="doctor.avatar || './assets/img/default-doctor.jpg'"
+                [alt]="doctor.fullName"
+              />
+              <div class="doctor_overlay">
+                <button
+                  class="view_profile_btn"
+                  (click)="
+                    router.navigate(['/public/bac-si-chi-tiet', doctor.id])
+                  "
+                >
+                  <i class="fa-solid fa-eye"></i> Xem hồ sơ
+                </button>
+              </div>
+            </div>
+            <div class="doctor_info">
+              <h3 class="doctor_name">
+                {{ doctor.doctorRank?.name }} {{ doctor.fullName }}
+              </h3>
+              <p class="doctor_major">{{ doctor.major?.name }}</p>
+              <p class="doctor_price" *ngIf="doctor.doctorRank?.basePrice">
+                <i class="fa-solid fa-money-bill"></i>
+                {{ formatCurrency(doctor.doctorRank.basePrice) }}
+              </p>
+              <button class="book_btn" (click)="datLichKham(doctor.id)">
+                <i class="fa-solid fa-calendar-plus"></i>
+                Đặt lịch khám
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noDoctors>
+          <div class="no_doctors">
+            <div class="no_doctors_icon">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <h3>Chưa có bác sĩ</h3>
+            <p>
+              Hiện tại chuyên khoa này chưa có bác sĩ. Vui lòng quay lại sau.
+            </p>
+          </div>
+        </ng-template>
+      </section>
+
+      <!-- Achievements -->
+      <section
+        *ngIf="activeTab === 'achievements'"
+        class="content_section fade-in"
+      >
+        <div class="section_header">
+          <h2 class="section_title">THÀNH TỰU</h2>
+          <div class="title_underline"></div>
+        </div>
+        <div class="achievements_content">
+          <div
+            [innerHTML]="
+              majorDetail?.achievements ||
+              'Thông tin thành tựu đang được cập nhật.'
+            "
+          ></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Booking CTA -->
+  <div class="booking_cta">
+    <div class="cta_content">
+      <div class="cta_text">
+        <h3>Đặt lịch khám ngay</h3>
+        <p>
+          Nhận tư vấn từ đội ngũ chuyên gia hàng đầu tại {{ majorDetail?.name }}
+        </p>
+      </div>
+      <button class="cta_button" (click)="datLichChuyenKhoa()">
+        <i class="fa-solid fa-calendar-check"></i>
+        ĐẶT LỊCH HẸN
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading_container">
+  <div class="loading_spinner">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+  </div>
+  <p>Đang tải thông tin chuyên khoa...</p>
+</div>
