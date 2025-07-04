@@ -243,7 +243,7 @@ public class HistoryService {
             Booking booking = history.getBooking();
             
             // Chuẩn bị parameters cho hóa đơn theo template payment_invoice.jrxml
-            paramsReport.put("clinicName", "Phòng khám Tâm Anh");
+            paramsReport.put("clinicName", "Phòng khám An Tâm");
             paramsReport.put("clinicAddress", "Địa chỉ: Hà Nội | Điện thoại: 0999997777");
             paramsReport.put("invoiceNumber", "HD" + System.currentTimeMillis());
             paramsReport.put("invoiceDate", ConvertTimeUtils.convertLocalDatetime(LocalDateTime.now()));

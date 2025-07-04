@@ -35,7 +35,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Phòng khám Tâm Anh]]></text>
+				<text><![CDATA[Phòng khám An Tâm]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="70" width="555" height="20" uuid="b457cf20-b687-403d-b01d-ccef46a20410"/>

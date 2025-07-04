@@ -463,7 +463,13 @@
                 <tbody>
                   <tr *ngFor="let service of selectedHistory.services">
                     <td>{{ service.name }}</td>
-                    <td>{{ service.type == "MEDICAL_SERVICE" ? "Dịch vụ y tế" : "Dịch vụ khác" }}</td>
+                    <td>
+                      {{
+                        service.type == "MEDICAL_SERVICE"
+                          ? "Dịch vụ y tế"
+                          : "Dịch vụ khác"
+                      }}
+                    </td>
                     <td>
                       <span
                         class="service-status"
@@ -528,7 +534,7 @@
             </div>
 
             <!-- Tổng tiền -->
-            <div class="total-cost">
+            <div class="total-cost" style="text-align: right">
               <span class="cost-amount">{{
                 selectedHistory.totalCost
                   | currency : "VND" : "symbol" : "1.0-0"

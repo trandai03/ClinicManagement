@@ -26,7 +26,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<text><![CDATA[Bệnh viện Tâm Anh]]></text>
+				<text><![CDATA[Bệnh viện An Tâm]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="60" width="555" height="20" uuid="b457cf20-b687-403d-b01d-ccef46a20410"/>
