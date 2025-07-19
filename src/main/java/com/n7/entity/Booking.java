@@ -65,8 +65,6 @@ public class Booking {
     @Column(name="room_number")
     private String roomNumber;
 
-    @Column(name="checked_in_time")
-    private LocalDateTime checkedInTime;
 
     @Column(name="start_time")
     private LocalDateTime startTime;

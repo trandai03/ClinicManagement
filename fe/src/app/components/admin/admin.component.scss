@@ -1,6 +1,98 @@
 /* Admin Layout - Support toggle sidebar */
-.main {
+
+/* Main content area */
+#main {
+  margin-left: 300px;
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Footer */
+#footer {
+  margin-left: 300px;
   transition: margin-left 0.3s ease;
 }
 
-/* Global CSS đã xử lý các margin rules */
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 996;
+  transition: left 0.3s ease;
+  padding: 20px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #aab7cf transparent;
+  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+  background-color: #fff;
+}
+
+/* Global toggle states - sử dụng ::ng-deep để override global styles */
+:host ::ng-deep body.toggle-sidebar {
+  
+  @media (min-width: 1200px) {
+    /* Desktop: when sidebar is toggled off */
+    #main,
+    #footer {
+      margin-left: 0 !important;
+    }
+
+    .sidebar {
+      left: -300px !important;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    /* Mobile: when toggled on */
+    .sidebar {
+      left: 0 !important;
+    }
+  }
+}
+
+/* Default mobile behavior */
+@media (max-width: 1199px) {
+  #main,
+  #footer {
+    margin-left: 0;
+  }
+
+  .sidebar {
+    left: -300px;
+  }
+}
+
+/* Smooth animations for all elements */
+.sidebar,
+#main,
+#footer {
+  transition: all 0.3s ease;
+}
+
+/* Mobile overlay when sidebar is open */
+@media (max-width: 1199px) {
+  :host ::ng-deep body.toggle-sidebar::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 995;
+  }
+}
+
+/* Header adjustments */
+:host ::ng-deep .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 997;
+}

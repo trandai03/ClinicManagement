@@ -1,5 +1,6 @@
 package com.n7.repository;
 
+import com.n7.entity.Role;
 import com.n7.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
             "AND u.role.id = 2")
     List<User> findDoctorByMajor(@Param("id") Long id);
 
-    
 
+    List<User> findByRole(Role role);
 }

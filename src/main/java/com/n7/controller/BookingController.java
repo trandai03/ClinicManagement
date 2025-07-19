@@ -73,8 +73,9 @@ public ResponseEntity<?> getBookingCounts(@RequestParam(value = "idDoctor", requ
     public ResponseEntity<?> createBooking(final Authentication authentication, @Valid @RequestBody BookingDTO bookingDTO) {
         try {
             System.out.println(bookingDTO);
-            CustomUserDetail customUserDetail= (CustomUserDetail) authentication.getPrincipal() ;
-            if(customUserDetail != null){
+
+
+            if(authentication != null){
                 bookingService.creatBookingWithUser(bookingDTO);
                 return ResponseEntity.ok().body(new SuccessResponse<>("ok"));
             }

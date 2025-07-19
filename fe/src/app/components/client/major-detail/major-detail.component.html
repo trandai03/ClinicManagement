@@ -4,18 +4,18 @@
     <div class="banner_area_img">
       <img
         [src]="
-          majorDetail?.banner_image ||
-          majorDetail?.image ||
+          majorDetail.banner_image ||
+          majorDetail.image ||
           './assets/img/default-banner.jpg'
         "
-        [alt]="majorDetail?.name"
+        [alt]="majorDetail.name"
       />
       <div class="banner_overlay">
         <div class="banner_content">
           <button class="back_button" (click)="goBack()">
             <i class="fa-solid fa-arrow-left"></i> Quay lại
           </button>
-          <h1 class="banner_title">{{ majorDetail?.name }}</h1>
+          <h1 class="banner_title">{{ majorDetail.name }}</h1>
           <p class="banner_subtitle">
             Chuyên khoa hàng đầu tại Bệnh viện Đa khoa Tâm Anh
           </p>
@@ -78,8 +78,8 @@
           <div
             class="content_text"
             [innerHTML]="
-              majorDetail?.introduction ||
-              majorDetail?.description ||
+              majorDetail.introduction ||
+              majorDetail.description ||
               'Thông tin chi tiết đang được cập nhật.'
             "
           ></div>
@@ -92,13 +92,13 @@
               <h3>Thời gian hoạt động</h3>
               <p>
                 {{
-                  majorDetail?.working_hours || "Thứ 2 - Chủ nhật: 7:00 - 17:00"
+                  majorDetail.working_hours || "Thứ 2 - Chủ nhật: 7:00 - 17:00"
                 }}
               </p>
             </div>
           </div>
 
-          <div class="facilities_info" *ngIf="majorDetail?.facilities">
+          <div class="facilities_info" *ngIf="majorDetail.facilities">
             <h3>Cơ sở vật chất</h3>
             <div [innerHTML]="majorDetail.facilities"></div>
           </div>
@@ -114,7 +114,7 @@
         <div class="services_content">
           <div
             [innerHTML]="
-              majorDetail?.description ||
+              majorDetail.description ||
               'Danh sách dịch vụ đang được cập nhật.'
             "
           ></div>
@@ -151,9 +151,9 @@
             </div>
             <div class="doctor_info">
               <h3 class="doctor_name">
-                {{ doctor.doctorRank?.name }} {{ doctor.fullName }}
+                {{ doctor.doctorRank.name }} {{ doctor.fullName }}
               </h3>
-              <p class="doctor_major">{{ doctor.major?.name }}</p>
+              <p class="doctor_major">{{ doctor.major.name }}</p>
               <p class="doctor_price" *ngIf="doctor.doctorRank?.basePrice">
                 <i class="fa-solid fa-money-bill"></i>
                 {{ formatCurrency(doctor.doctorRank.basePrice) }}
@@ -191,7 +191,7 @@
         <div class="achievements_content">
           <div
             [innerHTML]="
-              majorDetail?.achievements ||
+              majorDetail.achievements ||
               'Thông tin thành tựu đang được cập nhật.'
             "
           ></div>
@@ -206,7 +206,7 @@
       <div class="cta_text">
         <h3>Đặt lịch khám ngay</h3>
         <p>
-          Nhận tư vấn từ đội ngũ chuyên gia hàng đầu tại {{ majorDetail?.name }}
+          Nhận tư vấn từ đội ngũ chuyên gia hàng đầu tại {{ majorDetail.name }}
         </p>
       </div>
       <button class="cta_button" (click)="datLichChuyenKhoa()">

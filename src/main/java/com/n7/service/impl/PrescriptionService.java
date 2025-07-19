@@ -73,7 +73,33 @@ public class PrescriptionService {
      */
     @Transactional
     public List<Map<String, Object>> createPrescriptions(Long historyId, List<PrescriptionRequest> requests) {
-        List<Prescription> prescriptions = requests.stream()
+        // Group các request theo medicineId và merge quantity
+        Map<Long, PrescriptionRequest> mergedRequests = new HashMap<>();
+
+        for (PrescriptionRequest request : requests) {
+            Long medicineId = request.getMedicineId();
+
+            if (mergedRequests.containsKey(medicineId)) {
+                // Nếu đã tồn tại medicineId, cộng dồn quantity
+                PrescriptionRequest existingRequest = mergedRequests.get(medicineId);
+                existingRequest.setQuantity(existingRequest.getQuantity() + request.getQuantity());
+
+                // Cập nhật dosage và instructions với giá trị mới nhất
+                existingRequest.setDosage(request.getDosage());
+                existingRequest.setInstructions(request.getInstructions());
+            } else {
+                // Nếu chưa tồn tại, thêm mới
+                mergedRequests.put(medicineId, new PrescriptionRequest(
+                        request.getMedicineId(),
+                        request.getQuantity(),
+                        request.getDosage(),
+                        request.getInstructions()
+                ));
+            }
+        }
+
+        // Tạo prescriptions từ merged requests
+        List<Prescription> prescriptions = mergedRequests.values().stream()
                 .map(request -> createPrescriptionEntity(historyId, request))
                 .collect(Collectors.toList());
 

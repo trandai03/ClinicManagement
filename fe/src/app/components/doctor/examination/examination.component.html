@@ -25,7 +25,7 @@
       </div> -->
 
       <div class="examination-header">
-        <h2>Khám bệnh - {{ currentBooking?.name || "Đang tải..." }}</h2>
+        <h2>Khám bệnh - {{ currentBooking.name || "Đang tải..." }}</h2>
         <div class="patient-info" *ngIf="currentBooking">
           <span><strong>Mã BN:</strong> {{ currentBooking.id }}</span>
           <span

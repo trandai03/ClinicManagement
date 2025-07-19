@@ -68,8 +68,6 @@ public class BookingService implements IBookingService {
         // SUCCESS không filter theo ngày, các status khác cần filter
         List<Object[]> statusWithDate = bookingRepo.countBookingsGroupedByStatus(doctorId, now,null);
         List<Object[]> successOnly = bookingRepo.countBookingsGroupedByStatus(doctorId, null,Status.SUCCESS);
-        log.info("withDate "+statusWithDate.toString());
-        log.info("success "+successOnly.toString());
         Map<Status, Integer> counts = new EnumMap<>(Status.class);
     
         // Gộp 2 kết quả lại
@@ -83,7 +81,6 @@ public class BookingService implements IBookingService {
             // Nếu đã tồn tại (vd: SUCCESS đã có) thì bỏ qua
             counts.put(status, ((Long) row[1]).intValue());
         }
-    log.info("counts "+counts.toString());
         return counts;
     }
 

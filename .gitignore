@@ -37,3 +37,7 @@ build/
 .cursor/
 *.sql
 *.pdf
+*.txt
+*.drawio
+*.bkp
+*.xml
